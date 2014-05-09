@@ -1,0 +1,1 @@
+angular.module('phruma', ['ngRoute', 'appRoutes', 'MainCtrl']);
