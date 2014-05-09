@@ -1,21 +1,9 @@
 <div class="jumbotron">
 	<div class="text-center" style="padding-bottom: 20px">
 		<h1>Movie Search</h1>
-		<input type="text" ng-model="userTitle">
-		<input type="submit" ng-click="results()" value="Submit">
+		<input type="text" ng-model="$root.userTitle">
+		<input type="submit" ng-click="doSearch()" value="Submit">
 	</div>
 	<div class="row">
-		<div class="movieinfo-left col-md-3">
-			<p><img src="{{ moviePoster }}"></p>
-		</div>
-		<div class="movieinfo-right col-md-9">
-			<h2>{{ movieTitle }}</h2>
-
-			<p>Plot:</p>
-			<p>{{ moviePlot }}</p>
-			<p>Rating:</p>
-			<p>{{ movieRating }}</p>
-
-		</div>
 	</div>
 </div>

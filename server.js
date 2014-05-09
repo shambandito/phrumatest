@@ -1,17 +1,22 @@
 var express = require("express");
 var logfmt = require("logfmt");
+var cors = require('cors');
 var app = express();
 
 app.use(logfmt.requestLogger());
 
 
 
-	app.use(express.static(__dirname + '/public')); 	// set the static files location /public/img will be /img for users
+app.use(express.static(__dirname + '/public')); 	// set the static files location /public/img will be /img for users
 
+app.get('*', function(req, res, next) {
+  res.type('html');
+  res.sendfile('./public/views/index.html'); // load our public/views/index.html file
+});
 
 
 // routes ==================================================
-require('./app/routes')(app); // configure our routes
+//require('./app/routes')(app); // configure our routes
 
 var port = Number(process.env.PORT || 5000);
 

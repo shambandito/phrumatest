@@ -1,1 +1,1 @@
-angular.module('phruma', ['ngRoute', 'appRoutes', 'MainCtrl']);
+var app = angular.module('phruma', ['ngRoute', 'appRoutes', 'controllers']);

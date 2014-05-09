@@ -8,6 +8,14 @@
 			controller: 'MainController'
 		})
 
+				// home page
+		.when('/search', {
+			templateUrl: 'views/search.html',
+			controller: 'MainController'
+		})
+
+
+
 	$locationProvider.html5Mode(true);
 
 }]);
