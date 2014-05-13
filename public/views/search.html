@@ -16,8 +16,10 @@
 			<p>Produced by: {{ movieProduction }}</p>
 
 			<h3>Rotten Tomatoes Data</h3>
-			<p>Concensus: {{movieConsensus}}</p>
-			<p>Tomato Meter: {{tomatoMeter}}</p>
+			<p>Concensus: {{concensus}}</p>
+			<p>Studio: {{movieStudio}}</p>
+
+			<p>Bla: {{movieurl}}</p>
 		</div>
 
 
@@ -26,7 +28,8 @@
 		<div class="col-md-6">
 			<h5>Links</h5>
 			<a href="{{ movieSite }}" target="_blank" ng-if="$scope.movieSite != 'N/A'">Official Website</a><br>
-			<a href="{{ imdbLink }}" target="_blank">IMDB Link</a>
+			<a href="{{ imdbLink }}" target="_blank">IMDB Link</a><br>
+			<a href="{{ rtLink }}" target="_blank">Rotten Tomatoes Link</a>
 		</div>
 	</div>
 

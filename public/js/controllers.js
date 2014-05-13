@@ -2,6 +2,7 @@ angular.module('controllers', []).controller('MainController', function($scope, 
 
 	var show = false;
 
+
 	$scope.doSearch = function() {
 
 		$location.path("/search");
@@ -10,28 +11,48 @@ angular.module('controllers', []).controller('MainController', function($scope, 
 
 	$scope.searchInit = function() {
 		var query = $rootScope.userTitle;
-		var url = 'http://www.omdbapi.com/?t=' + encodeURI(query) + '&tomatoes=true&callback=JSON_CALLBACK'
+		var url = 'http://www.omdbapi.com/?t=' + encodeURI(query) + '&tomatoes=true&callback=JSON_CALLBACK';
+		var RTsearchurl = 'http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=4nktdb9q9p54q9krkmagc7u3&q=' + encodeURI(query) + '&page_limit=1&callback=JSON_CALLBACK';
+
+
 		$http.jsonp(url).then(function (result) {
 
-			var movie = result.data;
+			var IMDBmovie = result.data;
 
 
-    		$scope.movieTitle = movie.Title;
-    		$scope.moviePlot = movie.Plot;
-    		$scope.movieRating = movie.imdbRating;
-    		$scope.movieDirectors = movie.Director;
-    		$scope.moviePoster = movie.Poster;
-    		$scope.movieSite = movie.Website;
-
-
-
-
+    		$scope.movieTitle = IMDBmovie.Title;
+    		$scope.moviePlot = IMDBmovie.Plot;
+    		$scope.movieRating = IMDBmovie.imdbRating;
+    		$scope.movieDirectors = IMDBmovie.Director;
+    		$scope.movieSite = IMDBmovie.Website;
     		$scope.movieProduction = movie.Production;
-    		$scope.movieConsensus = movie.tomatoConsensus;
-    		$scope.tomatoMeter = movie.tomatoMeter;
     		$scope.imdbLink = "http://www.imdb.com/title/" + movie.imdbID;
 
 		});	
+
+		$http.jsonp(RTsearchurl).then(function (result) {
+
+			var RTsearchresult = result.data;
+
+			$scope.searchresult = RTsearchresult;
+
+			var RTmovieurl = RTsearchresult.movies[0].links.self + '?apikey=4nktdb9q9p54q9krkmagc7u3&callback=JSON_CALLBACK';
+
+			$http.jsonp(RTmovieurl).then(function (result) {
+
+				var RTmovie = result.data;
+
+				$scope.concensus = RTmovie.critics_consensus;
+				$scope.movieStudio = RTmovie.studio;
+				$scope.rtLink = RTmovie.links.alternate;
+				$scope.moviePoster = RTmovie.posters.detailed;
+
+
+			});	
+
+		});	
+
+
 	}
 
 	$scope.websiteBool = function(){
