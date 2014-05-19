@@ -5,9 +5,17 @@ var app = express();
 
 app.use(logfmt.requestLogger());
 
+var login= {'username' : 'ruben', 'password' : '1234'};
 
 
 app.use(express.static(__dirname + '/public')); 	// set the static files location /public/img will be /img for users
+
+
+app.get('/api/login', function(req, res, next) {
+  res.json(login);
+});
+
+
 
 app.get('*', function(req, res, next) {
   res.type('html');

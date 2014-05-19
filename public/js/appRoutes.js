@@ -14,6 +14,16 @@
 			controller: 'MainController'
 		})
 
+		.when('/login', {
+			templateUrl: 'views/login.html',
+			controller: 'LoginController'
+		})
+
+		.when('/logged', {
+			templateUrl: 'views/logged.html',
+			controller: 'LoginController'
+		})
+
 
 
 	$locationProvider.html5Mode(true);

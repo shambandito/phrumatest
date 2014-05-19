@@ -1,5 +1,9 @@
-angular.module('controllers', []).controller('MainController', function($scope, $http, $location, $rootScope) {
+var ctrl = angular.module('controllers', [])
+    .controller('MainController', MainController)
+    .controller('LoginController', LoginController);
 
+
+function MainController($scope, $http, $location, $rootScope) {
 	var show = false;
 
 
@@ -59,5 +63,19 @@ angular.module('controllers', []).controller('MainController', function($scope, 
      	return show;
    	}
 
+}
 
-});
+function LoginController($scope, $http, $location) {
+	$scope.doLogin = function() {
+		$http.get('/api/login').success(function (result) {
+
+			if($scope.username == result.username && $scope.password == result.password) {
+				$location.path('/logged');
+			} else {
+				$scope.loginFail = "Wrong details. Please try again.";
+			}
+
+		});
+	}
+
+}
