@@ -1,13 +1,13 @@
-<div class="jumbotron">
+<div class="jumbotron" ng-init="searchInit()">
 	<div class="text-center" style="padding-bottom: 20px">
 		<h1>Movie Search</h1>
 	</div>
-	<div class="row" ng-init="searchInit()">
+	<div class="row" ng-repeat="movie in movies">
 		<div class="movieinfo-left col-md-3">
-			<p><img src="{{ moviePoster }}" style="width: 100%;"></p>
+			<p><img src="{{movie.posters.profile}}"></p>
 		</div>
 		<div class="movieinfo-right col-md-9">
-			<h2>{{ movieTitle }}</h2>
+<!-- 			<h2>{{ movieTitle }}</h2>
 
 			<p>Plot:</p>
 			<p>{{ moviePlot }}</p>
@@ -19,25 +19,29 @@
 			<p>Concensus: {{concensus}}</p>
 			<p>Studio: {{movieStudio}}</p>
 
-			<p>Bla: {{movieurl}}</p>
+			<p>Bla: {{movieurl}}</p> -->
+
+			<p ng-click="singleMovieSearch(movie.links.self)">{{movie.title}}</p>
+			<p style="font-size: 0.9em">{{movie.year}}</p>
+			<p><span style="font-size: 0.7em" ng-repeat="actor in movie.abridged_cast">{{actor.name + ", "}}</span></p>
 		</div>
 
 
 	</div>
-	<div class="row">
+<!-- 	<div class="row">
 		<div class="col-md-6">
 			<h5>Links</h5>
 			<a href="{{ movieSite }}" target="_blank" ng-if="$scope.movieSite != 'N/A'">Official Website</a><br>
 			<a href="{{ imdbLink }}" target="_blank">IMDB Link</a><br>
 			<a href="{{ rtLink }}" target="_blank">Rotten Tomatoes Link</a>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="row">
 		<div class="col-md-12" style="text-align: center">
 			<h3>Search again</h3>
-			<input type="text" ng-model="$root.userTitle">
-			<input type="submit" ng-click="doSearch()" value="Submit"><br>
+			<input type="text" ng-model="query">
+			<input type="submit" ng-click="doSearch(query)" value="Submit"><br>
 			<a href="/">Back to Start</a>
 		</div>
 	</div>

@@ -1,37 +1,80 @@
 angular.module('factory', []).factory('MainFactory', function($rootScope, $http){
-
-	var movie;
     
-    return {
-        sayHello: function(text){
-            return "Factory says \"Hello " + text + "\"";
-        }  
-
- //        getQuery: function(query) {
- //        	return query;
- //        }
-
- //        results: function() {
-	// 		var url = 'http://www.omdbapi.com/?t=' + encodeURI(getQuery) + '&tomatoes=true&callback=JSON_CALLBACK'
-	// 		$http.jsonp(url).then(function (result) {
-
-	// 			//$scope.moviebla = result;
-	//     		$scope.movieTitle = result.data.Title;
-	//     		$scope.moviePlot = result.data.Plot;
-	//     		$scope.movieRating = result.data.imdbRating;
-	//     		$scope.movieDirectors = result.data.Director;
-	//     		$scope.moviePoster = result.data.Poster;
-
-	//     		movie = result.data;
-
-	// 		});
-
-	// 		return movie;
-	// 	}		
-	// };
+ 	var movie = {};
+ 	var RTurl = "";
+ 	var query = "";
+ 	var IMDBid = "";
 
 
+    movie.setQuery = function(value) {
+
+    	query=value;
+
+    } 
+
+    movie.getQuery = function() {
+
+    	return query;
+
+    }  
+
+    movie.getRTmovies_list = function(query) {
+      return $http({
+        method: 'JSONP', 
+        url: 'http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=4nktdb9q9p54q9krkmagc7u3&q=' + encodeURI(query) + '&page_limit=5&callback=JSON_CALLBACK'
+      });
+    }
+
+    movie.setRTurl = function(value) {
+
+    	RTurl=value;
+
+    } 
+
+    movie.getRTurl = function() {
+
+    	return RTurl;
+
+    }  
+
+    movie.getRTmovie = function(url) {
+      return $http({
+        method: 'JSONP', 
+        url: url + '?apikey=4nktdb9q9p54q9krkmagc7u3&callback=JSON_CALLBACK'
+      });
+    }
+
+    movie.getIMDBmovies_list = function(query) {
+      return $http({
+        method: 'JSONP', 
+        url: 'http://www.omdbapi.com/?s=' + encodeURI(query) + '&callback=JSON_CALLBACK'
+      });
+    }  
+
+    movie.setIMDBid = function(value) {
+
+    	IMDBid=value;
+
+    } 
+
+    movie.getIMDBid = function() {
+
+    	return IMDBid;
+
+    } 
+
+    movie.getIMDBmovie = function(id) {
+      return $http({
+        method: 'JSONP', 
+        url: 'http://www.omdbapi.com/?i=tt' + id + '&plot=full&callback=JSON_CALLBACK'
+      });
+    }  
 
 
- //    }               
+
+
+
+
+
+    return movie;           
 });

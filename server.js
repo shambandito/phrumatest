@@ -18,7 +18,6 @@ app.get('/api/login', function(req, res, next) {
 
 
 app.get('*', function(req, res, next) {
-  res.type('html');
   res.sendfile('./public/views/index.html'); // load our public/views/index.html file
 });
 

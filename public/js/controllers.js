@@ -3,67 +3,76 @@ var ctrl = angular.module('controllers', [])
     .controller('LoginController', LoginController);
 
 
-function MainController($scope, $http, $location, $rootScope) {
+function MainController($scope, $location, $rootScope, MainFactory) {
 	var show = false;
 
 
-	$scope.doSearch = function() {
+	$scope.doSearch = function(query) {
 
-		$location.path("/search");
-		$scope.searchInit();	
+		MainFactory.setQuery(query);
+
+		if($location.path() == "/search") {
+			$scope.searchInit();
+		} else {
+			$location.path("/search");
+		}
+
 	}
 
 	$scope.searchInit = function() {
-		var query = $rootScope.userTitle;
-		var url = 'http://www.omdbapi.com/?t=' + encodeURI(query) + '&tomatoes=true&callback=JSON_CALLBACK';
-		var RTsearchurl = 'http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=4nktdb9q9p54q9krkmagc7u3&q=' + encodeURI(query) + '&page_limit=1&callback=JSON_CALLBACK';
+
+		var query = MainFactory.getQuery();
+
+		//ROTTEN TOMATOES SEARCH
+		MainFactory.getRTmovies_list(query).success(function (res) {
+    		$scope.movies = res.movies;
+		});
+
+		//IMDB SEARCH
+/*		MainFactory.getIMDBmovies_list(query).success(function (res) {
+    		$scope.movies = res.Search;
+		});*/
+
+	}
+
+	$scope.singleMovieSearch = function(url) {
+
+		MainFactory.setRTurl(url);
+		$location.path('/result');
+
+	}
+
+	$scope.singleMovieInit = function() {
+		MainFactory.getRTmovie(MainFactory.getRTurl()).success(function (res) {
+			$scope.movieTitle = res.title;
+	   		$scope.movieCriticsRating = res.ratings.critics_score;
+	   		$scope.movieDirectors = res.abridged_directors;
+	   		$scope.movieSite = res.Website;
+	   		$scope.moviePoster = res.posters.detailed;
+	   		$scope.movieStudio = res.studio;
+	   		$scope.movieConcensus = res.critics_consensus;
+	   		//LINKS
+	   		$scope.movieRTlink = res.links.alternate;
+	   		$scope.movieIMDBid = res.alternate_ids.imdb;	   		
+	   		MainFactory.setIMDBid($scope.movieIMDBid);
+
+			MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
+				console.log(MainFactory.getIMDBid());
+				console.log("IMDB Fetch !");
+				$scope.moviePlot = res.Plot;
+				$scope.movieRuntime = res.Runtime;
+				$scope.IMDBRating = res.imdbRating;
+			});
+		});
 
 
-		$http.jsonp(url).then(function (result) {
-
-			var IMDBmovie = result.data;
-
-
-    		$scope.movieTitle = IMDBmovie.Title;
-    		$scope.moviePlot = IMDBmovie.Plot;
-    		$scope.movieRating = IMDBmovie.imdbRating;
-    		$scope.movieDirectors = IMDBmovie.Director;
-    		$scope.movieSite = IMDBmovie.Website;
-    		$scope.movieProduction = movie.Production;
-    		$scope.imdbLink = "http://www.imdb.com/title/" + movie.imdbID;
-
-		});	
-
-		$http.jsonp(RTsearchurl).then(function (result) {
-
-			var RTsearchresult = result.data;
-
-			$scope.searchresult = RTsearchresult;
-
-			var RTmovieurl = RTsearchresult.movies[0].links.self + '?apikey=4nktdb9q9p54q9krkmagc7u3&callback=JSON_CALLBACK';
-
-			$http.jsonp(RTmovieurl).then(function (result) {
-
-				var RTmovie = result.data;
-
-				$scope.concensus = RTmovie.critics_consensus;
-				$scope.movieStudio = RTmovie.studio;
-				$scope.rtLink = RTmovie.links.alternate;
-				$scope.moviePoster = RTmovie.posters.detailed;
-
-
-			});	
-
-		});	
 
 
 	}
 
-	$scope.websiteBool = function(){
-     	return show;
-   	}
-
 }
+
+
 
 function LoginController($scope, $http, $location) {
 	$scope.doLogin = function() {

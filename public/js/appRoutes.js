@@ -14,6 +14,11 @@
 			controller: 'MainController'
 		})
 
+		.when('/result', {
+			templateUrl: 'views/movie_result.html',
+			controller: 'MainController'
+		})
+
 		.when('/login', {
 			templateUrl: 'views/login.html',
 			controller: 'LoginController'
