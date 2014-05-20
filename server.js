@@ -1,6 +1,5 @@
 var express = require("express");
 var logfmt = require("logfmt");
-var cors = require('cors');
 var app = express();
 
 app.use(logfmt.requestLogger());
