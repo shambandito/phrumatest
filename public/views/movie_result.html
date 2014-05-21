@@ -4,15 +4,15 @@
 	</div>
 	<div class="row">
 		<div class="movieinfo-left col-md-3">
-			<p><img src="{{ moviePoster }}" style="width: 100%;"></p>
+			<p><img src="{{ poster }}" style="width: 100%;"></p>
 			<h5>Links</h5>
 			<!-- <a href="{{ movieSite }}" target="_blank" ng-if="$scope.movieSite != 'N/A'">Official Website</a><br> -->
-			<a href="http://www.imdb.com/title/tt{{ movieIMDBid }}" target="_blank">IMDB Link</a><br>
+			<a href="{{ movieIMDBurl }}" target="_blank">IMDB Link</a><br>
 			<a href="{{ movieRTlink }}" target="_blank">Rotten Tomatoes Link</a>
 		</div>
 		<div class="movieinfo-right col-md-9">
 			<h2>{{ movieTitle }}</h2>
-
+			<p><span style="font-size: 0.7em; font-style: italic;" ng-repeat="genre in genres">{{genre + ", "}}</span></p>
 			<p>Plot:</p>
 			<p>{{ moviePlot }}</p>
 			<p>IMDB Rating: {{ IMDBRating }}</p>
@@ -20,8 +20,9 @@
 			<p>Concensus: {{movieConcensus}}</p>
 			<p style="font-size: 0.9em">Studio: {{movieStudio}}</p>
 			<p style="font-size: 0.9em">Runtime: {{movieRuntime}}</p>
-
-			<p style="font-size: 0.9em">Director: <span ng-repeat="director in movieDirectors">{{director.name + ", "}}</span></p>
+			<p><span style="font-size: 0.7em" ng-repeat="actor in movieActors">{{actor.actorName + ", "}}</span></p>
+			<p style="font-size: 0.9em">Directed by: <span ng-repeat="director in movieDirectors">{{director + ", "}}</span></p>
+			<p style="font-size: 0.9em">Written by: <span ng-repeat="writer in movieWriters">{{writer + ", "}}</span></p>
 		</div>
 
 
