@@ -24,15 +24,29 @@ function MainController($scope, $location, $rootScope, MainFactory) {
 		var query = MainFactory.getQuery();
 
 		//ROTTEN TOMATOES SEARCH
-		MainFactory.getRTmovies_list(query).success(function (res) {
+/*		MainFactory.getRTmovies_list(query).success(function (res) {
     		//$scope.movies = res.movies;
     		$scope.rtMovies = res.movies;
-		});
+		});*/
 
 		//IMDB SEARCH
 		MainFactory.getIMDBmovies_list(query).success(function (res) {
-    		$scope.movies = res.Search;
-
+    		//$scope.movies = res.Search;
+    		var array = [];
+    		var movies= res.Search;
+    		//console.log(movies);
+    		
+    		if(movies != null) {
+	    		for (var i = 0; i < movies.length; i++) {
+	    			console.log(movies[i].Title)
+	    			MainFactory.getIMDBmovie_omdb(movies[i].imdbID).success(function (res) {
+	    				array[array.length] = res;
+	    			});
+	    		};
+	    		
+	    		$scope.movies = array;
+	    		//console.log($scope.movies);
+			}
 		});
 
 	}

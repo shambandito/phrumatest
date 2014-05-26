@@ -1,0 +1,56 @@
+body, html {
+	height: 100%;
+	width: 100%;
+	background: #f9f9f9;
+}
+
+.main_logo {
+	position: absolute;
+	left: 30px;
+	top: 25px;
+}
+
+.big_search_container {
+	height: 100vh;
+}
+
+.big_search {
+	position: absolute;
+	top: 50%;
+	margin-top: -120px;
+}
+
+.big_searchbar {
+	height: 60px;
+	width: 100%;
+	font-size: 22px;
+}
+
+	.big_searchbar_button {
+		width: 75px;
+		height: 60px;
+	}
+
+.small_search {
+	position: absolute;
+	top: 30px;
+	right: 50px;
+	width: 350px;
+}
+
+	.small_searchbar {
+
+	}
+
+
+
+/* SEARCH RESULTS */
+
+.movie_title {
+	font-size: 24px;
+
+}
+
+	.movie_title:hover {
+		cursor: pointer;
+	}

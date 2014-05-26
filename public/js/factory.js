@@ -61,6 +61,13 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
       });
     }  
 
+    movie.getIMDBmovie_omdb = function(id) {
+      return $http({
+        method: 'JSONP', 
+        url: 'http://www.omdbapi.com/?i=' + id + '&callback=JSON_CALLBACK'
+      });
+    }  
+
     movie.setIMDBid = function(value) {
 
     	IMDBid=value;
