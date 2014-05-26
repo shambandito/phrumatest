@@ -4,6 +4,7 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
  	var RTurl = "";
  	var query = "";
  	var IMDBid = "";
+ 	var type = "";
 
 
     movie.setQuery = function(value) {
@@ -16,7 +17,15 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
 
     	return query;
 
-    }  
+    } 
+
+    movie.setType = function(value) {
+    	type=value;
+    } 
+
+    movie.getType = function() {
+    	return type;
+    }
 
     movie.getRTmovies_list = function(query) {
       return $http({
@@ -38,9 +47,10 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
     }  
 
     movie.getRTmovie = function(url) {
+    	url=url.substr(2);
       return $http({
         method: 'JSONP', 
-        url: url + '?apikey=4nktdb9q9p54q9krkmagc7u3&callback=JSON_CALLBACK'
+        url: 'http://api.rottentomatoes.com/api/public/v1.0/movie_alias.json?apikey=4nktdb9q9p54q9krkmagc7u3&type=imdb&id=' + url + '&callback=JSON_CALLBACK'
       });
     }
 
@@ -66,7 +76,7 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
     movie.getIMDBmovie = function(id) {
       return $http({
         method: 'JSONP', 
-        url: 'http://www.omdbapi.com/?i=tt' + id + '&plot=full&callback=JSON_CALLBACK'
+        url: 'http://www.myapifilms.com/search?idIMDB=' + id + '&format=JSONP&aka=0&business=1&seasons=0&technical=0&lang=en-us&actors=S&biography=0&callback=JSON_CALLBACK'
       });
     }  
 

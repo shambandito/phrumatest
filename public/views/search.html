@@ -21,8 +21,9 @@
 
 			<p>Bla: {{movieurl}}</p> -->
 
-			<p ng-click="singleMovieSearch(movie.links.self)">{{movie.title}}</p>
-			<p style="font-size: 0.9em">{{movie.year}}</p>
+			<p ng-click="singleMovieSearch(movie.imdbID, movie.Type)">{{movie.Title}}</p>
+			<p style="font-size: 0.9em">{{movie.Year}}</p>
+			<p style="text-transform: capitalize; font-size: 0.9em">{{movie.Type}}</p>
 			<p><span style="font-size: 0.7em" ng-repeat="actor in movie.abridged_cast">{{actor.name + ", "}}</span></p>
 		</div>
 

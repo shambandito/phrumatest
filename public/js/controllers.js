@@ -25,49 +25,67 @@ function MainController($scope, $location, $rootScope, MainFactory) {
 
 		//ROTTEN TOMATOES SEARCH
 		MainFactory.getRTmovies_list(query).success(function (res) {
-    		$scope.movies = res.movies;
+    		//$scope.movies = res.movies;
+    		$scope.rtMovies = res.movies;
 		});
 
 		//IMDB SEARCH
-/*		MainFactory.getIMDBmovies_list(query).success(function (res) {
+		MainFactory.getIMDBmovies_list(query).success(function (res) {
     		$scope.movies = res.Search;
-		});*/
+
+		});
 
 	}
 
-	$scope.singleMovieSearch = function(url) {
+	$scope.singleMovieSearch = function(url, type) {
 
 		MainFactory.setRTurl(url);
+
+		MainFactory.setType(type);
+		MainFactory.setIMDBid(url)
+
 		$location.path('/result');
 
 	}
 
 	$scope.singleMovieInit = function() {
+
+	if(MainFactory.getType() == "movie") {	
 		MainFactory.getRTmovie(MainFactory.getRTurl()).success(function (res) {
-			$scope.movieTitle = res.title;
+			//$scope.movieTitle = res.title;
 	   		$scope.movieCriticsRating = res.ratings.critics_score;
-	   		$scope.movieDirectors = res.abridged_directors;
+	   		//$scope.movieDirectors = res.abridged_directors;
 	   		$scope.movieSite = res.Website;
 	   		$scope.moviePoster = res.posters.detailed;
 	   		$scope.movieStudio = res.studio;
 	   		$scope.movieConcensus = res.critics_consensus;
 	   		//LINKS
 	   		$scope.movieRTlink = res.links.alternate;
-	   		$scope.movieIMDBid = res.alternate_ids.imdb;	   		
-	   		MainFactory.setIMDBid($scope.movieIMDBid);
-
-			MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
-				console.log(MainFactory.getIMDBid());
-				console.log("IMDB Fetch !");
-				$scope.moviePlot = res.Plot;
-				$scope.movieRuntime = res.Runtime;
-				$scope.IMDBRating = res.imdbRating;
-			});
+	   		console.log("This is a movie");
 		});
+	} else { 
+		console.log("This is NOT a movie"); 
+	}
 
+		MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
+				$scope.movieActors = res.actors;
+				$scope.moviePlot = res.simplePlot;
+				$scope.movieRuntime = res.runtime[0];
+				$scope.IMDBRating = res.rating;
+				$scope.poster = res.urlPoster;
+				$scope.movieTitle = res.title;
+				$scope.genres = res.genres;
+				$scope.movieDirectors = res.directors;
+				$scope.movieWriters = res.writers;
+				$scope.movieIMDBurl = res.urlIMDB;
 
+			
 
-
+				//SET RT LINK VIA SERIES TITLE
+				if(MainFactory.getType() == "series") {					
+					$scope.movieRTlink = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
+				}
+		});
 	}
 
 }
