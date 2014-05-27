@@ -46,11 +46,48 @@ body, html {
 
 /* SEARCH RESULTS */
 
+.search_container {
+	margin-top: 75px;
+}
+
+.movie_search_result {
+	border-bottom: 1px solid #ddd;
+	padding: 15px 0;
+
+}
+
+/*	.movie_search_result h2 {
+		margin-top: 0;
+	}*/
+
 .movie_title {
 	font-size: 24px;
-
+	width: 100%;
+	text-overflow: ellipsis;
+	float: left;
+	overflow: hidden;
+	white-space: nowrap;
+	margin: 0;
 }
 
 	.movie_title:hover {
 		cursor: pointer;
+		color: #999;
 	}
+
+.movie_year {
+	float: left;
+	clear: both;
+}
+
+.movie_actors {
+	float: left;
+	width: 100%;
+	font-size: 0.9em;
+}
+
+/* MOVIE RESULT PAGE */
+
+#result_container {
+	display: none;
+}

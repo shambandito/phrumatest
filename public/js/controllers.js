@@ -3,7 +3,7 @@ var ctrl = angular.module('controllers', [])
     .controller('LoginController', LoginController);
 
 
-function MainController($scope, $location, $rootScope, MainFactory) {
+function MainController($scope, $location, $rootScope, MainFactory, ngProgress) {
 	var show = false;
 
 
@@ -28,7 +28,7 @@ function MainController($scope, $location, $rootScope, MainFactory) {
     		//$scope.movies = res.movies;
     		$scope.rtMovies = res.movies;
 		});*/
-
+		ngProgress.start();
 		//IMDB SEARCH
 		MainFactory.getIMDBmovies_list(query).success(function (res) {
     		//$scope.movies = res.Search;
@@ -39,9 +39,12 @@ function MainController($scope, $location, $rootScope, MainFactory) {
     		if(movies != null) {
 	    		for (var i = 0; i < movies.length; i++) {
 	    			console.log(movies[i].Title)
-	    			MainFactory.getIMDBmovie_omdb(movies[i].imdbID).success(function (res) {
-	    				array[array.length] = res;
-	    			});
+	    			if(movies[i].Type != "episode" || movies[i].Type != "game"){
+		    			MainFactory.getIMDBmovie_omdb(movies[i].imdbID).success(function (res) {
+		    				array[array.length] = res;
+		    				ngProgress.complete();
+		    			});
+	    			}
 	    		};
 	    		
 	    		$scope.movies = array;
@@ -64,6 +67,8 @@ function MainController($scope, $location, $rootScope, MainFactory) {
 
 	$scope.singleMovieInit = function() {
 
+		ngProgress.start();
+
 	if(MainFactory.getType() == "movie") {	
 		MainFactory.getRTmovie(MainFactory.getRTurl()).success(function (res) {
 			//$scope.movieTitle = res.title;
@@ -82,6 +87,7 @@ function MainController($scope, $location, $rootScope, MainFactory) {
 	}
 
 		MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
+				document.getElementById("result_container").style.display = 'block';
 				$scope.movieActors = res.actors;
 				$scope.moviePlot = res.simplePlot;
 				$scope.movieRuntime = res.runtime[0];
@@ -93,7 +99,7 @@ function MainController($scope, $location, $rootScope, MainFactory) {
 				$scope.movieWriters = res.writers;
 				$scope.movieIMDBurl = res.urlIMDB;
 
-			
+				ngProgress.complete();
 
 				//SET RT LINK VIA SERIES TITLE
 				if(MainFactory.getType() == "series") {					
@@ -101,6 +107,16 @@ function MainController($scope, $location, $rootScope, MainFactory) {
 				}
 		});
 	}
+
+
+	$scope.check = function(data) {
+		if(data == "N/A") {
+			return false;
+		}
+
+		return true;
+	}
+
 
 }
 
