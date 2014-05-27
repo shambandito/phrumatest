@@ -39,11 +39,13 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress) 
     		if(movies != null) {
 	    		for (var i = 0; i < movies.length; i++) {
 	    			console.log(movies[i].Title)
-	    			if(movies[i].Type != "episode" || movies[i].Type != "game"){
-		    			MainFactory.getIMDBmovie_omdb(movies[i].imdbID).success(function (res) {
-		    				array[array.length] = res;
-		    				ngProgress.complete();
-		    			});
+	    			if(movies[i].Type !== "episode"){
+	    				if(movies[i].Type !== "game") {
+			    			MainFactory.getIMDBmovie_omdb(movies[i].imdbID).success(function (res) {
+			    				array[array.length] = res;
+			    				ngProgress.complete();
+			    			});
+		    			}
 	    			}
 	    		};
 	    		
