@@ -15,8 +15,17 @@
 			<p><span style="font-size: 0.7em; font-style: italic;" ng-repeat="genre in genres">{{genre + ", "}}</span></p>
 			<p>Plot:</p>
 			<p>{{ moviePlot }}</p>
-			<p>IMDB Rating: {{ IMDBRating }}</p>
-			<p>RT Rating: {{ movieCriticsRating }}</p>
+			<h3>Ratings</h3>
+			<div style="float: left; width: 50%">
+			<input type="text" value="0" class="knob2" ng-model="IMDBRating"/>
+				<p style="width: 200px; text-align: center">IMDB</p style="width: 200px; text-align: center">
+			</div>
+
+			<div style="float: left; width: 50%">
+			<input type="text" value="0" class="knob2" ng-model="movieCriticsRating"/>
+				<p style="width: 200px; text-align: center">Rotten Tomatoes</p>
+			</div>
+
 			<p>Concensus: {{movieConcensus}}</p>
 			<p style="font-size: 0.9em">Studio: {{movieStudio}}</p>
 			<p style="font-size: 0.9em">Runtime: {{movieRuntime}}</p>

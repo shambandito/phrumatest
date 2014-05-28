@@ -38,7 +38,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress) 
     		
     		if(movies != null) {
 	    		for (var i = 0; i < movies.length; i++) {
-	    			console.log(movies[i].Title)
 	    			if(movies[i].Type !== "episode"){
 	    				if(movies[i].Type !== "game") {
 			    			MainFactory.getIMDBmovie_omdb(movies[i].imdbID).success(function (res) {
@@ -93,7 +92,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress) 
 				$scope.movieActors = res.actors;
 				$scope.moviePlot = res.simplePlot;
 				$scope.movieRuntime = res.runtime[0];
-				$scope.IMDBRating = res.rating;
+				$scope.IMDBRating = res.rating * 10;
 				$scope.poster = res.urlPoster;
 				$scope.movieTitle = res.title;
 				$scope.genres = res.genres;
