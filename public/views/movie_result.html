@@ -6,7 +6,7 @@
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">
 				<li>
-					<div class="navbar navbar-form">
+					<div class="navbar navbar-form small_search">
 						<div class="input-group">
 							<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query)">
 							<span class="input-group-btn">
@@ -37,6 +37,7 @@
 			<p>Plot:</p>
 			<p>{{ moviePlot }}</p>
 
+
 			<p>Concensus: {{movieConcensus}}</p>
 			<p style="font-size: 0.9em">Studio: {{movieStudio}}</p>
 			<p style="font-size: 0.9em">Runtime: {{movieRuntime}}</p>
@@ -66,7 +67,7 @@
 		<div class="col-md-6">
 			<div class="moviedata">
 				<div class="knob_container">
-				<input type="text" value="0" class="knob" ng-model="IMDBRating"/>
+				<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
 					<p>IMDB</p>
 				</div>
 			</div>
@@ -74,11 +75,19 @@
 		<div class="col-md-6">
 			<div class="moviedata">
 				<div class="knob_container">
-				<input type="text" value="0" class="knob" ng-model="movieCriticsRating"/>
+				<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
 					<p>Rotten Tomatoes</p>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<div class="row">
+        <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+    </div>
+
+
+
+
 
 </div>

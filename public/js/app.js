@@ -1,25 +1,6 @@
-var app = angular.module('phruma', ['ngRoute', 'appRoutes', 'controllers', 'factory', 'ngProgress']);
+var app = angular.module('phruma', ['ngRoute', 'appRoutes', 'controllers', 'factory', 'ngProgress', 'highcharts-ng']);
 
 app.directive('knob', function() {
-  return {
-      restrict: 'C',
-      replace: 'true',
-      link: function(scope, element, attrs) {
-            $(element).knob({
-              'readOnly':true,
-              'min':0,
-              'max':100,
-              'angleOffset': -125,
-              'angleArc': 250
-
-            });
-
-            $(element).trigger("change");
-      }
-  };
-});
-
-app.directive('knob2', function() {
     return {
         restrict: 'C',
         require: 'ngModel',
@@ -53,4 +34,32 @@ app.directive('knob2', function() {
 
 });
 
+app.directive('barchart', function() {
+
+    return {
+
+        // required to make it work as an element
+        restrict: 'E',
+        template: '<div></div>',
+        replace: true,
+        // observe and manipulate the DOM
+        link: function($scope, element, attrs) {
+
+            var data = $scope[attrs.data],
+                xkey = $scope[attrs.xkey],
+                ykeys= $scope[attrs.ykeys],
+                labels= $scope[attrs.labels];
+
+            Morris.Bar({
+                    element: element,
+                    data: data,
+                    xkey: xkey,
+                    ykeys: ykeys,
+                    labels: labels
+                });
+        }
+
+    };
+
+});
 

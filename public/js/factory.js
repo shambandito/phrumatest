@@ -1,30 +1,30 @@
 angular.module('factory', []).factory('MainFactory', function($rootScope, $http){
     
- 	var movie = {};
- 	var RTurl = "";
- 	var query = "";
- 	var IMDBid = "";
- 	var type = "";
+    var movie = {};
+    var RTurl = "";
+    var query = "";
+    var IMDBid = "";
+    var type = "";
 
 
     movie.setQuery = function(value) {
 
-    	query=value;
+        query=value;
 
     } 
 
     movie.getQuery = function() {
 
-    	return query;
+        return query;
 
     } 
 
     movie.setType = function(value) {
-    	type=value;
+        type=value;
     } 
 
     movie.getType = function() {
-    	return type;
+        return type;
     }
 
     movie.getRTmovies_list = function(query) {
@@ -36,22 +36,29 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
 
     movie.setRTurl = function(value) {
 
-    	RTurl=value;
+        RTurl=value;
 
     } 
 
     movie.getRTurl = function() {
 
-    	return RTurl;
+        return RTurl;
 
     }  
 
     movie.getRTmovie = function(url) {
-    	url=url.substr(2);
+        url=url.substr(2);
       return $http({
         method: 'JSONP', 
         url: 'http://api.rottentomatoes.com/api/public/v1.0/movie_alias.json?apikey=4nktdb9q9p54q9krkmagc7u3&type=imdb&id=' + url + '&callback=JSON_CALLBACK'
       });
+    }
+
+    movie.getRTsimilar = function(id) {
+      return $http({
+        method: 'JSONP', 
+        url: 'http://api.rottentomatoes.com/api/public/v1.0/movies/' + id + '/similar.json?apikey=4nktdb9q9p54q9krkmagc7u3&limit=4&callback=JSON_CALLBACK'
+      });        
     }
 
     movie.getIMDBmovies_list = function(query) {
@@ -70,13 +77,13 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
 
     movie.setIMDBid = function(value) {
 
-    	IMDBid=value;
+        IMDBid=value;
 
     } 
 
     movie.getIMDBid = function() {
 
-    	return IMDBid;
+        return IMDBid;
 
     } 
 

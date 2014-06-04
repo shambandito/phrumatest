@@ -37,17 +37,8 @@ body, html {
 	}
 
 .small_search {
-	position: absolute;
-	top: 30px;
-	right: 50px;
-	width: 350px;
+	width: 300px;
 }
-
-	.small_searchbar {
-
-	}
-
-
 
 /* SEARCH RESULTS */
 
@@ -143,3 +134,5 @@ body, html {
 #moviedata-container {
 	margin-bottom: 2%;
 }
+
+

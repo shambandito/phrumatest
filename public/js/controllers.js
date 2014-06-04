@@ -73,6 +73,14 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 	$scope.singleMovieInit = function() {
 
+
+
+
+
+
+
+
+
 		ngProgress.start();
 
 		if(MainFactory.getType() == "movie") {	
@@ -118,6 +126,51 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				$scope.movieWriters = res.writers;
 				$scope.movieIMDBurl = res.urlIMDB;
 				$scope.movieLocations = res.filmingLocations;
+
+
+				// MOVIE GROSS CHART STUFF
+				var movieGross = res.business.gross;
+				var array = [];
+
+	    		if(movieGross != null) {
+		    		for (var i = 0; i < movieGross.length; i++) {
+		    			if(movieGross[i].country == "USA"){
+		    				array[array.length] = movieGross[i];
+		    			}
+		    		};
+
+		    		$scope.movieUSGross = array;
+
+		    		var dataForChartY = [];
+		    		var dataForChartX = [];
+					
+					for (var i = 0; i < array.length; i++) {
+						dataForChartY[dataForChartY.length] = [array[i].day + "." + array[i].month + "." + array[i].year, parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
+						dataForChartX[dataForChartX.length] = [array[i].day + "." + array[i].month + "." + array[i].year]
+					}
+
+					dataForChartY.reverse();
+					dataForChartX.reverse();	
+
+				    $scope.chartConfig = {
+				        options: {
+				            chart: {
+				                type: 'spline'
+				            }
+				        },
+				        xAxis: {
+				        	categories: dataForChartX
+						},
+				        series: [{
+				        	name: "Gross",
+				            data: dataForChartY
+				        }],
+				        title: {
+				            text: 'US Gross'
+				        },
+				    };
+
+				}
 
 				ngProgress.complete();
 
