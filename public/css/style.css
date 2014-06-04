@@ -135,4 +135,8 @@ body, html {
 	margin-bottom: 2%;
 }
 
+.similar_movie img:hover, span:hover {
+	cursor: pointer;
+}
+
 

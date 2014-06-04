@@ -65,22 +65,19 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		MainFactory.setRTurl(url);
 
 		MainFactory.setType(type);
-		MainFactory.setIMDBid(url)
+		MainFactory.setIMDBid(url);
 
-		$location.path('/result');
+		if($location.path() == "/result") {
+			$scope.singleMovieInit();
+		} else {
+			$location.path("/result");
+		}
 
 	}
 
 	$scope.singleMovieInit = function() {
-
-
-
-
-
-
-
-
-
+		document.getElementById("result_container").style.display = 'none';
+		window.scrollTo(0, 0);
 		ngProgress.start();
 
 		if(MainFactory.getType() == "movie") {	

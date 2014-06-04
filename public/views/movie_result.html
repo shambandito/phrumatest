@@ -54,9 +54,9 @@
 	<div class="row">
 		<h2>Similar Movies</h2>
 		<div class="col-md-12" id="similar_container">
-			<div class="col-md-3 col-sm-6" ng-repeat="similarMovie in similarMovies" style="text-align: center">
-				<img src="{{similarMovie.posters.profile}}">
-				<span style="display: block;">{{similarMovie.title}}</span>
+			<div class="col-md-3 col-sm-6 similar_movie" ng-repeat="similarMovie in similarMovies" style="text-align: center">
+				<img src="{{similarMovie.posters.profile}}" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">
+				<span style="display: block;" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">{{similarMovie.title}}</span>
 			</div>
 
 		</div>
