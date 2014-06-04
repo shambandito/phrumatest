@@ -3,9 +3,11 @@ var ctrl = angular.module('controllers', [])
     .controller('LoginController', LoginController);
 
 
-function MainController($scope, $location, $rootScope, MainFactory, ngProgress) {
-	var show = false;
 
+
+function MainController($scope, $location, $rootScope, MainFactory, ngProgress, $timeout) {
+
+	var show = false;
 
 	$scope.doSearch = function(query) {
 
@@ -16,26 +18,30 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress) 
 		} else {
 			$location.path("/search");
 		}
+	}
 
+	$scope.pressEnter = function(event, query) {
+
+		if(event.which == 13) {
+
+			console.log("pressed enter");
+			$scope.doSearch(query);
+		}
 	}
 
 	$scope.searchInit = function() {
 
 		var query = MainFactory.getQuery();
 
-		//ROTTEN TOMATOES SEARCH
-/*		MainFactory.getRTmovies_list(query).success(function (res) {
-    		//$scope.movies = res.movies;
-    		$scope.rtMovies = res.movies;
-		});*/
 		ngProgress.start();
+
 		//IMDB SEARCH
 		MainFactory.getIMDBmovies_list(query).success(function (res) {
-    		//$scope.movies = res.Search;
+    		
     		var array = [];
     		var movies= res.Search;
-    		//console.log(movies);
     		
+    		//FILL ARRAY WITH SEARCH RESULTS (ONLY MOVIES + TV SERIES)
     		if(movies != null) {
 	    		for (var i = 0; i < movies.length; i++) {
 	    			if(movies[i].Type !== "episode"){
@@ -49,7 +55,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress) 
 	    		};
 	    		
 	    		$scope.movies = array;
-	    		//console.log($scope.movies);
 			}
 		});
 
@@ -70,23 +75,36 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress) 
 
 		ngProgress.start();
 
-	if(MainFactory.getType() == "movie") {	
-		MainFactory.getRTmovie(MainFactory.getRTurl()).success(function (res) {
-			//$scope.movieTitle = res.title;
-	   		$scope.movieCriticsRating = res.ratings.critics_score;
-	   		//$scope.movieDirectors = res.abridged_directors;
-	   		$scope.movieSite = res.Website;
-	   		$scope.moviePoster = res.posters.detailed;
-	   		$scope.movieStudio = res.studio;
-	   		$scope.movieConcensus = res.critics_consensus;
-	   		//LINKS
-	   		$scope.movieRTlink = res.links.alternate;
-	   		console.log("This is a movie");
-		});
-	} else { 
-		console.log("This is NOT a movie"); 
-	}
+		if(MainFactory.getType() == "movie") {	
 
+			//GET ROTTEN TOMATOES MOVIE JSON
+			MainFactory.getRTmovie(MainFactory.getRTurl()).success(function (res) {
+				$scope.rtMovieID = res.id;
+		   		$scope.movieCriticsRating = res.ratings.critics_score;
+		   		//$scope.movieDirectors = res.abridged_directors;
+		   		$scope.movieSite = res.Website;
+		   		$scope.moviePoster = res.posters.detailed;
+		   		$scope.movieStudio = res.studio;
+		   		$scope.movieConcensus = res.critics_consensus;
+		   		//LINKS
+		   		$scope.movieRTlink = res.links.alternate;
+		   		console.log("This is a movie");
+
+
+		   		//GET SIMILAR MOVIES
+				MainFactory.getRTsimilar($scope.rtMovieID).success(function (res) {
+					$scope.similarMovies = res.movies;
+				});
+
+
+			});
+
+
+		} else { 
+			console.log("This is NOT a movie"); 
+		}
+
+		//GET IMDB MOVIE JSON
 		MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
 				document.getElementById("result_container").style.display = 'block';
 				$scope.movieActors = res.actors;
@@ -99,6 +117,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress) 
 				$scope.movieDirectors = res.directors;
 				$scope.movieWriters = res.writers;
 				$scope.movieIMDBurl = res.urlIMDB;
+				$scope.movieLocations = res.filmingLocations;
 
 				ngProgress.complete();
 
@@ -135,5 +154,5 @@ function LoginController($scope, $http, $location) {
 
 		});
 	}
-
 }
+
