@@ -1,15 +1,24 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="border: none;">
 		<div class="container">
+
 			<div class="navbar-header">
+		      <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
 				<a href="/" class="navbar-brand">phruma</a>
 			</div>
-		<div class="collapse navbar-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#">register</a></li>
-				<li><button class="btn btn-default navbar-btn"><a href="#">login</a></button></li>
-			</ul>
+
+			<div class="collapse navbar-collapse" collapse="isCollapsed">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">register</a></li>
+					<li><button class="btn btn-default navbar-btn" ng-click="openModal('lg')">login</button></li>
+				</ul>
+			</div>
+
 		</div>
-	</div>
 </nav>
 
 <div class="col-md-10 col-md-offset-1 big_search_container" >
@@ -19,6 +28,21 @@
 	      	<button class="btn btn-default big_searchbar_button" type="button" ng-click="doSearch(query)"><span class="glyphicon glyphicon-search"></span></button>
 	    </span>
 	</div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="login_modal">
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">I'm a modal!</h3>
+        </div>
+        <div class="modal-body">
+        	<h2>HEHEHE</h2>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" ng-click="cancel()">Close</button>
+        </div>
+    </script>
 </div>
 
 

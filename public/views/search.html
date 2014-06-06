@@ -1,32 +1,42 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="border: none;">
-	<div class="container">
-		<div class="navbar-header">
-			<a href="/" class="navbar-brand">phruma</a>
-		</div>
-		<div class="collapse navbar-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li>
-					<div class="navbar navbar-form small_search">
-						<div class="input-group">
-							<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query)">
-							<span class="input-group-btn">
-								<button class="btn btn-default small_searchbar_button" type="button" ng-click="doSearch(query)"><span class="glyphicon glyphicon-search"></span></button>
-							</span>
+		<div class="container">
+
+			<div class="navbar-header">
+		      <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+				<a href="/" class="navbar-brand">phruma</a>
+			</div>
+
+			<div class="collapse navbar-collapse" collapse="isCollapsed">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<div class="navbar navbar-form small_search">
+							<div class="input-group">
+								<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query)">
+								<span class="input-group-btn">
+									<button class="btn btn-default small_searchbar_button" type="button" ng-click="doSearch(query)"><span class="glyphicon glyphicon-search"></span></button>
+								</span>
+							</div>
 						</div>
-					</div>
-				</li>
-				<li><a href="#">register</a></li>
-				<li><button class="btn btn-default navbar-btn"><a href="#">login</a></button></li>
-			</ul>
+					</li>
+					<li><a href="#">register</a></li>
+					<li><button class="btn btn-default navbar-btn" ng-click="openModal('lg')">login</button></li>
+				</ul>
+			</div>
+
 		</div>
-	</div>
 </nav>
 
 <div class="col-md-10 col-md-offset-1 search_container" ng-init="searchInit()">
-	<div class="text-center" style="padding-bottom: 20px">
-		<!-- <h1>Search Results</h1> -->
+	<div ng-hide="errorMessage == ''" class="text-center" style="padding-top: 300px">
+		<h3>{{ errorMessage }}</h3>
 	</div>
 	<div class="row movie_search_result" ng-repeat="movie in movies" >
+
 		<div class="movieinfo-left col-md-1 col-sm-2 col-xs-4">
 			<img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="singleMovieSearch(movie.imdbID, movie.Type)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
 		</div>
@@ -41,4 +51,19 @@
 			<p class="movie_actors" ng-show="check(movie.Actors)">{{movie.Actors}}</p>
 		</div>
 	</div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="login_modal">
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">I'm a modal!</h3>
+        </div>
+        <div class="modal-body">
+        	<h2>HEHEHE</h2>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" ng-click="cancel()">Close</button>
+        </div>
+    </script>
 </div>

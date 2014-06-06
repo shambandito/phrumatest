@@ -1,14 +1,44 @@
 var ctrl = angular.module('controllers', [])
     .controller('MainController', MainController)
-    .controller('LoginController', LoginController);
+    .controller('LoginController', LoginController)
+    .controller('ModalInstanceController', ModalInstanceController);
 
 
 
 
-function MainController($scope, $location, $rootScope, MainFactory, ngProgress, $timeout) {
+function MainController($scope, $location, $rootScope, MainFactory, ngProgress, $timeout, $modal) {
 
 	var show = false;
 
+	//TOGGLE FOR MENU COLLAPSE
+	$scope.isCollapsed = true;
+
+	//OPEN MODAL FUNCTION
+	$scope.openModal = function (size) {
+
+	    var modalInstance = $modal.open({
+	      templateUrl: 'myModalContent.html',
+	      controller: ModalInstanceController,
+	      size: size,
+	      resolve: {
+	        items: function () {
+	          return $scope.items;
+	        }
+	      }
+	    });
+	};
+
+	// PRESS ENTER TO SEARCH FUNCTION
+	$scope.pressEnter = function(event, query) {
+
+		if(event.which == 13) {
+
+			console.log("pressed enter");
+			$scope.doSearch(query);
+		}
+	}
+
+	//START SEARCH FUNCTION
 	$scope.doSearch = function(query) {
 
 		MainFactory.setQuery(query);
@@ -20,18 +50,11 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		}
 	}
 
-	$scope.pressEnter = function(event, query) {
-
-		if(event.which == 13) {
-
-			console.log("pressed enter");
-			$scope.doSearch(query);
-		}
-	}
-
+	// SEARCH IS DONE HERE
 	$scope.searchInit = function() {
 
 		var query = MainFactory.getQuery();
+		$scope.errorMessage = "";
 
 		ngProgress.start();
 
@@ -40,32 +63,44 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
     		
     		var array = [];
     		var movies= res.Search;
-    		
-    		//FILL ARRAY WITH SEARCH RESULTS (ONLY MOVIES + TV SERIES)
-    		if(movies != null) {
-	    		for (var i = 0; i < movies.length; i++) {
-	    			if(movies[i].Type !== "episode"){
-	    				if(movies[i].Type !== "game") {
-			    			MainFactory.getIMDBmovie_omdb(movies[i].imdbID).success(function (res) {
-			    				array[array.length] = res;
-			    				ngProgress.complete();
-			    			});
+
+    		if(res.Response == "False") {
+				$scope.errorMessage = "Sorry, no results could be found! Please try again.";
+				ngProgress.reset();
+				$scope.movies = null;
+    		} else {	
+	    		//FILL ARRAY WITH SEARCH RESULTS (ONLY MOVIES + TV SERIES)
+	    		if(movies != null) {
+		    		for (var i = 0; i < movies.length; i++) {
+		    			if(movies[i].Type !== "episode"){
+		    				if(movies[i].Type !== "game") {
+				    			MainFactory.getIMDBmovie_omdb(movies[i].imdbID).success(function (res) {
+				    				array[array.length] = res;
+				    				ngProgress.complete();
+				    			}).error(function(data, status, headers, config) {
+									alert("error!");
+									ngProgress.reset();
+						    	});
+			    			}
 		    			}
-	    			}
-	    		};
-	    		
-	    		$scope.movies = array;
-			}
-		});
+		    		};
+		    		
+		    		$scope.movies = array;
+				}
+    		}
+
+		}).error(function(data, status, headers, config) {
+			alert("error!");
+    	});
 
 	}
 
-	$scope.singleMovieSearch = function(url, type) {
+	//START SETTING UP RESULT PAGE
+	$scope.singleMovieSearch = function(id, type) {
 
-		MainFactory.setRTurl(url);
-
+		//MainFactory.setRTurl(url);
 		MainFactory.setType(type);
-		MainFactory.setIMDBid(url);
+		MainFactory.setIMDBid(id);
 
 		if($location.path() == "/result") {
 			$scope.singleMovieInit();
@@ -75,110 +110,121 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 	}
 
+	//RESULT PAGE IS GENERATED HERE
 	$scope.singleMovieInit = function() {
-		document.getElementById("result_container").style.display = 'none';
-		window.scrollTo(0, 0);
-		ngProgress.start();
 
-		if(MainFactory.getType() == "movie") {	
+		$scope.movieQuery = MainFactory.getQuery();
 
-			//GET ROTTEN TOMATOES MOVIE JSON
-			MainFactory.getRTmovie(MainFactory.getRTurl()).success(function (res) {
-				$scope.rtMovieID = res.id;
-		   		$scope.movieCriticsRating = res.ratings.critics_score;
-		   		//$scope.movieDirectors = res.abridged_directors;
-		   		$scope.movieSite = res.Website;
-		   		$scope.moviePoster = res.posters.detailed;
-		   		$scope.movieStudio = res.studio;
-		   		$scope.movieConcensus = res.critics_consensus;
-		   		//LINKS
-		   		$scope.movieRTlink = res.links.alternate;
-		   		console.log("This is a movie");
+		$scope.errorMessage = "Search for a movie or TV show to get results";
+
+		$scope.isMovie = false;
+
+		if($scope.movieQuery != "") {
+
+			$scope.errorMessage = "";
+
+			document.getElementById("result_container").style.display = 'none';
+			window.scrollTo(0, 0);
+			ngProgress.start();
+
+			if(MainFactory.getType() == "movie") {	
+
+				$scope.isMovie = true;
+
+				//GET ROTTEN TOMATOES MOVIE JSON
+				MainFactory.getRTmovie(MainFactory.getIMDBid()).success(function (res) {
+					$scope.rtMovieID = res.id;
+			   		$scope.movieCriticsRating = res.ratings.critics_score;
+			   		//$scope.movieDirectors = res.abridged_directors;
+			   		$scope.movieSite = res.Website;
+			   		$scope.moviePoster = res.posters.detailed;
+			   		$scope.movieStudio = res.studio;
+			   		$scope.movieConcensus = res.critics_consensus;
+			   		//LINKS
+			   		$scope.movieRTlink = res.links.alternate;
 
 
-		   		//GET SIMILAR MOVIES
-				MainFactory.getRTsimilar($scope.rtMovieID).success(function (res) {
-					$scope.similarMovies = res.movies;
+			   		//GET SIMILAR MOVIES
+					MainFactory.getRTsimilar($scope.rtMovieID).success(function (res) {
+						$scope.similarMovies = res.movies;
+					});
+
+
 				});
+			}
+
+			//GET IMDB MOVIE JSON
+			MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
+					document.getElementById("result_container").style.display = 'block';
+					$scope.movieActors = res.actors;
+					$scope.moviePlot = res.simplePlot;
+					$scope.movieRuntime = res.runtime[0];
+					$scope.IMDBRating = res.rating * 10;
+					$scope.poster = res.urlPoster;
+					$scope.movieTitle = res.title;
+					$scope.genres = res.genres;
+					$scope.movieDirectors = res.directors;
+					$scope.movieWriters = res.writers;
+					$scope.movieIMDBurl = res.urlIMDB;
+					$scope.movieLocations = res.filmingLocations;
 
 
-			});
+					// MOVIE GROSS CHART STUFF
+					var movieGross = res.business.gross;
+					var array = [];
 
+		    		if(movieGross != null) {
+			    		for (var i = 0; i < movieGross.length; i++) {
+			    			if(movieGross[i].country == "USA"){
+			    				array[array.length] = movieGross[i];
+			    			}
+			    		};
 
-		} else { 
-			console.log("This is NOT a movie"); 
-		}
+			    		$scope.movieUSGross = array;
 
-		//GET IMDB MOVIE JSON
-		MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
-				document.getElementById("result_container").style.display = 'block';
-				$scope.movieActors = res.actors;
-				$scope.moviePlot = res.simplePlot;
-				$scope.movieRuntime = res.runtime[0];
-				$scope.IMDBRating = res.rating * 10;
-				$scope.poster = res.urlPoster;
-				$scope.movieTitle = res.title;
-				$scope.genres = res.genres;
-				$scope.movieDirectors = res.directors;
-				$scope.movieWriters = res.writers;
-				$scope.movieIMDBurl = res.urlIMDB;
-				$scope.movieLocations = res.filmingLocations;
+			    		var dataForChartY = [];
+			    		var dataForChartX = [];
+						
+						for (var i = 0; i < array.length; i++) {
+							dataForChartY[dataForChartY.length] = [array[i].day + "." + array[i].month + "." + array[i].year, parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
+							dataForChartX[dataForChartX.length] = [array[i].day + "." + array[i].month + "." + array[i].year]
+						}
 
+						dataForChartY.reverse();
+						dataForChartX.reverse();	
 
-				// MOVIE GROSS CHART STUFF
-				var movieGross = res.business.gross;
-				var array = [];
+					    $scope.chartConfig = {
+					        options: {
+					            chart: {
+					                type: 'spline'
+					            }
+					        },
+					        xAxis: {
+					        	categories: dataForChartX
+							},
+					        series: [{
+					        	name: "Gross",
+					            data: dataForChartY
+					        }],
+					        title: {
+					            text: 'US Gross'
+					        },
+					    };
 
-	    		if(movieGross != null) {
-		    		for (var i = 0; i < movieGross.length; i++) {
-		    			if(movieGross[i].country == "USA"){
-		    				array[array.length] = movieGross[i];
-		    			}
-		    		};
-
-		    		$scope.movieUSGross = array;
-
-		    		var dataForChartY = [];
-		    		var dataForChartX = [];
-					
-					for (var i = 0; i < array.length; i++) {
-						dataForChartY[dataForChartY.length] = [array[i].day + "." + array[i].month + "." + array[i].year, parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
-						dataForChartX[dataForChartX.length] = [array[i].day + "." + array[i].month + "." + array[i].year]
 					}
 
-					dataForChartY.reverse();
-					dataForChartX.reverse();	
+					ngProgress.complete();
 
-				    $scope.chartConfig = {
-				        options: {
-				            chart: {
-				                type: 'spline'
-				            }
-				        },
-				        xAxis: {
-				        	categories: dataForChartX
-						},
-				        series: [{
-				        	name: "Gross",
-				            data: dataForChartY
-				        }],
-				        title: {
-				            text: 'US Gross'
-				        },
-				    };
+					//SET RT LINK VIA SERIES TITLE
+					if(MainFactory.getType() == "series") {					
+						$scope.movieRTlink = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
+					}
+			});
+		}
 
-				}
-
-				ngProgress.complete();
-
-				//SET RT LINK VIA SERIES TITLE
-				if(MainFactory.getType() == "series") {					
-					$scope.movieRTlink = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
-				}
-		});
 	}
 
-
+	//CHECK IF DATA HAS BEEN PROPERLY RETURNED
 	$scope.check = function(data) {
 		if(data == "N/A") {
 			return false;
@@ -189,8 +235,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 
 }
-
-
 
 function LoginController($scope, $http, $location) {
 	$scope.doLogin = function() {
@@ -206,3 +250,9 @@ function LoginController($scope, $http, $location) {
 	}
 }
 
+//CONTROLLER FOR MODAL OBJECTS
+function ModalInstanceController($scope, $modalInstance) {
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};

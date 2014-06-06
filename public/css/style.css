@@ -4,6 +4,9 @@ body, html {
 	background: #f9f9f9;
 }
 
+/* IMPORTANT FOR ANGULAR BOOTSTRAP UI */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
 .navbar {
 	background: #f9f9f9;
 	opacity: 0.9;
