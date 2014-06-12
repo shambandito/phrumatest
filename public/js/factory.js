@@ -3,7 +3,9 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
     var movie = {};
     var RTurl = "";
     var query = "";
+    var compareQuery = "";
     var IMDBid = "";
+    var IMDBid_2 = "";
     var type = "";
 
 
@@ -16,6 +18,18 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
     movie.getQuery = function() {
 
         return query;
+
+    }
+
+    movie.setCompareQuery = function(value) {
+
+        compareQuery=value;
+
+    } 
+
+    movie.getCompareQuery = function() {
+
+        return compareQuery;
 
     } 
 
@@ -84,6 +98,18 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
     movie.getIMDBid = function() {
 
         return IMDBid;
+
+    } 
+
+    movie.setIMDBid_movie2 = function(value) {
+
+        IMDBid_2=value;
+
+    } 
+
+    movie.getIMDBid_movie2 = function() {
+
+        return IMDBid_2;
 
     } 
 

@@ -143,3 +143,41 @@ body, html {
 }
 
 
+#compare_search_overlay {
+	display: none;
+	background: rgba(255,255,255,0.95);
+	width: 100%;
+	min-height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 9000;
+}
+
+.close_overlay {
+	position: absolute;
+	right: 25px;
+	top: 25px;
+	font-size: 50px;
+	opacity: 0.75;
+}
+
+	.close_overlay:hover {
+		cursor: pointer;
+		opacity: 1;
+	}
+
+.compare_search_input {
+	width: 80%;
+	margin: 0 auto;
+	margin-bottom: 50px;
+}
+
+.compare_searchbar {
+	height: 50px;
+	font-size: 20px;
+}
+
+.compare_searchbar_button {
+	height: 50px;
+}

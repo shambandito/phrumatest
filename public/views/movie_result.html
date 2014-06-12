@@ -61,6 +61,8 @@
 
 			<p >{{location}}</p>
 
+			<button class="btn btn-default" type="button" ng-click="openCompareSearch('lg')">Compare Movie</button>
+
 		</div>
 
 	</div>
@@ -99,6 +101,43 @@
 	<div class="row">
         <highchart id="chart1" config="chartConfig" class="span10"></highchart>
     </div>
+
+</div>
+
+
+<!-- OVERLAY FOR COMPARE SEARCH -->
+<div id="compare_search_overlay">
+	<h1>Search</h1>
+	<span class="close_overlay" ng-click="closeCompareSearch()">X</span>
+	<div class="col-md-10 col-md-offset-1">
+		<div ng-hide="errorMessage == ''" class="text-center" style="padding-top: 300px">
+			<h3>{{ errorMessage }}</h3>
+		</div>
+		<div class="row">
+				<div class="input-group compare_search_input">
+					<input type="text" ng-model="compareSearchQuery" class="compare_searchbar form-control" placeholder="Search for a Movie or TV Show"/>
+					<span class="input-group-btn">
+				      	<button class="btn btn-default compare_searchbar_button" type="button" ng-click="doCompareSearch()"><span class="glyphicon glyphicon-search"></span></button>
+				    </span>
+				</div>
+		</div>
+		<div class="row movie_search_result" ng-repeat="movie in compareSearchMovies" >
+
+			<div class="movieinfo-left col-md-1 col-sm-2 col-xs-4">
+				<img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="doCompare(movie.imdbID, movie.Type)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
+			</div>
+			<div class="movieinfo-right col-md-11 col-sm-10 col-xs-8">
+
+				<h2 class="movie_title" ng-click="doCompare(movie.imdbID, movie.Type)">{{movie.Title}} </h2>
+
+				<span class="movie_year"> ({{movie.Year}})</span>
+
+				<p style="font-size: 0.9em"></p>
+
+				<p class="movie_actors" ng-show="check(movie.Actors)">{{movie.Actors}}</p>
+			</div>
+		</div>
+	</div>
 
 </div>
 

@@ -19,6 +19,11 @@
 			controller: 'MainController'
 		})
 
+		.when('/compare', {
+			templateUrl: 'views/compare.html',
+			controller: 'MainController'
+		})
+
 		.when('/login', {
 			templateUrl: 'views/login.html',
 			controller: 'LoginController'
