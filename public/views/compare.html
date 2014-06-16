@@ -50,7 +50,7 @@
 				<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
 				<p>IMDB</p>
 			</div>
-			<div class="knob_container">
+			<div class="knob_container" ng-show="isMovie">
 				<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
 				<p>Rotten Tomatoes</p>
 			</div>
@@ -67,7 +67,7 @@
 				<input type="text" value="N/A" class="knob" ng-model="IMDBRating_compare"/>
 				<p>IMDB</p>
 			</div>
-			<div class="knob_container">
+			<div class="knob_container" ng-show="isMovie">
 				<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating_compare"/>
 				<p>Rotten Tomatoes</p>
 			</div>

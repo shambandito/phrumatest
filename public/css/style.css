@@ -90,11 +90,15 @@ body, html {
 #result_container {
 	display: none;
 	margin-top: 75px;
+
+	-webkit-transition: opacity 1s ease-in;
+	-moz-transition: opacity 1s ease-in;
+	-o-transition: opacity 1s ease-in;
+	-ms-transition: opacity 1s ease-in;
+	transition: opacity 1s ease-in;
 }
 
 .knob_container {
-	float: left; 
-	width: 50%;
 }
 
 	.knob_container > p {
@@ -103,15 +107,43 @@ body, html {
 		font-weight: bold;
 	}
 
-#similar_container {
-	background: #ddd;
-	padding-top: 25px;
-	margin-bottom: 2%;
-	position: relative;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
+/* SIMILAR MOVIE STUFF */
+
+.similar_movie {
+	text-align: left;
+	height: 300px;
 }
+
+	.similar_movie h3 {
+		margin-top: 0;
+	}
+
+.carousel-control.right, .carousel-control.left {
+	color: #000;
+	background: none;
+
+	display: none;
+}
+
+.carousel-indicators {
+	margin-bottom: 0;
+	bottom: 0;
+}
+
+.carousel-indicators .active {
+	background: #000;
+	border: 1px solid rgba(0,0,0,1);
+	width: 17px;
+	height: 17px;
+	margin: 2px;
+}
+
+	.carousel-indicators li {
+		border: 1px solid rgba(0,0,0,0.8);
+		width: 15px;
+		height: 15px;
+		margin: 3px;
+	}
 
 .movieposter {
 	width: 100%;
@@ -152,6 +184,7 @@ body, html {
 	top: 0;
 	left: 0;
 	z-index: 9000;
+	overflow-x: hidden;
 }
 
 .close_overlay {

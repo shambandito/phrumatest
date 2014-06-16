@@ -75,6 +75,15 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
       });        
     }
 
+    movie.getRTreviews_top = function(id) {
+      return $http({
+        method: 'JSONP', 
+        url: 'http://api.rottentomatoes.com/api/public/v1.0/movies/' + id + '/reviews.json?apikey=4nktdb9q9p54q9krkmagc7u3&limit=4&review_type=top_critic&page_limit=10&callback=JSON_CALLBACK'
+      });        
+    }
+
+
+
     movie.getIMDBmovies_list = function(query) {
       return $http({
         method: 'JSONP', 

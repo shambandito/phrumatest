@@ -28,20 +28,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	    });
 	};
 
-	$scope.openModalCompareSearch = function (size) {
-
-	    var modalInstance = $modal.open({
-	      templateUrl: 'compareSearchModal.html',
-	      controller: ModalInstanceController,
-	      size: size,
-	      resolve: {
-	        items: function () {
-	          return $scope.items;
-	        }
-	      }
-	    });
-	};
-
 	// PRESS ENTER TO SEARCH FUNCTION
 	$scope.pressEnter = function(event, query) {
 
@@ -139,6 +125,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			$scope.errorMessage = "";
 
 			document.getElementById("result_container").style.display = 'none';
+			document.getElementById("result_container").style.opacity = '0';
 			window.scrollTo(0, 0);
 			ngProgress.start();
 
@@ -150,27 +137,40 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				MainFactory.getRTmovie(MainFactory.getIMDBid()).success(function (res) {
 					$scope.rtMovieID = res.id;
 			   		$scope.movieCriticsRating = res.ratings.critics_score;
-			   		//$scope.movieDirectors = res.abridged_directors;
+			   		$scope.movieUsersRating = res.ratings.audience_score;
 			   		$scope.movieSite = res.Website;
 			   		$scope.moviePoster = res.posters.detailed;
 			   		$scope.movieStudio = res.studio;
 			   		$scope.movieConcensus = res.critics_consensus;
-			   		//LINKS
 			   		$scope.movieRTlink = res.links.alternate;
 
 
 			   		//GET SIMILAR MOVIES
 					MainFactory.getRTsimilar($scope.rtMovieID).success(function (res) {
 						$scope.similarMovies = res.movies;
+					}).error(function(data, status, headers, config) {
+									alert("error!");
+									ngProgress.reset();
+					});;
+
+			   		//GET TOP CRITICS REVIEWS
+					MainFactory.getRTreviews_top($scope.rtMovieID).success(function (res) {
+						$scope.criticReviews = res.reviews;
+						document.getElementById("result_container").style.display = 'block';
+					}).error(function(data, status, headers, config) {
+									alert("error!");
+									ngProgress.reset();
 					});
 
-
-				});
+				}).error(function(data, status, headers, config) {
+									alert("error!");
+									ngProgress.reset();
+				});;
 			}
 
 			//GET IMDB MOVIE JSON
 			MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
-					document.getElementById("result_container").style.display = 'block';
+
 					$scope.movieIMDBid = MainFactory.getIMDBid();
 					$scope.movieActors = res.actors;
 					$scope.moviePlot = res.simplePlot;
@@ -229,26 +229,35 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 					}
 
-					ngProgress.complete();
-
 					//SET RT LINK VIA SERIES TITLE
 					if(MainFactory.getType() == "series") {					
 						$scope.movieRTlink = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
 					}
+
+					ngProgress.complete();
+					document.getElementById("result_container").style.opacity = '1';
+					document.getElementById("result_container").style.display = 'block';
+
+
+
 			});
+
+
+
 		}
 
 	}
 
 	$scope.openCompareSearch = function() {
 		document.getElementById("compare_search_overlay").style.display = 'block';
-		document.body.style.overflow = "hidden";
+		document.getElementById("result_container").style.display = 'none';		
+		document.getElementById("result_container").style.opacity = '0';
 	}
 
 	$scope.closeCompareSearch = function() {
 				document.getElementById("compare_search_overlay").style.display = 'none';	
-
-				document.body.style.overflow = "auto";	
+				document.getElementById("result_container").style.display = 'block';
+				document.getElementById("result_container").style.opacity = '1';
 	}
 
 	$scope.doCompareSearch = function() {
