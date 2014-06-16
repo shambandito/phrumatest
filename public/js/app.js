@@ -1,4 +1,4 @@
-var app = angular.module('phruma', ['ngRoute', 'appRoutes', 'controllers', 'factory', 'ngProgress', 'highcharts-ng', 'ui.bootstrap']);
+var app = angular.module('phruma', ['ngRoute', 'appRoutes', 'controllers', 'factory', 'ngProgress', 'highcharts-ng', 'ui.bootstrap', 'ngTouch']);
 
 app.directive('knob', function() {
     return {
