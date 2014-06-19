@@ -1,4 +1,5 @@
-angular.module('factory', []).factory('MainFactory', function($rootScope, $http){
+angular.module('factory', [])
+.factory('MainFactory', function($rootScope, $http){
     
     var movie = {};
     var RTurl = "";
@@ -7,6 +8,8 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
     var IMDBid = "";
     var IMDBid_2 = "";
     var type = "";
+    var message = "";
+    var isAuthenticated = false;
 
 
     movie.setQuery = function(value) {
@@ -129,11 +132,37 @@ angular.module('factory', []).factory('MainFactory', function($rootScope, $http)
       });
     }  
 
+    movie.setMessage = function(messageauthen){
+        message =  messageauthen;
+    }
 
+    movie.getMessage = function(){
+        return message;
+    }
+    movie.setAuthen = function(authen){
+        isAuthenticated = authen;
+    }
 
-
-
-
+    movie.getAuthen = function(){
+        return isAuthenticated;
+    }
 
     return movie;           
+})
+.factory('authInterceptor', function ($rootScope, $q, $window) {
+return {
+    request: function (config) {
+      config.headers = config.headers || {};
+      if ($window.sessionStorage.token) {
+        config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+      }
+      return config;
+    },
+    responseError: function (rejection) {
+      if (rejection.status === 401) {
+        // handle the case where the user is not authenticated
+      }
+      return $q.reject(rejection);
+    }
+  };
 });

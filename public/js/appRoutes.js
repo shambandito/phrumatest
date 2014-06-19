@@ -38,4 +38,8 @@
 
 	$locationProvider.html5Mode(true);
 
-}]);
+}])
+.config(function ($httpProvider) {
+	console.log("Moinsen");
+  	$httpProvider.interceptors.push('authInterceptor');
+});

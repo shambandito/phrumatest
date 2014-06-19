@@ -6,7 +6,7 @@ var ctrl = angular.module('controllers', [])
 
 
 
-function MainController($scope, $location, $rootScope, MainFactory, ngProgress, $timeout, $modal) {
+function MainController($scope, $location, $rootScope, MainFactory, ngProgress, $timeout, $modal , $window,$http) {
 
 	var show = false;
 
@@ -538,7 +538,29 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		return true;
 	}
 
+	$scope.getAuthen =function(){
+		$scope.message = MainFactory.getMessage();
+		return MainFactory.getAuthen();
 
+
+	};
+
+	$scope.logout = function () {
+    	$scope.welcome = '';
+    	$scope.message = '';
+    	MainFactory.setAuthen(false);
+    	delete $window.sessionStorage.token;
+  	};
+
+  	 $scope.callRestricted = function () {
+    	$http({url: '/api/restricted', method: 'GET'})
+    	.success(function (data, status, headers, config) {
+      		$scope.message = $scope.message + ' ' + data.name; // Should log 'foo'
+    	})
+    	.error(function (data, status, headers, config) {
+    		alert(data);
+    	});
+  	};
 }
 
 function LoginController($scope, $http, $location) {
@@ -556,8 +578,37 @@ function LoginController($scope, $http, $location) {
 }
 
 //CONTROLLER FOR MODAL OBJECTS
-function ModalInstanceController($scope, $modalInstance) {
+function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactory) {
+  
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
+
+  	$scope.login = function(username,password){
+  		var user = {username : username, password : password };
+		var message = '';
+		console.log(user.username);
+
+		    $http.post('/authenticate', user)
+      		.success(function (data, status, headers, config) {
+        		
+        		$window.sessionStorage.token = data.token;
+
+        		MainFactory.setMessage('Welcome ' + user.username);
+        		MainFactory.setAuthen(true);
+        		var encodedProfile = data.token.split('.')[1];
+        		console.log(encodedProfile);
+        		var profile = JSON.parse(url_base64_decode(encodedProfile));
+        		console.log(profile);
+        		//MainFactory.setToken(data.token);
+        		$modalInstance.dismiss('cancel');
+      		})
+      		.error(function (data, status, headers, config) {
+        	// Erase the token if the user fails to log in
+        		delete $window.sessionStorage.token;
+
+        		// Handle login errors here
+        		$scope.message = 'Error: Invalid user or password';
+      		});
+	}
 };
