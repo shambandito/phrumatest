@@ -14,10 +14,10 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	$scope.isCollapsed = true;
 
 	//OPEN MODAL FUNCTION
-	$scope.openModal = function (size) {
-
+	$scope.openModal = function (size,modalziel) {
+		if(modalziel == 'login'){
 	    var modalInstance = $modal.open({
-	      templateUrl: 'myModalContent.html',
+	      templateUrl: 'myLoginModal.html',
 	      controller: ModalInstanceController,
 	      size: size,
 	      resolve: {
@@ -26,6 +26,19 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	        }
 	      }
 	    });
+	    }
+	    else if(modalziel == 'signup'){
+	    	var modalInstance = $modal.open({
+	      		templateUrl: 'mySignUpModal.html',
+	      		controller: ModalInstanceController,
+	      		size: size,
+	      		resolve: {
+	        		items: function () {
+	          			return $scope.items;
+	        		}
+	      		}
+	    	});
+	    }
 	};
 
 	// PRESS ENTER TO SEARCH FUNCTION
@@ -580,14 +593,31 @@ function LoginController($scope, $http, $location) {
 //CONTROLLER FOR MODAL OBJECTS
 function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactory) {
   
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
+  	$scope.cancel = function () {
+    	$modalInstance.dismiss('cancel');
+  	};
+
+  	$scope.signup = function(user){
+  		var newuser =  {username : user.username , email: user.email , password : user.password};
+  		$scope.message ='';
+
+  		if(newuser.password  == user.passwordconfirm){
+  		$http.post('/newuser',newuser)
+  			.success(function(data, status, headers, config){
+  				console.log("bin drin");
+  				$modalInstance.dismiss('cancel');
+  			});
+  		}
+  		else{
+  			$scope.message = 'Error : Passwort stimmt nicht überein';
+  		}
+
+  		
+  	}
 
   	$scope.login = function(username,password){
   		var user = {username : username, password : password };
 		var message = '';
-		console.log(user.username);
 
 		    $http.post('/authenticate', user)
       		.success(function (data, status, headers, config) {
@@ -597,9 +627,7 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
         		MainFactory.setMessage('Welcome ' + user.username);
         		MainFactory.setAuthen(true);
         		var encodedProfile = data.token.split('.')[1];
-        		console.log(encodedProfile);
         		var profile = JSON.parse(url_base64_decode(encodedProfile));
-        		console.log(profile);
         		//MainFactory.setToken(data.token);
         		$modalInstance.dismiss('cancel');
       		})

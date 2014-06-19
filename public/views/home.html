@@ -13,9 +13,9 @@
 
 			<div class="collapse navbar-collapse" collapse="isCollapsed">
 				<ul class="nav navbar-nav navbar-right">
-					<li ng-show="!getAuthen()"><a href="#">register</a></li>
-					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg')">login</button></li>
-					<li ng-show="getAuthen()">{{message}}</li>
+					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">register</a></li>
+					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">login</button></li>
+					<li ng-show="getAuthen()"><p style="margin : 15px 15px 0px">{{message}}</p></li>
 					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">logout</button></li>
 				</ul>
 			</div>
@@ -34,7 +34,7 @@
 
 <!-- LOGIN MODAL -->
 <div id="login_modal">
-    <script type="text/ng-template" id="myModalContent.html">
+    <script type="text/ng-template" id="myLoginModal.html">
         <div class="modal-header">
             <h3 class="modal-title">Login</h3>
         </div>
@@ -52,9 +52,45 @@
         		<div class="col-md-10">{{message}}</div>        			
         	</div>
         <div class="modal-footer">
-        	<button class="btn btn-warning"  type="submit" data-dismiss="modal">Login</button>
-            <button class="btn btn-warning" ng-click="cancel()">Close</button>
-            </form>
+        	<button class="btn btn-warning"  type="submit" >Login</button>
+        	<button class="btn btn-warning" type="button" ng-click="cancel()">Close</button>
+        	</form>
+            
+        </div>
+    </script>
+</div>
+
+<div id="signup_modal">
+    <script type="text/ng-template" id="mySignUpModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">SignUp</h3>
+        </div>
+        <div class="modal-body">
+        <form  ng-submit="signup(newuser)">
+        	<div class="row">
+        		<div class="col-md-5">Username :</div>
+        		<div class="col-md-5"><input type="text" ng-model="newuser.username" placeholder="Username"></div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">e-mail :</div>
+        		<div class="col-md-5"><input type="text" ng-model="newuser.email" placeholder="email"></div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">password : </div>
+        		<div class="col-md-5"><input type="password" ng-model="newuser.password" placeholder="Password"></div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">Confirm password: </div>
+        		<div class="col-md-5"><input type="password" ng-model="newuser.passwordconfirm" placeholder="Password"></div>
+        	</div>            	
+        	<div class="row">
+        		<div class="col-md-10">{{message}}</div>        			
+        	</div>
+        <div class="modal-footer">
+        	<button class="btn btn-warning"  type="submit" >SignUp</button>
+        	<button class="btn btn-warning" type="button" ng-click="cancel()">Close</button>  
+        	</form>
+            
         </div>
     </script>
 </div>
