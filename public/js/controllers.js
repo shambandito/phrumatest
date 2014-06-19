@@ -1,6 +1,5 @@
 var ctrl = angular.module('controllers', [])
     .controller('MainController', MainController)
-    .controller('LoginController', LoginController)
     .controller('ModalInstanceController', ModalInstanceController);
 
 
@@ -9,6 +8,7 @@ var ctrl = angular.module('controllers', [])
 function MainController($scope, $location, $rootScope, MainFactory, ngProgress, $timeout, $modal) {
 
 	var show = false;
+	$scope.showPlot = false;
 
 	//TOGGLE FOR MENU COLLAPSE
 	$scope.isCollapsed = true;
@@ -171,9 +171,12 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			//GET IMDB MOVIE JSON
 			MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
 
+					$scope.countries = res.countries;
 					$scope.movieIMDBid = MainFactory.getIMDBid();
 					$scope.movieActors = res.actors;
 					$scope.moviePlot = res.simplePlot;
+					$scope.moviePlotFull = res.plot;
+					$scope.movieYear = res.year;
 					$scope.movieRuntime = res.runtime[0];
 					$scope.IMDBRating = res.rating * 10;
 					$scope.poster = res.urlPoster;
@@ -303,7 +306,15 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	}
 
 
+	$scope.showFullPlot = function() {
 
+		if($scope.showPlot == false) {
+			$scope.showPlot = true;	
+		}
+		else {
+			$scope.showPlot = false;
+		}
+	}
 
 
 	//START SETTING UP COMPARE PAGE
@@ -393,6 +404,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
 					$scope.movieActors = res.actors;
 					$scope.moviePlot = res.simplePlot;
+					$scope.moviePlotFull = res.plot;
 					$scope.movieRuntime = res.runtime[0];
 					$scope.IMDBRating = res.rating * 10;
 					$scope.poster = res.urlPoster;
@@ -538,11 +550,10 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		return true;
 	}
 
-
-}
-
-function LoginController($scope, $http, $location) {
 	$scope.doLogin = function() {
+
+		console.log("login!");
+
 		$http.get('/api/login').success(function (result) {
 
 			if($scope.username == result.username && $scope.password == result.password) {

@@ -24,7 +24,7 @@
 			controller: 'MainController'
 		})
 
-		.when('/login', {
+		/*.when('/login', {
 			templateUrl: 'views/login.html',
 			controller: 'LoginController'
 		})
@@ -33,6 +33,7 @@
 			templateUrl: 'views/logged.html',
 			controller: 'LoginController'
 		})
+		*/
 
 
 

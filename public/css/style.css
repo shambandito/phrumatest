@@ -4,12 +4,26 @@ body, html {
 	background: #f9f9f9;
 }
 
+h1, h2, h3, h4, h5, h6 {
+	color: #8A8984;
+}
+
+a {
+	color: #0096C4;
+}
+
+	.btn:hover {
+		background-color: #0096C4;
+	}
+
 /* IMPORTANT FOR ANGULAR BOOTSTRAP UI */
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.nav, .pagination, .carousel, .panel-title a { 
+	cursor: pointer; 
+	margin: 0;
+}
 
 .navbar {
-	background: #f9f9f9;
-	opacity: 0.9;
+	opacity: 0.8;
 }
 
 .main_logo {
