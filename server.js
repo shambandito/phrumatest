@@ -24,16 +24,39 @@ var user = mongoose.model('User', new Schema({
 }),'users');
 
 app.post('/newuser',function(req,res){
-  user.create({
-      username: req.body.username,
-      email : req.body.email,
-      password : req.body.password
-    }, function(err, data) {
-      if (err)
-        res.send(err);
-      res.json(data);
-    })
+
+  user.find({username : req.body.username},function(err,data){
+    console.log(data[0]);
+    if(data[0] != null){
+      console.log("ich geh hier rein");
+      res.send(401,'User already exists');
+    return;
+    }
+    else{
+      user.find({email : req.body.email},function(err,data){
+        if(data[0] != null){
+          res.send(401,'email already exists');
+        return;
+        }
+        else{
+          user.create({
+            username: req.body.username,
+            email : req.body.email,
+            password : req.body.password
+          }, function(err, data) {
+            if (err)
+            res.send(err);
+            res.json(data);
+          });
+        }
+      });
+    }
+  });
 });
+
+  
+
+ 
 
 
 app.post('/authenticate', function (req, res) {
