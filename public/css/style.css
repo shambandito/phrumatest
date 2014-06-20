@@ -1,36 +1,43 @@
+/*FONT IMPORTS*/
+@import url(http://fonts.googleapis.com/css?family=Istok+Web:400,700);
+@import url(http://fonts.googleapis.com/css?family=Oxygen:400,700&subset=latin,latin-ext);
+
 body, html {
 	height: 100%;
 	width: 100%;
 	background: #f9f9f9;
+	font-family: 'Istok Web', sans-serif;
+	font-weight: 400;
+	-webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
 	color: #8A8984;
+	font-family: 'Oxygen', sans-serif;
+	font-weight: 700;
 }
 
 a {
 	color: #FF2F2F;
+
 }
 
 	a:hover {
 		color: #FF2F2F;
-		text-decoration: underline;
+		text-decoration: none;
+		cursor: pointer;
 	}
 
 /*Buttons*/
-
-	.btn:hover {
-		color: #0096C4;
-		background-color: #f9f9f9;
-		border: 2px solid #0096C4;
-	}
-
-.login-btn {
-	margin-left: 1px;
+.btn {
+	border: 1px solid #0096C4;
+	color: #0096C4;
 }
 
-	.login-btn:hover {
-		margin-left: 0px;
+	.btn:hover {
+		color: #fff;
+		background-color: #0096C4;
+		border: 1px solid #0096C4;
 	}
 
 .modal-buttons {
@@ -47,8 +54,9 @@ a {
 	border: 1px solid #FF2F2F;
 }
 	.modal-btn-close:hover {
-		color: #FF2F2F;
-		border: 2px solid #FF2F2F;
+		color: #FFF;
+		background: #FF2F2F;
+		border: 1px solid #FF2F2F;
 	}
 
 .compare {
@@ -75,7 +83,7 @@ a {
 
 .navbar {
 	min-height: 0px;
-	opacity: 0.8;
+	background: rgba(0,0,0,0.75);
 }
 
 .main_logo {
@@ -98,6 +106,7 @@ a {
 	height: 60px;
 	width: 100%;
 	font-size: 22px;
+	border: 1px solid #0096C4;
 }
 
 	.big_searchbar_button {
@@ -108,6 +117,10 @@ a {
 .small_search {
 	width: 300px;
 }
+
+	.small_search input {
+		border: 1px solid #0096C4;
+	}
 
 /* SEARCH RESULTS */
 
@@ -279,4 +292,15 @@ a {
 
 .compare_searchbar_button {
 	height: 50px;
+}
+
+/* PROGRESS BAR */
+
+#ngProgress-container {
+	top: 50px !important;
+}
+
+
+#ngProgress {
+	box-shadow: none !important;
 }

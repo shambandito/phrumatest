@@ -13,10 +13,10 @@
 
 			<div class="collapse navbar-collapse" collapse="isCollapsed">
 				<ul class="nav navbar-nav navbar-right">
-					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">register</a></li>
-					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">login</button></li>
+					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">Register</a></li>
+					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">Login</button></li>
 					<li ng-show="getAuthen()"><p style="margin : 15px 15px 0px; color: #FF2F2F;">{{message}}</p></li>
-					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">logout</button></li>
+					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">Logout</button></li>
 				</ul>
 			</div>
 
@@ -52,8 +52,8 @@
         		<div class="col-md-10">{{message}}</div>        			
         	</div>
         <div class="modal-footer">
-                <button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">login</button>
-                <button class="btn btn-default modal-btn-close" type ="button"ng-click="cancel()">close</button>
+                <button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">Login</button>
+                <button class="btn btn-default modal-btn-close" type ="button"ng-click="cancel()">Close</button>
             </div>
         	</form>
         </div>
@@ -89,8 +89,8 @@
         		<div class="col-md-10">{{message}}</div>        			
         	</div>
         <div class="modal-footer">
-        	<button class="btn btn-warning"  type="submit" >SignUp</button>
-        	<button class="btn btn-warning" type="button" ng-click="cancel()">Close</button>  
+        	<button class="btn btn-default modal-btn-login"  type="submit" >Register</button>
+        	<button class="btn btn-default modal-btn-close" type="button" ng-click="cancel()">Close</button>  
         	</form>
         </div>
     </script>

@@ -14,7 +14,7 @@
 			<div class="collapse navbar-collapse" collapse="isCollapsed">
 				<ul class="nav navbar-nav navbar-right">
 					<li>
-						<div class="navbar navbar-form small_search">
+						<div class="navbar-form small_search">
 							<div class="input-group">
 								<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query)">
 								<span class="input-group-btn">
@@ -23,8 +23,8 @@
 							</div>
 						</div>
 					</li>
-					<li><a class="register" href="#">register</a></li>
-					<li><button class="btn btn-default navbar-btn login-btn" ng-click="openModal('lg')">login</button></li>
+					<li><a class="register" href="#">Register</a></li>
+					<li><button class="btn btn-default navbar-btn login-btn" ng-click="openModal('lg')">Login</button></li>
 				</ul>
 			</div>
 		</div>
@@ -87,7 +87,7 @@
 						<h3 class="highlight" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">{{similarMovie.title}}</h3>
 						<h4>Critics Consensus</h4>
 						<p>"{{similarMovie.critics_consensus}}"</p>
-						<button class="btn btn-default" type="button" ng-click="doCompare('tt' + similarMovie.alternate_ids.imdb, 'movie')">Compare</button>
+						<button class="btn btn-default btn-block btn-lg" type="button" ng-click="doCompare('tt' + similarMovie.alternate_ids.imdb, 'movie')">Compare</button>
 					</div>
 
 
@@ -101,8 +101,9 @@
 			<carousel>
 				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active">
 					<div class="col-sm-12">
+						<h3 class="highlight">{{review.critic}}</h3>
+						<h4>{{review.publication}}</h4>
 						<p>"{{review.quote}}"</p>
-						<span>{{review.critic}} {{'(' + review.publication + ')'}}</span>
 					</div>
 
 

@@ -10,6 +10,9 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	var show = false;
 	$scope.showPlot = false;
 
+	ngProgress.height("8px");
+	ngProgress.color("#0096C4");
+
 	//TOGGLE FOR MENU COLLAPSE
 	$scope.isCollapsed = true;
 
@@ -228,19 +231,45 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					    $scope.chartConfig = {
 					        options: {
 					            chart: {
-					                type: 'spline'
-					            }
+					                type: 'spline',
+					                backgroundColor: null,
+									borderWidth: 0,
+									borderRadius: 0,
+									plotBackgroundColor: null,
+									plotShadow: false,
+									plotBorderWidth: 0
+					            },
+					            tooltip: {
+									backgroundColor: '#FFF',
+									borderWidth: 0,
+									style: {
+										color: '#000'
+									},
+									formatter: function() {
+								        return this.x + '<br>' + '<strong>$' + Highcharts.numberFormat(this.y, 0) + '</strong>'
+								    }
+								},
+								legend: {
+            						enabled: false
+        						}
 					        },
+					        
 					        xAxis: {
 					        	categories: dataForChartX
 							},
 					        series: [{
 					        	name: "Gross",
-					            data: dataForChartY
+					            data: dataForChartY,
+					            color: '#0096C4',
+					            lineWidth: 3
 					        }],
+
 					        title: {
 					            text: 'US Gross'
-					        },
+					        }
+
+
+
 					    };
 
 					}
