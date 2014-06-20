@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="border: none;">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="border: none;">
 		<div class="container">
 
 			<div class="navbar-header">
@@ -23,11 +23,10 @@
 							</div>
 						</div>
 					</li>
-					<li><a href="#">register</a></li>
-					<li><button class="btn btn-default navbar-btn" ng-click="openModal('lg')">login</button></li>
+					<li><a class="register" href="#">register</a></li>
+					<li><button class="btn btn-default navbar-btn login-btn" ng-click="openModal('lg')">login</button></li>
 				</ul>
 			</div>
-
 		</div>
 </nav>
 
@@ -42,7 +41,7 @@
 	<!-- MOVIE 1 -->
 	<div class="col-md-6">
 		<p><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
-		<h2>{{ movieTitle }}</h2>
+		<h2 class="highlight">{{ movieTitle }}</h2>
 		<p><span style="font-size: 0.7em; font-style: italic;" ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
 		<p>Plot:</p>
 		<p>{{ moviePlot }}</p>
@@ -59,7 +58,7 @@
 	<!-- MOVIE 2 (COMPARISON) -->
 	<div class="col-md-6">
 		<p><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster_compare }}" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
-		<h2>{{ movieTitle_compare }}</h2>
+		<h2 class="highlight">{{ movieTitle_compare }}</h2>
 		<p><span style="font-size: 0.7em; font-style: italic;" ng-repeat="genre in genres_compare">{{genre}}{{$last ? '' : ', '}}</span></p>
 		<p>Plot:</p>
 		<p>{{ moviePlot_compare }}</p>
