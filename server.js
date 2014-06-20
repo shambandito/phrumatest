@@ -29,7 +29,6 @@ app.post('/newuser',function(req,res){
       email : req.body.email,
       password : req.body.password
     }, function(err, data) {
-      console.log("hiho");
       if (err)
         res.send(err);
       res.json(data);

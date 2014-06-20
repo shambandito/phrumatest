@@ -1,6 +1,5 @@
 var ctrl = angular.module('controllers', [])
     .controller('MainController', MainController)
-    .controller('LoginController', LoginController)
     .controller('ModalInstanceController', ModalInstanceController);
 
 
@@ -14,7 +13,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	$scope.isCollapsed = true;
 
 	//OPEN MODAL FUNCTION
-	$scope.openModal = function (size,modalziel) {
+	$scope.openModal = function (size, modalziel) {
 		if(modalziel == 'login'){
 	    var modalInstance = $modal.open({
 	      templateUrl: 'myLoginModal.html',
@@ -568,26 +567,12 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
   	 $scope.callRestricted = function () {
     	$http({url: '/api/restricted', method: 'GET'})
     	.success(function (data, status, headers, config) {
-      		$scope.message = $scope.message + ' ' + data.name; // Should log 'foo'
+      		$scope.message = $scope.message + ' ' + data.name;
     	})
     	.error(function (data, status, headers, config) {
     		alert(data);
     	});
   	};
-}
-
-function LoginController($scope, $http, $location) {
-	$scope.doLogin = function() {
-		$http.get('/api/login').success(function (result) {
-
-			if($scope.username == result.username && $scope.password == result.password) {
-				$location.path('/logged');
-			} else {
-				$scope.loginFail = "Wrong details. Please try again.";
-			}
-
-		});
-	}
 }
 
 //CONTROLLER FOR MODAL OBJECTS
@@ -615,7 +600,7 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
   		
   	}
 
-  	$scope.login = function(username,password){
+  	$scope.login = function(username, password){
   		var user = {username : username, password : password };
 		var message = '';
 
@@ -632,7 +617,7 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
         		$modalInstance.dismiss('cancel');
       		})
       		.error(function (data, status, headers, config) {
-        	// Erase the token if the user fails to log in
+        		// Erase the token if the user fails to log in
         		delete $window.sessionStorage.token;
 
         		// Handle login errors here

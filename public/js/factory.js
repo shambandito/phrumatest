@@ -14,7 +14,7 @@ angular.module('factory', [])
 
     movie.setQuery = function(value) {
 
-        query=value;
+        query = value;
 
     } 
 
@@ -26,7 +26,7 @@ angular.module('factory', [])
 
     movie.setCompareQuery = function(value) {
 
-        compareQuery=value;
+        compareQuery = value;
 
     } 
 
@@ -37,7 +37,7 @@ angular.module('factory', [])
     } 
 
     movie.setType = function(value) {
-        type=value;
+        type = value;
     } 
 
     movie.getType = function() {
@@ -53,7 +53,7 @@ angular.module('factory', [])
 
     movie.setRTurl = function(value) {
 
-        RTurl=value;
+        RTurl = value;
 
     } 
 
@@ -64,7 +64,7 @@ angular.module('factory', [])
     }  
 
     movie.getRTmovie = function(url) {
-        url=url.substr(2);
+        url = url.substr(2);
       return $http({
         method: 'JSONP', 
         url: 'http://api.rottentomatoes.com/api/public/v1.0/movie_alias.json?apikey=4nktdb9q9p54q9krkmagc7u3&type=imdb&id=' + url + '&callback=JSON_CALLBACK'
@@ -103,7 +103,7 @@ angular.module('factory', [])
 
     movie.setIMDBid = function(value) {
 
-        IMDBid=value;
+        IMDBid = value;
 
     } 
 
@@ -115,7 +115,7 @@ angular.module('factory', [])
 
     movie.setIMDBid_movie2 = function(value) {
 
-        IMDBid_2=value;
+        IMDBid_2 = value;
 
     } 
 
