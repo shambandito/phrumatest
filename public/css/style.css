@@ -9,20 +9,72 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
+	color: #FF2F2F;
+}
+
+	a:hover {
+		color: #FF2F2F;
+		text-decoration: underline;
+	}
+
+/*Buttons*/
+
+	.btn:hover {
+		color: #0096C4;
+		background-color: #f9f9f9;
+		border: 2px solid #0096C4;
+	}
+
+.login-btn {
+	margin-left: 1px;
+}
+
+	.login-btn:hover {
+		margin-left: 0px;
+	}
+
+.modal-buttons {
+	height: 40px;
+}
+
+.modal-btn-login {
+	color: #0096C4;
+	border: 1px solid #0096C4;
+}
+
+.modal-btn-close {
+	color: #FF2F2F;
+	border: 1px solid #FF2F2F;
+}
+	.modal-btn-close:hover {
+		color: #FF2F2F;
+		border: 2px solid #FF2F2F;
+	}
+
+.compare {
+	height: 50px;
+}
+
+.highlight {
 	color: #0096C4;
 }
 
-	.btn:hover {
-		background-color: #0096C4;
-	}
-
+.navbar-inverse .navbar-brand {
+	font-size: 2em;
+    color: #FF2F2F;
+}
 /* IMPORTANT FOR ANGULAR BOOTSTRAP UI */
 .nav, .pagination, .carousel, .panel-title a { 
 	cursor: pointer; 
 	margin: 0;
 }
 
+.navbar-fixed-top {
+	height: 50px;
+}
+
 .navbar {
+	min-height: 0px;
 	opacity: 0.8;
 }
 
@@ -85,7 +137,7 @@ a {
 
 	.movie_title:hover {
 		cursor: pointer;
-		color: #999;
+		color: #FF2F2F;
 	}
 
 .movie_year {

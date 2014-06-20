@@ -8,7 +8,7 @@
 		        <span class="icon-bar"></span>
 		        <span class="icon-bar"></span>
 		      </button>
-				<a href="/" class="navbar-brand" style="color: #0096C4; font-size: 2em">phruma</a>
+				<a href="/" class="navbar-brand">phruma</a>
 			</div>
 
 			<div class="collapse navbar-collapse" collapse="isCollapsed">
@@ -24,10 +24,9 @@
 						</div>
 					</li>
 					<li><a class="register" href="#">register</a></li>
-					<li><button class="btn btn-default navbar-btn" ng-click="openModal('lg')">login</button></li>
+					<li><button class="btn btn-default navbar-btn login-btn" ng-click="openModal('lg')">login</button></li>
 				</ul>
 			</div>
-
 		</div>
 </nav>
 
@@ -78,8 +77,10 @@
         	</div> 
         </div>
         <div class="modal-footer">
-        	<button type="submit" class="btn btn-info" ng-click="doLogin()">login</button>
-            <button class="btn btn-warning" ng-click="cancel()">close</button>
+	        <div class="modal-buttons">
+	        	<button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">login</button>
+            	<button class="btn btn-default modal-btn-close" ng-click="cancel()">close</button>
+	        </div>
         </div>
     </script>
 </div>
