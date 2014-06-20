@@ -5,7 +5,7 @@ var ctrl = angular.module('controllers', [])
 
 
 
-function MainController($scope, $location, $rootScope, MainFactory, ngProgress, $timeout, $modal) {
+function MainController($scope, $location, $rootScope, MainFactory, ngProgress, $timeout, $modal , $window,$http) {
 
 	var show = false;
 	$scope.showPlot = false;
@@ -14,10 +14,10 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	$scope.isCollapsed = true;
 
 	//OPEN MODAL FUNCTION
-	$scope.openModal = function (size) {
-
+	$scope.openModal = function (size,modalziel) {
+		if(modalziel == 'login'){
 	    var modalInstance = $modal.open({
-	      templateUrl: 'myModalContent.html',
+	      templateUrl: 'myLoginModal.html',
 	      controller: ModalInstanceController,
 	      size: size,
 	      resolve: {
@@ -26,6 +26,19 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	        }
 	      }
 	    });
+	    }
+	    else if(modalziel == 'signup'){
+	    	var modalInstance = $modal.open({
+	      		templateUrl: 'mySignUpModal.html',
+	      		controller: ModalInstanceController,
+	      		size: size,
+	      		resolve: {
+	        		items: function () {
+	          			return $scope.items;
+	        		}
+	      		}
+	    	});
+	    }
 	};
 
 	// PRESS ENTER TO SEARCH FUNCTION
@@ -550,25 +563,84 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		return true;
 	}
 
-	$scope.doLogin = function() {
+	$scope.getAuthen =function(){
+		$scope.message = MainFactory.getMessage();
+		return MainFactory.getAuthen();
 
-		console.log("login!");
+	};
 
-		$http.get('/api/login').success(function (result) {
+	$scope.logout = function () {
+    	$scope.welcome = '';
+    	$scope.message = '';
+    	MainFactory.setAuthen(false);
+    	delete $window.sessionStorage.token;
+  	};
 
-			if($scope.username == result.username && $scope.password == result.password) {
-				$location.path('/logged');
-			} else {
-				$scope.loginFail = "Wrong details. Please try again.";
-			}
-
-		});
-	}
+  	 $scope.callRestricted = function () {
+    	$http({url: '/api/restricted', method: 'GET'})
+    	.success(function (data, status, headers, config) {
+      		$scope.message = $scope.message + ' ' + data.name; // Should log 'foo'
+    	})
+    	.error(function (data, status, headers, config) {
+    		alert(data);
+    	});
+  	};
 }
 
 //CONTROLLER FOR MODAL OBJECTS
-function ModalInstanceController($scope, $modalInstance) {
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
+function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactory) {
+  
+  	$scope.cancel = function () {
+    	$modalInstance.dismiss('cancel');
+  	};
+
+  	$scope.signup = function(user){
+  		var newuser =  {username : user.username , email: user.email , password : user.password};
+  		$scope.message ='';
+
+  		if(newuser.password  == user.passwordconfirm){
+  		$http.post('/newuser',newuser)
+  			.success(function(data, status, headers, config){
+  				console.log("bin drin");
+  				$modalInstance.dismiss('cancel');
+  			})
+  			.error(function(data, status, headers, config){
+  				if(data == 'User already exists'){
+  					$scope.message = data;
+  				}else{
+  					$scope.messageemail = data;
+  				}
+  			});
+  		}
+  		else{
+  			$scope.message = 'Error : Passwort stimmt nicht überein';
+  		}
+
+  		
+  	}
+
+  	$scope.login = function(username,password){
+  		var user = {username : username, password : password };
+		var message = '';
+
+		    $http.post('/authenticate', user)
+      		.success(function (data, status, headers, config) {
+        		
+        		$window.sessionStorage.token = data.token;
+
+        		MainFactory.setMessage('Welcome ' + user.username);
+        		MainFactory.setAuthen(true);
+        		var encodedProfile = data.token.split('.')[1];
+        		var profile = JSON.parse(url_base64_decode(encodedProfile));
+        		//MainFactory.setToken(data.token);
+        		$modalInstance.dismiss('cancel');
+      		})
+      		.error(function (data, status, headers, config) {
+        	// Erase the token if the user fails to log in
+        		delete $window.sessionStorage.token;
+
+        		// Handle login errors here
+        		$scope.message = 'Error: Invalid user or password';
+      		});
+	}
 };
