@@ -73,7 +73,6 @@ a {
 }
 /* IMPORTANT FOR ANGULAR BOOTSTRAP UI */
 .nav, .pagination, .carousel, .panel-title a { 
-	cursor: pointer; 
 	margin: 0;
 }
 
@@ -193,8 +192,9 @@ a {
 	height: 300px;
 }
 
-	.similar_movie h3 {
+	.similar_movie similar_movie_title {
 		margin-top: 0;
+		cursor: pointer;
 	}
 
 .carousel-control.right, .carousel-control.left {
@@ -210,15 +210,15 @@ a {
 }
 
 .carousel-indicators .active {
-	background: #000;
-	border: 1px solid rgba(0,0,0,1);
+	background: #0096C4;
+	border: 1px solid #0096C4;
 	width: 17px;
 	height: 17px;
 	margin: 2px;
 }
 
 	.carousel-indicators li {
-		border: 1px solid rgba(0,0,0,0.8);
+		border: 1px solid #0096C4;
 		width: 15px;
 		height: 15px;
 		margin: 3px;
