@@ -36,38 +36,39 @@
 
 <div ng-init="singleMovieInit()" id="result_container" ng-hide="movieQuery == ''">
 
-	<div class="row">
-		<div class="movieinfo-left col-md-3 col-xs-6">
-			<p><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
-			<div class="compare">
-				<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')">Compare</button>
+	<div class="row" id="movie_info">
+		<div class="movie_info_wrapper">
+			<div class="movieinfo-left col-md-3 col-xs-6">
+				<p><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
+				<div class="compare">
+					<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')">Compare</button>
+				</div>
+				<h5>Links</h5>
+				<!-- <a href="{{ movieSite }}" target="_blank" ng-if="$scope.movieSite != 'N/A'">Official Website</a><br> -->
+				<a href="{{ movieIMDBurl }}" target="_blank">IMDB Link</a><br>
+				<a href="{{ movieRTlink }}" target="_blank">Rotten Tomatoes Link</a>
 			</div>
-			<h5>Links</h5>
-			<!-- <a href="{{ movieSite }}" target="_blank" ng-if="$scope.movieSite != 'N/A'">Official Website</a><br> -->
-			<a href="{{ movieIMDBurl }}" target="_blank">IMDB Link</a><br>
-			<a href="{{ movieRTlink }}" target="_blank">Rotten Tomatoes Link</a>
+			<div class="movieinfo-right col-md-9 col-xs-6">
+				<h2 class="highlight">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>
+				<p><b>Plot</b></p>
+
+				<div id="plot_container">
+					<p ng-hide="showPlot">{{ moviePlot }} <a ng-click="showFullPlot()">full plot</a></p>
+					<p ng-show="showPlot">{{ moviePlotFull }} <a ng-click="showFullPlot()">short plot</a></p>
+				</div>
+
+				<hr>
+				<div id="meta_container">
+					<p style="font-size: 0.9em"><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
+					<p style="font-size: 0.9em"><b>Studio: </b>{{movieStudio}}</p>
+					<p style="font-size: 0.9em"><b>Runtime:</b> {{movieRuntime}}</p>
+					<p><b>Starring: </b><span style="font-size: 0.9em" ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
+					<p style="font-size: 0.9em"><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
+					<p style="font-size: 0.9em"><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
+				</div>
+
+			</div>
 		</div>
-		<div class="movieinfo-right col-md-9 col-xs-6">
-			<h2 class="highlight">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>
-			<p><b>Plot</b></p>
-
-			<div id="plot_container">
-				<p ng-hide="showPlot">{{ moviePlot }} <a ng-click="showFullPlot()">full plot</a></p>
-				<p ng-show="showPlot">{{ moviePlotFull }} <a ng-click="showFullPlot()">short plot</a></p>
-			</div>
-
-			<hr>
-			<div id="meta_container">
-				<p style="font-size: 0.9em"><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
-				<p style="font-size: 0.9em"><b>Studio: </b>{{movieStudio}}</p>
-				<p style="font-size: 0.9em"><b>Runtime:</b> {{movieRuntime}}</p>
-				<p><b>Starring: </b><span style="font-size: 0.9em" ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
-				<p style="font-size: 0.9em"><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
-				<p style="font-size: 0.9em"><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
-			</div>
-
-		</div>
-
 	</div>
 
 	<div id="moviedata-container" class="row">

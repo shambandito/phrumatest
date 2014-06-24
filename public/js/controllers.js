@@ -129,6 +129,18 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	//RESULT PAGE IS GENERATED HERE
 	$scope.singleMovieInit = function() {
 
+    function fullheight() {
+        jQuery('#movie_info').css({
+            height: jQuery(window).height()-50
+        });
+    };
+
+    jQuery(window).resize(function() {
+        fullheight();         
+    });
+
+    fullheight();
+
 		$scope.movieQuery = MainFactory.getQuery();
 		$scope.movieType = MainFactory.getType();
 

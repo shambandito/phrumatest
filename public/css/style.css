@@ -64,6 +64,10 @@ span {
 		border: 1px solid #FF2F2F;
 	}
 
+.navbar-btn {
+	background: #f9f9f9;
+}
+
 .compare {
 	height: 50px;
 }
@@ -89,6 +93,8 @@ span {
 	min-height: 0px;
 	background: rgba(0,0,0,0.75);
 }
+
+
 
 .main_logo {
 	position: absolute;
@@ -124,7 +130,12 @@ span {
 
 	.small_search input {
 		border: 1px solid #0096C4;
+		background: #f9f9f9;
 	}
+
+.small_searchbar_button {
+	background: #f9f9f9;
+}
 
 /* SEARCH RESULTS */
 
@@ -180,7 +191,7 @@ span {
 
 #result_container {
 	display: none;
-	margin-top: 75px;
+	margin-top: 50px;
 
 	-webkit-transition: opacity 1s ease-in;
 	-moz-transition: opacity 1s ease-in;
@@ -211,6 +222,18 @@ span {
 		font-weight: bold;
 		margin-bottom: 0;
 	}
+
+#movie_info {
+}
+
+.movie_info_wrapper {
+	top: 50%;
+	float: left;
+	position: relative;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-moz-webkit-transform: translateY(-50%);
+} 
 
 /* SIMILAR MOVIE STUFF */
 
