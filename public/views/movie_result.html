@@ -64,57 +64,9 @@
 				<p><b>Starring: </b><span style="font-size: 0.9em" ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
 				<p style="font-size: 0.9em"><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
 				<p style="font-size: 0.9em"><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
-				<p style="font-size: 0.9em"><b>Concensus: </b>{{ movieConcensus }}</p>
 			</div>
 
 		</div>
-
-	</div>
-
-	<div class="row" ng-show="isMovie">
-		<div class="col-md-6">
-			<h2>Similar Movies</h2>
-
-			<carousel style="height: 300px;">
-				<slide class="similar_movie" ng-repeat="similarMovie in similarMovies" active="slide.active">
-					<div class="col-xs-4">
-						<img style="width: 100%;" src="{{similarMovie.posters.detailed}}" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')"/>
-					</div>
-					<div class="col-xs-8">
-						<h3 class="highlight similar_movie_title" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">{{similarMovie.title}}</h3>
-						<h4>Critics Consensus</h4>
-						<p>"{{similarMovie.critics_consensus}}"</p>
-						<button class="btn btn-default btn-block btn-lg" type="button" ng-click="doCompare('tt' + similarMovie.alternate_ids.imdb, 'movie')">Compare</button>
-					</div>
-
-
-			    </slide>
-			</carousel>
-		</div>
-
-		<div class="col-md-6">
-			<h2>What The Critics Say</h2>
-
-			<carousel>
-				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active">
-					<div class="col-sm-12">
-						<h3 class="highlight">{{review.critic}}</h3>
-						<h4>{{review.publication}}</h4>
-						<p>"{{review.quote}}"</p>
-						<p><a href="{{review.links.review}}" target="_blank">>> Full Review</a></p>
-					</div>
-
-
-			    </slide>
-			</carousel>
-		</div>
-
-<!-- 		<div class="col-md-12" id="similar_container">
-				<div class="col-md-3 col-sm-6 similar_movie" ng-repeat="similarMovie in similarMovies" style="text-align: center">
-					<img src="{{similarMovie.posters.profile}}" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">
-					<span style="display: block;" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">{{similarMovie.title}}</span>
-				</div>
-			</div> -->
 
 	</div>
 
@@ -139,6 +91,48 @@
 				</div>
 		</div>
 	</div>
+
+	<div class="row" ng-show="isMovie">
+		<div class="col-md-6">
+			<h2>Similar Movies</h2>
+
+			<carousel>
+				<slide class="similar_movie" ng-repeat="similarMovie in similarMovies" active="slide.active">
+					<div class="col-xs-4">
+						<img style="width: 100%;" src="{{similarMovie.posters.original}}" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')"/>
+					</div>
+					<div class="col-xs-8">
+						<h3 class="highlight similar_movie_title" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">{{similarMovie.title}}</h3>
+						<h4>({{similarMovie.year}})</h4>
+						<p><span ng-repeat="actor in similarMovie.abridged_cast">{{actor.name}}{{$last ? '' : ', '}}</span></p>
+						<button class="btn btn-default btn-block btn-lg" type="button" ng-click="doCompare('tt' + similarMovie.alternate_ids.imdb, 'movie')">Compare</button>
+					</div>
+
+
+			    </slide>
+			</carousel>
+		</div>
+
+		<div class="col-md-6">
+			<h2>What The Critics Say</h2>
+
+			<carousel>
+				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active">
+					<div class="col-sm-12">
+						<h3 class="highlight similar_movie_title">{{review.critic}}</h3>
+						<h4>{{review.publication}}</h4>
+						<p>"{{review.quote}}"</p>
+						<p><a href="{{review.links.review}}" target="_blank">>> Full Review</a></p>
+					</div>
+
+
+			    </slide>
+			</carousel>
+		</div>
+
+	</div>
+
+
 
 	<div class="row" ng-show="isMovie">
 		<h2>Gross</h2>

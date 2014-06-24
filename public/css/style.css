@@ -28,6 +28,10 @@ a {
 		cursor: pointer;
 	}
 
+span {
+	 cursor: auto;
+}
+
 /*Buttons*/
 .btn {
 	border: 1px solid #0096C4;
@@ -163,6 +167,13 @@ a {
 	font-size: 0.9em;
 }
 
+.search_plot {
+	float: left;
+	width: 100%;
+	clear: both;
+	margin-top: 10px;
+}
+
 /* MOVIE RESULT PAGE */
 
 #result_container {
@@ -177,22 +188,43 @@ a {
 }
 
 .knob_container {
+	border-radius: 6px;
+	border: 1px solid #ccc;
+	text-align: center;
+	padding: 15px;
+	margin-bottom: 5px;
 }
 
+@media screen and (max-width: 991px) {
+	.knob_container {
+		width: 50%;
+		margin: 0 auto;
+		margin-bottom: 15px;
+	}
+}
+
+
 	.knob_container > p {
-		width: 200px; 
 		text-align: center;
 		font-weight: bold;
+		margin-bottom: 0;
 	}
 
 /* SIMILAR MOVIE STUFF */
 
-.similar_movie {
-	text-align: left;
-	height: 300px;
+.carousel {
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	padding: 15px 0;
+
 }
 
-	.similar_movie similar_movie_title {
+.similar_movie {
+	text-align: left;
+	min-height: 250px;
+}
+
+	.similar_movie .similar_movie_title {
 		margin-top: 0;
 		cursor: pointer;
 	}
@@ -200,12 +232,11 @@ a {
 .carousel-control.right, .carousel-control.left {
 	color: #000;
 	background: none;
-
 	display: none;
 }
 
 .carousel-indicators {
-	margin-bottom: 0;
+	margin-bottom: 5px;
 	bottom: 0;
 }
 
@@ -248,11 +279,6 @@ a {
 #moviedata-container {
 	margin-bottom: 2%;
 }
-
-.similar_movie img:hover, span:hover {
-	cursor: pointer;
-}
-
 
 #compare_search_overlay {
 	display: none;
