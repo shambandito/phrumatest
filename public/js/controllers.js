@@ -609,8 +609,16 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	}
 
 	$scope.getAuthen =function(){
-		$scope.message = MainFactory.getMessage();
-		return MainFactory.getAuthen();
+		if($window.sessionStorage.token != null){
+			
+			var encodedProfile = $window.sessionStorage.token.split('.')[1];
+        	var profile = JSON.parse(url_base64_decode(encodedProfile));
+        	console.log(profile);
+        	$scope.message = "Welcome " + profile.username;
+        	return true;
+		}else{
+			return false;
+		}
 
 	};
 
@@ -673,8 +681,6 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
         		
         		$window.sessionStorage.token = data.token;
 
-        		MainFactory.setMessage('Welcome ' + user.username);
-        		MainFactory.setAuthen(true);
         		var encodedProfile = data.token.split('.')[1];
         		var profile = JSON.parse(url_base64_decode(encodedProfile));
         		//MainFactory.setToken(data.token);

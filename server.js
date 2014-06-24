@@ -56,9 +56,6 @@ app.post('/newuser',function(req,res){
 
   
 
- 
-
-
 app.post('/authenticate', function (req, res) {
 
   var username = req.body.username;

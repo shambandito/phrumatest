@@ -23,8 +23,10 @@
 							</div>
 						</div>
 					</li>
-					<li><a class="register" href="#">Register</a></li>
-					<li><button class="btn btn-default navbar-btn login-btn" ng-click="openModal('lg')">Login</button></li>
+					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">register</a></li>
+					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">login</button></li>
+					<li ng-show="getAuthen()"><p id="welcome_message">{{message}}</p></li>
+					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">logout</button></li>
 				</ul>
 			</div>
 		</div>

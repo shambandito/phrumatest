@@ -394,3 +394,10 @@ span {
 #ngProgress {
 	box-shadow: none !important;
 }
+
+/* Welcome Text */
+
+#welcome_message {
+	color : #999;
+	margin: 15px 15px 0px;
+}
