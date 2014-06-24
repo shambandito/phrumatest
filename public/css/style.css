@@ -235,6 +235,24 @@ span {
 	-moz-webkit-transform: translateY(-50%);
 } 
 
+.scrollmore {
+	position: absolute;
+	bottom: 0px;
+	font-size: 18px;
+	left: 50%;
+	margin-left: -71.5px;
+	color: #fff !important;
+	text-transform: uppercase;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+	padding: 15px 25px;
+	background: rgba(0,0,0,0.75);
+	border-top-right-radius: 6px;
+	border-top-left-radius: 6px;
+}
+
 /* SIMILAR MOVIE STUFF */
 
 .carousel {
