@@ -91,7 +91,7 @@ span {
 
 .navbar {
 	min-height: 0px;
-	background: rgba(0,0,0,0.75);
+	background: #444;
 }
 
 
@@ -238,19 +238,39 @@ span {
 .scrollmore {
 	position: absolute;
 	bottom: 0px;
-	font-size: 18px;
 	left: 50%;
-	margin-left: -71.5px;
-	color: #fff !important;
+	margin-left: -20px;
+	color: #0096C4;
 	text-transform: uppercase;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	-ms-transition: all 0.3s;
-	padding: 15px 25px;
-	background: rgba(0,0,0,0.75);
 	border-top-right-radius: 6px;
 	border-top-left-radius: 6px;
+	font-size: 40px;
+}
+
+	.scrollmore span:hover {
+		cursor: pointer;
+	}
+
+.rt_consensus {
+	font-size: 24px;
+	font-style: italic;
+	text-align: center;
+	margin-bottom: 50px;
+	margin-top: 50px;
+}
+
+.movieratings_wrapper {
+	top: 50%;
+	float: left;
+	position: relative;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-moz-webkit-transform: translateY(-50%);
+	margin-top: -15px;
 }
 
 /* SIMILAR MOVIE STUFF */
@@ -321,6 +341,7 @@ span {
 
 #moviedata-container {
 	margin-bottom: 2%;
+	position: relative;
 }
 
 #compare_search_overlay {

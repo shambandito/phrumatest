@@ -70,35 +70,54 @@
 			</div>
 
 		</div>
-		<a class="scrollmore" smooth-scroll-jquery target="moviedata-container" speed="500" offset="50">Learn More</a>
+		<a class="scrollmore" smooth-scroll-jquery target="moviedata-container" speed="500" offset="50"><span class="glyphicon glyphicon-chevron-down"></span></a>
 	</div>
 
 	<div id="moviedata-container" class="row">
-		<h2>Ratings</h2>
-		<div class="col-md-4">
-				<div class="knob_container">
-					<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
-					<p>IMDB</p>
-				</div>
+		<div class="movieratings_wrapper">
+			<h2 style="margin-top: 0">Ratings</h2>
+			<p class="rt_consensus">{{movieConsensus}} „Deftly balancing vulgarity and sincerity while placing its protagonists in excessive situations, Superbad is an authentic take on friendship and the overarching awkwardness of the high school experience.“</p>
+			<div class="col-md-4">
+					<div class="knob_container">
+						<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
+						<p>IMDB</p>
+					</div>
+			</div>
+			<div class="col-md-4" ng-show="isMovie">
+					<div class="knob_container">
+						<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
+							<p>Rotten Tomatoes Critics</p>
+					</div>
+			</div>
+			<div class="col-md-4" ng-show="isMovie">
+					<div class="knob_container">
+						<input type="text" value="N/A" class="knob" ng-model="movieUsersRating"/>
+							<p>Rotten Tomatoes Audience</p>
+					</div>
+			</div>
 		</div>
-		<div class="col-md-4" ng-show="isMovie">
-				<div class="knob_container">
-					<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
-						<p>Rotten Tomatoes Critics</p>
-				</div>
-		</div>
-		<div class="col-md-4" ng-show="isMovie">
-				<div class="knob_container">
-					<input type="text" value="N/A" class="knob" ng-model="movieUsersRating"/>
-						<p>Rotten Tomatoes Audience</p>
-				</div>
-		</div>
+		<a class="scrollmore" smooth-scroll-jquery target="similar_and_critics" speed="500" offset="50"><span class="glyphicon glyphicon-chevron-down"></span></a>
 	</div>
 
-	<div class="row" ng-show="isMovie">
+	<div id="similar_and_critics" class="row" ng-show="isMovie">
+		<div class="col-md-6">
+				<h2>What The Critics Say</h2>
+
+				<carousel>
+					<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active">
+						<div class="col-sm-12">
+							<h3 class="highlight similar_movie_title">{{review.critic}}</h3>
+							<h4>{{review.publication}}</h4>
+							<p>„{{review.quote}}“</p>
+							<p><a href="{{review.links.review}}" target="_blank">>> Full Review</a></p>
+						</div>
+
+
+				    </slide>
+				</carousel>
+		</div>
 		<div class="col-md-6">
 			<h2>Similar Movies</h2>
-
 			<carousel>
 				<slide class="similar_movie" ng-repeat="similarMovie in similarMovies" active="slide.active">
 					<div class="col-xs-4">
@@ -116,22 +135,7 @@
 			</carousel>
 		</div>
 
-		<div class="col-md-6">
-			<h2>What The Critics Say</h2>
 
-			<carousel>
-				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active">
-					<div class="col-sm-12">
-						<h3 class="highlight similar_movie_title">{{review.critic}}</h3>
-						<h4>{{review.publication}}</h4>
-						<p>"{{review.quote}}"</p>
-						<p><a href="{{review.links.review}}" target="_blank">>> Full Review</a></p>
-					</div>
-
-
-			    </slide>
-			</carousel>
-		</div>
 
 	</div>
 

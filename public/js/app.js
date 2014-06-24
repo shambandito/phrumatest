@@ -34,6 +34,8 @@ app.directive('knob', function() {
 
 });
 
+
+
 app.directive('barchart', function() {
 
     return {

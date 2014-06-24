@@ -133,6 +133,10 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
         jQuery('#movie_info').css({
             height: jQuery(window).height()-50
         });
+
+        jQuery('#moviedata-container').css({
+            height: jQuery(window).height()-50
+        });
     };
 
     jQuery(window).resize(function() {
@@ -169,7 +173,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			   		$scope.movieSite = res.Website;
 			   		$scope.moviePoster = res.posters.detailed;
 			   		$scope.movieStudio = res.studio;
-			   		$scope.movieConcensus = res.critics_consensus;
+			   		$scope.movieConsensus = res.critics_consensus;
 			   		$scope.movieRTlink = res.links.alternate;
 
 
