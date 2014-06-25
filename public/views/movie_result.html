@@ -32,7 +32,7 @@
 		</div>
 </nav>
 
-<div ng-hide="errorMessage == ''" class="text-center" style="padding-top: 300px">
+<div ng-hide="errorMessage == ''" class="text-center error_message">
 		<h3>{{ errorMessage }}</h3>
 </div>
 
@@ -40,18 +40,19 @@
 
 	<div class="row" id="movie_info">
 		<div class="movie_info_wrapper">
-			<div class="movieinfo-left col-md-3 col-xs-6">
+			<div class="movieinfo-left col-md-3">
 				<p><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
-				<div class="compare">
-					<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')">Compare</button>
-				</div>
-				<h5>Links</h5>
-				<!-- <a href="{{ movieSite }}" target="_blank" ng-if="$scope.movieSite != 'N/A'">Official Website</a><br> -->
-				<a href="{{ movieIMDBurl }}" target="_blank">IMDB Link</a><br>
-				<a href="{{ movieRTlink }}" target="_blank">Rotten Tomatoes Link</a>
+				<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')">Compare</button>
+
 			</div>
-			<div class="movieinfo-right col-md-9 col-xs-6">
+			<div class="movieinfo-right col-md-9 ">
 				<h2 class="highlight">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>
+
+				<div class="links_container">
+					<a class="movie_link" href="{{ movieIMDBurl }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
+					<a class="movie_link" href="{{ movieRTlink }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>
+				</div>
+
 				<p><b>Plot</b></p>
 
 				<div id="plot_container">
@@ -61,12 +62,12 @@
 
 				<hr>
 				<div id="meta_container">
-					<p style="font-size: 0.9em"><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
-					<p style="font-size: 0.9em"><b>Studio: </b>{{movieStudio}}</p>
-					<p style="font-size: 0.9em"><b>Runtime:</b> {{movieRuntime}}</p>
-					<p><b>Starring: </b><span style="font-size: 0.9em" ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
-					<p style="font-size: 0.9em"><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
-					<p style="font-size: 0.9em"><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
+					<p><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
+					<p><b>Studio: </b>{{movieStudio}}</p>
+					<p><b>Runtime:</b> {{movieRuntime}}</p>
+					<p><b>Starring: </b><span ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
+					<p><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
+					<p><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
 				</div>
 
 			</div>
@@ -79,13 +80,13 @@
 		<div class="movieratings_wrapper">
 			<h2 style="margin-top: 0">Ratings</h2>
 			<p class="rt_consensus">{{movieConsensus}} „Deftly balancing vulgarity and sincerity while placing its protagonists in excessive situations, Superbad is an authentic take on friendship and the overarching awkwardness of the high school experience.“</p>
-			<div class="col-md-4">
+			<div class="col-md-4" ng-class="getClass()">
 					<div class="knob_container">
 						<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
 						<p>IMDB</p>
 					</div>
 			</div>
-			<div class="col-md-4" ng-show="isMovie">
+			<div class="col-md-4" ng-show="isMovie || hasRTrating">
 					<div class="knob_container">
 						<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
 							<p>Rotten Tomatoes Critics</p>
@@ -102,31 +103,33 @@
 	</div>
 
 	<div id="similar_and_critics" class="row" ng-show="isMovie">
-		<div class="col-md-6">
-				<h2>What The Critics Say</h2>
+		<div class="col-md-6 critics_container" ng-show="hasReviews">
+			<h2>What The Critics Say</h2>
 
-				<carousel>
-					<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active">
-						<div class="col-sm-12">
-							<h3 class="highlight similar_movie_title">{{review.critic}}</h3>
-							<h4>{{review.publication}}</h4>
-							<p>„{{review.quote}}“</p>
-							<p><a href="{{review.links.review}}" target="_blank">>> Full Review</a></p>
-						</div>
+			<carousel>
+				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active">
+					<div class="col-sm-12">
+						<h3 class="highlight similar_movie_title">{{review.critic}}</h3>
+						<h4>{{review.publication}}</h4>
+						<span ng-show="review.freshness == 'fresh'" class="glyphicon glyphicon-thumbs-up critic_freshness"></span>
+						<span ng-show="review.freshness == 'rotten'" class="glyphicon glyphicon-thumbs-down critic_freshness"></span>
+						<p>{{"„" + review.quote + "“"}}</p>
+						<p><a href="{{review.links.review}}" target="_blank">Read Full Review</a></p>
+					</div>
 
 
-				    </slide>
-				</carousel>
+			    </slide>
+			</carousel>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-6 similar_container" ng-show="hasSimilar">
 			<h2>Similar Movies</h2>
 			<carousel>
 				<slide class="similar_movie" ng-repeat="similarMovie in similarMovies" active="slide.active">
 					<div class="col-xs-4">
-						<img style="width: 100%;" src="{{similarMovie.posters.original}}" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')"/>
+						<img style="width: 100%;" src="{{similarMovie.posters.detailed}}" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')"/>
 					</div>
 					<div class="col-xs-8">
-						<h3 class="highlight similar_movie_title" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">{{similarMovie.title}}</h3>
+						<h3 class="highlight similar_movie_title"><span ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">{{similarMovie.title}}</span></h3>
 						<h4>({{similarMovie.year}})</h4>
 						<p><span ng-repeat="actor in similarMovie.abridged_cast">{{actor.name}}{{$last ? '' : ', '}}</span></p>
 						<button class="btn btn-default btn-block btn-lg" type="button" ng-click="doCompare('tt' + similarMovie.alternate_ids.imdb, 'movie')">Compare</button>
@@ -143,8 +146,9 @@
 
 
 
-	<div class="row" ng-show="isMovie">
-		<h2>Gross</h2>
+	<div class="row" ng-show="hasGross || isMovie">
+		<h2>Business Data</h2>
+		<p class="budget_p">{{movieTitle}} had a Budget of <span class="budget">{{movieBudget}}</span></p>
         <highchart id="chart1" config="chartConfig" class="span10"></highchart>
     </div>
 
@@ -165,7 +169,7 @@
 	</div>
 	<div class="container">
 		<div class="col-md-12">
-			<div ng-hide="errorMessage == ''" class="text-center" style="padding-top: 300px">
+			<div ng-hide="errorMessage == ''" class="text-center" class="error_message">
 				<h3>{{ errorMessage }}</h3>
 			</div>
 

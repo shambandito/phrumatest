@@ -49,7 +49,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 		if(event.which == 13) {
 
-			console.log("pressed enter");
 			$scope.doSearch(query);
 		}
 	}
@@ -57,17 +56,35 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	//START SEARCH FUNCTION
 	$scope.doSearch = function(query) {
 
-		MainFactory.setQuery(query);
+		if(typeof query !== 'undefined') {
 
-		if($location.path() == "/search") {
-			$scope.searchInit();
-		} else {
-			$location.path("/search");
+			MainFactory.setQuery(query);
+
+			if($location.path() == "/search") {
+				$scope.searchInit();
+			} else {
+				$location.path("/search");
+			}
 		}
 	}
 
 	// SEARCH IS DONE HERE
 	$scope.searchInit = function() {
+
+		//MAKE RESULT PAGE "PAGES" FULLSCREEN
+	    function fullheight() {
+	        jQuery('.search_container').css({
+	            height: jQuery(window).height()-75
+	        });
+	    };
+
+	    //CHECK FOR WINDOW RESIZE AND RESIZE ELEMENTS
+	    jQuery(window).resize(function() {
+	        fullheight();         
+	    });
+
+	    // RUN FULLHEIGHT ONCE ON INIT
+	    fullheight();
 
 		var query = MainFactory.getQuery();
 		$scope.errorMessage = "";
@@ -94,7 +111,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				    				array[array.length] = res;
 				    				ngProgress.complete();
 				    			}).error(function(data, status, headers, config) {
-									alert("error!");
+									alert("Unfortunatley the OMDBAPI hasn't responded. Please try again later.");
 									ngProgress.reset();
 						    	});
 			    			}
@@ -129,21 +146,26 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	//RESULT PAGE IS GENERATED HERE
 	$scope.singleMovieInit = function() {
 
-    function fullheight() {
-        jQuery('#movie_info').css({
-            height: jQuery(window).height()-50
-        });
+		//MAKE RESULT PAGE "PAGES" FULLSCREEN
+	    function fullheight() {
+	        jQuery('#movie_info').css({
+	            height: jQuery(window).height()-50
+	        });
 
-        jQuery('#moviedata-container').css({
-            height: jQuery(window).height()-50
-        });
-    };
+	        jQuery('#moviedata-container').css({
+	            height: jQuery(window).height()-50
+	        });
+	    };
 
-    jQuery(window).resize(function() {
-        fullheight();         
-    });
+	    //CHECK FOR WINDOW RESIZE AND RESIZE ELEMENTS
+	    jQuery(window).resize(function() {
+	        fullheight();         
+	    });
 
-    fullheight();
+	    // RUN FULLHEIGHT ONCE ON INIT
+	    fullheight();
+
+
 
 		$scope.movieQuery = MainFactory.getQuery();
 		$scope.movieType = MainFactory.getType();
@@ -169,6 +191,14 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				MainFactory.getRTmovie(MainFactory.getIMDBid()).success(function (res) {
 					$scope.rtMovieID = res.id;
 			   		$scope.movieCriticsRating = res.ratings.critics_score;
+
+			   		//CHECK IF THERE IS ACTUALLY A CRITICS RATING
+			   		$scope.hasRTrating = true;
+			   		console.log($scope.movieCriticsRating);
+			   		if($scope.movieCriticsRating == "-1") {
+			   			$scope.hasRTrating = false;
+			   		}
+
 			   		$scope.movieUsersRating = res.ratings.audience_score;
 			   		$scope.movieSite = res.Website;
 			   		$scope.moviePoster = res.posters.detailed;
@@ -180,25 +210,43 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			   		//GET SIMILAR MOVIES
 					MainFactory.getRTsimilar($scope.rtMovieID).success(function (res) {
 						$scope.similarMovies = res.movies;
+						$scope.hasSimilar = true;
+						if($scope.similarMovies == "") {
+							$scope.hasSimilar = false;
+						}
 					}).error(function(data, status, headers, config) {
-									alert("error!");
+									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
 					});;
 
 			   		//GET TOP CRITICS REVIEWS
 					MainFactory.getRTreviews_top($scope.rtMovieID).success(function (res) {
 						$scope.criticReviews = res.reviews;
+						$scope.hasReviews = true;
+						if($scope.criticReviews == "") {
+							$scope.hasReviews = false;
+						}
+
 						document.getElementById("result_container").style.display = 'block';
 					}).error(function(data, status, headers, config) {
-									alert("error!");
+									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
 					});
 
 				}).error(function(data, status, headers, config) {
-									alert("error!");
+									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
 				});;
 			}
+
+	    //GET CLASS FUNCTION
+	    $scope.getClass = function() {
+				if($scope.isMovie == false) {
+					return "series_knob"
+				} else {
+					return "";
+				}
+		}
 
 			//GET IMDB MOVIE JSON
 			MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
@@ -221,73 +269,87 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 
 					// MOVIE GROSS CHART STUFF
-					var movieGross = res.business.gross;
-					var array = [];
+					if($scope.movieType == "movie") {
+						$scope.movieBudget = res.business.budget.money;
+						$scope.hasGross = false;
 
-		    		if(movieGross != null) {
-			    		for (var i = 0; i < movieGross.length; i++) {
-			    			if(movieGross[i].country == "USA"){
-			    				array[array.length] = movieGross[i];
-			    			}
-			    		};
+						var movieGross = res.business.gross;
+						var array = [];
 
-			    		$scope.movieUSGross = array;
+						$scope.movieGross = movieGross;
 
-			    		var dataForChartY = [];
-			    		var dataForChartX = [];
-						
-						for (var i = 0; i < array.length; i++) {
-							dataForChartY[dataForChartY.length] = [array[i].day + "." + array[i].month + "." + array[i].year, parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
-							dataForChartX[dataForChartX.length] = [array[i].day + "." + array[i].month + "." + array[i].year]
-						}
+			    		if(movieGross != null) {
+			    			$scope.hasGross = true;
+				    		for (var i = 0; i < movieGross.length; i++) {
+				    			if(movieGross[i].country == "USA"){
+				    				array[array.length] = movieGross[i];
+				    			}
+				    		};
 
-						dataForChartY.reverse();
-						dataForChartX.reverse();	
+				    		$scope.movieUSGross = array;
 
-					    $scope.chartConfig = {
-					        options: {
-					            chart: {
-					                type: 'spline',
-					                backgroundColor: null,
-									borderWidth: 0,
-									borderRadius: 0,
-									plotBackgroundColor: null,
-									plotShadow: false,
-									plotBorderWidth: 0
-					            },
-					            tooltip: {
-									backgroundColor: '#FFF',
-									borderWidth: 0,
-									style: {
-										color: '#000'
+				    		if(array.length < 2) {
+				    			$scope.hasGross = false;
+				    		}
+
+				    		var dataForChartY = [];
+				    		var dataForChartX = [];
+
+
+							
+							for (var i = 0; i < array.length; i++) {
+								dataForChartY[dataForChartY.length] = [array[i].day + "." + array[i].month + "." + array[i].year, parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
+								dataForChartX[dataForChartX.length] = [array[i].day + "." + array[i].month + "." + array[i].year]			
+							}
+
+							dataForChartY.reverse();
+							dataForChartX.reverse();	
+
+						    $scope.chartConfig = {
+						        options: {
+						            chart: {
+						                type: 'spline',
+						                backgroundColor: null,
+										borderWidth: 0,
+										borderRadius: 0,
+										plotBackgroundColor: null,
+										plotShadow: false,
+										plotBorderWidth: 0
+						            },
+						            tooltip: {
+										backgroundColor: '#FFF',
+										borderWidth: 0,
+										style: {
+											color: '#000'
+										},
+										formatter: function() {
+									        return this.x + '<br>' + '<strong>$' + Highcharts.numberFormat(this.y, 0) + '</strong>'
+									    }
 									},
-									formatter: function() {
-								        return this.x + '<br>' + '<strong>$' + Highcharts.numberFormat(this.y, 0) + '</strong>'
-								    }
+									legend: {
+	            						enabled: false
+	        						}
+						        },
+						        
+						        xAxis: {
+						        	categories: dataForChartX
 								},
-								legend: {
-            						enabled: false
-        						}
-					        },
-					        
-					        xAxis: {
-					        	categories: dataForChartX
-							},
-					        series: [{
-					        	name: "Gross",
-					            data: dataForChartY,
-					            color: '#0096C4',
-					            lineWidth: 3
-					        }],
+						        series: [{
+						        	name: "Gross",
+						            data: dataForChartY,
+						            color: '#0096C4',
+						            lineWidth: 3
+						        }],
 
-					        title: {
-					            text: 'US Gross'
-					        }
+						        title: {
+						            text: 'US Gross'
+						        }
 
 
 
-					    };
+						    };
 
+						}
 					}
 
 					//SET RT LINK VIA SERIES TITLE
@@ -298,6 +360,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					ngProgress.complete();
 					document.getElementById("result_container").style.opacity = '1';
 					document.getElementById("result_container").style.display = 'block';
+
 
 
 
@@ -324,8 +387,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	$scope.doCompareSearch = function() {
 		var query = $scope.compareSearchQuery;
 		$scope.errorMessage = "";
-		console.log($scope.compareSearchQuery);
-		console.log(query);
 
 		//IMDB SEARCH
 		MainFactory.getIMDBmovies_list(query).success(function (res) {

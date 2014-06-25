@@ -72,6 +72,7 @@ app.post('/authenticate', function (req, res) {
   //Wenn keine email email == false und stringvergleich mit data[0].username
   if(email == false){
     user.find({username : username},function(err, data) {
+      if(data[0]!=null){
       if (!(username == data[0].username && req.body.password == data[0].password)) {
       res.send(401, 'Wrong user or password');
       return;
@@ -86,9 +87,13 @@ app.post('/authenticate', function (req, res) {
   var token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
 
   res.json({ token: token });
+}else{
+  res.send(401, 'Wrong user or password');
+}
   });
   } else{
     user.find({email : username},function(err, data) {
+      if(data[0] != null){
       if (!(username == data[0].email && req.body.password == data[0].password)) {
         res.send(401, 'Wrong user or password');
         return;
@@ -103,6 +108,9 @@ app.post('/authenticate', function (req, res) {
   var token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
 
   res.json({ token: token });
+}else{
+   res.send(401, 'Wrong user or password');
+}
   })
   }
     

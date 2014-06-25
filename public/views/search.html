@@ -33,7 +33,7 @@
 </nav>
 
 <div class="col-md-10 col-md-offset-1 search_container" ng-init="searchInit()">
-	<div ng-hide="errorMessage == ''" class="text-center" style="padding-top: 300px">
+	<div ng-hide="errorMessage == ''" class="text-center error_message">
 		<h3>{{ errorMessage }}</h3>
 	</div>
 	<div class="row movie_search_result" ng-repeat="movie in movies" >
