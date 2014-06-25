@@ -71,7 +71,9 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	// SEARCH IS DONE HERE
 	$scope.searchInit = function() {
 
-		//MAKE RESULT PAGE "PAGES" FULLSCREEN
+		ngProgress.reset();
+
+		//MAKE SEARCH CONTAINER FULL HEIGHT OF WINDOW
 	    function fullheight() {
 	        jQuery('.search_container').css({
 	            height: jQuery(window).height()-75
@@ -146,6 +148,8 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	//RESULT PAGE IS GENERATED HERE
 	$scope.singleMovieInit = function() {
 
+		ngProgress.reset();
+
 		//MAKE RESULT PAGE "PAGES" FULLSCREEN
 	    function fullheight() {
 	        jQuery('#movie_info').css({
@@ -190,12 +194,14 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				//GET ROTTEN TOMATOES MOVIE JSON
 				MainFactory.getRTmovie(MainFactory.getIMDBid()).success(function (res) {
 					$scope.rtMovieID = res.id;
+					if(typeof res.ratings.critics_score !== 'undefined')
 			   		$scope.movieCriticsRating = res.ratings.critics_score;
 
 			   		//CHECK IF THERE IS ACTUALLY A CRITICS RATING
 			   		$scope.hasRTrating = true;
+
 			   		console.log($scope.movieCriticsRating);
-			   		if($scope.movieCriticsRating == "-1") {
+			   		if($scope.movieCriticsRating == '-1') {
 			   			$scope.hasRTrating = false;
 			   		}
 
@@ -268,17 +274,29 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					$scope.movieLocations = res.filmingLocations;
 
 
+				if(typeof res.trailer.videoURL !== 'undefined' ) {
+					$scope.trailerURL = res.trailer.videoURL;
+				}
+
+					//GET SEASONS & EPISODES IF QUERY IS A SERIES
+					if(MainFactory.getType() == "series") {
+						$scope.seriesSeasons = res.seasons;
+						console.log(res.seasons);
+					}
+
+
 					// MOVIE GROSS CHART STUFF
 					if($scope.movieType == "movie") {
-						$scope.movieBudget = res.business.budget.money;
+						if(typeof res.business.budget.money !== 'undefined' ) {
+							$scope.movieBudget = res.business.budget.money;
+						}
 						$scope.hasGross = false;
 
 						var movieGross = res.business.gross;
+						console.log(movieGross);
 						var array = [];
 
-						$scope.movieGross = movieGross;
-
-			    		if(movieGross != null) {
+			    		if(typeof movieGross !== 'undefined') {
 			    			$scope.hasGross = true;
 				    		for (var i = 0; i < movieGross.length; i++) {
 				    			if(movieGross[i].country == "USA"){
@@ -288,7 +306,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 				    		$scope.movieUSGross = array;
 
-				    		if(array.length < 2) {
+				    		if($scope.movieUSGross.length < 1) {
 				    			$scope.hasGross = false;
 				    		}
 
@@ -455,6 +473,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 	//COMPARE PAGE IS GENERATED HERE
 	$scope.compareInit = function() {
+		ngProgress.reset();
 
 		$scope.movieQuery = MainFactory.getQuery();
 		console.log(MainFactory.getIMDBid());
@@ -601,6 +620,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					$scope.movieWriters_compare = res.writers;
 					$scope.movieIMDBurl_compare = res.urlIMDB;
 					$scope.movieLocations_compare = res.filmingLocations;
+
 
 
 					// MOVIE GROSS CHART STUFF

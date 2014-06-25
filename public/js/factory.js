@@ -128,7 +128,7 @@ angular.module('factory', [])
     movie.getIMDBmovie = function(id) {
       return $http({
         method: 'JSONP', 
-        url: 'http://www.myapifilms.com/search?idIMDB=' + id + '&format=JSONP&aka=0&business=1&seasons=0&technical=0&lang=en-us&actors=S&biography=0&callback=JSON_CALLBACK'
+        url: 'http://www.myapifilms.com/search?idIMDB=' + id + '&format=JSONP&aka=0&business=1&seasons=1&technical=0&lang=en-us&actors=S&biography=0&trailer=1&callback=JSON_CALLBACK'
       });
     }  
 
