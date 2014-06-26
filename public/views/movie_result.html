@@ -48,6 +48,8 @@
 			<div class="movieinfo-right col-md-9 ">
 				<h2 class="highlight">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>
 
+				<button ng-click="addToWatchList()">Add Movie To Watchlist</button>
+
 				<div class="links_container">
 					<a class="movie_link" href="{{ movieIMDBurl }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
 					<a class="movie_link" href="{{ movieRTlink }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>

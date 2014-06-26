@@ -6,6 +6,8 @@ var ctrl = angular.module('controllers', [])
 
 
 function MainController($scope, $location, $rootScope, MainFactory, ngProgress, $timeout, $modal , $window,$http) {
+	
+	
 
 	var show = false;
 	$scope.showPlot = false;
@@ -145,6 +147,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 	//RESULT PAGE IS GENERATED HERE
 	$scope.singleMovieInit = function() {
+
 
 		//MAKE RESULT PAGE "PAGES" FULLSCREEN
 	    function fullheight() {
@@ -671,11 +674,9 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 	$scope.getAuthen =function(){
 		if($window.sessionStorage.token != null){
-			
 			var encodedProfile = $window.sessionStorage.token.split('.')[1];
-        	var profile = JSON.parse(url_base64_decode(encodedProfile));
-        	console.log(profile);
-        	$scope.message = "Welcome " + profile.username;
+    		var profile = JSON.parse(url_base64_decode(encodedProfile));
+			$scope.message = "Welcome " + profile.username;
         	return true;
 		}else{
 			return false;
@@ -699,6 +700,43 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
     		alert(data);
     	});
   	};
+
+  	$scope.addToWatchList = function(){
+  		if($window.sessionStorage.token != null){
+  		var encodedProfile = $window.sessionStorage.token.split('.')[1];
+    	var profile = JSON.parse(url_base64_decode(encodedProfile));
+		var imdbid = MainFactory.getIMDBid();
+		console.log($scope.movieTitle);
+
+  		$http({url: '/api/userwatchlist',
+  			   method : 'POST',
+  				data: {userid : profile.id,
+  					   imdbid : imdbid,
+  					   movieltitle : $scope.movieTitle}
+  				}).success(function(){
+  					$scope.successmessage = "movie was added to the watchlist";
+				});
+		}
+		else{
+			alert("Sie sind nicht eingelogt");
+		}
+  		};
+  	$scope.watchlistInit =  function(){
+  			if($window.sessionStorage.token != null){
+  			var encodedProfile = $window.sessionStorage.token.split('.')[1];
+    		var profile = JSON.parse(url_base64_decode(encodedProfile));
+
+  			$http({url: '/api/userwatchlist/'+profile.id ,
+  			   	   method : 'Get',
+  				}).success(function(data){
+  					$scope.watchlist = data;
+  					console.log(data);
+				});
+			}
+			else{
+				alert("Sie sind nicht eingelogt");
+			}
+	  	};	
 }
 
 //CONTROLLER FOR MODAL OBJECTS
@@ -745,6 +783,7 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
         		var encodedProfile = data.token.split('.')[1];
         		var profile = JSON.parse(url_base64_decode(encodedProfile));
         		//MainFactory.setToken(data.token);
+        		console.log(profile);
         		$modalInstance.dismiss('cancel');
       		})
       		.error(function (data, status, headers, config) {
