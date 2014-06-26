@@ -168,7 +168,7 @@ span {
 		margin-top: 0;
 	}*/
 
-.movie_title {
+.search_movie_title {
 	font-size: 24px;
 	line-height: 30px;
 	width: 100%;
@@ -179,17 +179,17 @@ span {
 	margin: 0;
 }
 
-	.movie_title:hover {
+	.search_movie_title:hover {
 		cursor: pointer;
 		color: #FF2F2F;
 	}
 
-.movie_year {
+.search_movie_year {
 	float: left;
 	clear: both;
 }
 
-.movie_actors {
+.search_movie_actors {
 	float: left;
 	width: 100%;
 	font-size: 0.9em;
@@ -219,6 +219,10 @@ span {
 	position: absolute;
 	top: 32px;
 	right: 15px;
+}
+
+.movie_title {
+	max-width: 73%;
 }
 
 .movie_link {
@@ -360,11 +364,6 @@ span {
 .movieposter {
 	width: 100%;
 }
-	.movieposter:hover {
-		-moz-box-shadow: 2px 2px 1px #888;
-		-webkit-box-shadow: 2px 2px 1px #888;
-		box-shadow: 2px 2px 1px #888;
-	}
 
 .ratings-container {
 }
@@ -440,6 +439,53 @@ span {
 	color: #0096C4;
 }
 
+/* BUSINESS STUFF */ 
+
+.budget_p {
+	font-size: 24px;
+	font-style: italic;
+	text-align: center;
+	margin-bottom: 50px;
+	margin-top: 50px;
+}
+
+.budget {
+	font-size: 30px;
+	padding-left: 5px;
+	color: #0096C4;
+}
+
+/* SEASONS & EPISODES STUFF */
+
+#series_container {
+	margin-bottom: 30px;
+}
+
+.nav-pills {
+	width: 35%;
+	float: left;
+	margin-right: 5%;
+}
+
+	.nav-pills > li > a {
+		color: #0096C4;
+	}
+
+.tab-content {
+	width: 60%;
+	float: left;
+}
+
+.episode_number {
+	float: right;
+	top: 2px;
+	position: absolute;
+	right: 15px;
+	margin: 0;
+}
+
+
+
 
 /* PROGRESS BAR */
 
@@ -459,18 +505,3 @@ span {
 	margin: 15px 15px 0px;
 }
 
-/* BUSINESS STUFF */ 
-
-.budget_p {
-	font-size: 24px;
-	font-style: italic;
-	text-align: center;
-	margin-bottom: 50px;
-	margin-top: 50px;
-}
-
-.budget {
-	font-size: 30px;
-	padding-left: 5px;
-	color: #0096C4;
-}

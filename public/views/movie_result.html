@@ -46,11 +46,12 @@
 
 			</div>
 			<div class="movieinfo-right col-md-9 ">
-				<h2 class="highlight">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>
+				<h2 class="highlight movie_title">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>
 
 				<button ng-click="addToWatchList()">Add Movie To Watchlist</button>
 
 				<div class="links_container">
+					<a class="movie_link" href="{{ trailerURL }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
 					<a class="movie_link" href="{{ movieIMDBurl }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
 					<a class="movie_link" href="{{ movieRTlink }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>
 				</div>
@@ -67,7 +68,7 @@
 					<p><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
 					<p><b>Studio: </b>{{movieStudio}}</p>
 					<p><b>Runtime:</b> {{movieRuntime}}</p>
-					<p><b>Starring: </b><span ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
+					<p><b>Starring: </b><span style="cursor:pointer" popover="{{'As ' + actor.character}}" popover-trigger="mouseenter" ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
 					<p><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
 					<p><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
 				</div>
@@ -146,9 +147,41 @@
 
 	</div>
 
+	<div id="series_container" class="row" ng-hide="isMovie">
+		<h2 style="margin-bottom: 30px">Seasons & Episodes</h2>
+		<div class="col-sm-12" >
+		<tabset vertical="true" type="pills">
+		    <tab heading="Season {{season.numSeason}}" ng-repeat="season in seriesSeasons">
+				<carousel>
+					<slide class="similar_movie" ng-repeat="episode in season.episodes" active="slide.active">
+						<div class="col-sm-12">
+							<h3 class="highlight similar_movie_title">{{episode.title}}</h3>
+							<h4 class="episode_number">{{"Episode " + episode.episode}}</h4>
+							<p ng-if="episode.plot !== 'Add a Plot'">{{episode.plot}}</p>
+							<p ng-if="episode.plot == 'Add a Plot'">Unfortunately no Plot has been added for this episode.</p>
+						</div>
+				    </slide>
+				</carousel>
+		    </tab>
+
+		</tabset>
+
+<!-- 
+				<h2>Season {{season.numSeason}}</h2>
+				<carousel>
+				<slide class="similar_movie" ng-repeat="episode in season.episodes" active="slide.active">
+					<div class="col-sm-12">
+						<h3 class="highlight similar_movie_title">{{episode.title}}</h3>
+						<p>{{episode.plot}}</p>
+					</div>
+			    </slide>
+			</carousel> -->
+		</div>
+	</div>
 
 
-	<div class="row" ng-show="hasGross || isMovie">
+
+	<div class="row" ng-show="hasGross">
 		<h2>Business Data</h2>
 		<p class="budget_p">{{movieTitle}} had a Budget of <span class="budget">{{movieBudget}}</span></p>
         <highchart id="chart1" config="chartConfig" class="span10"></highchart>

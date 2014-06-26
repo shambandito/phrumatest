@@ -43,11 +43,11 @@
 		</div>
 		<div class="movieinfo-right col-md-10 col-sm-10 col-xs-9">
 
-			<h2 class="movie_title highlight" ng-click="singleMovieSearch(movie.imdbID, movie.Type)">{{movie.Title}} </h2>
+			<h2 class="search_movie_title highlight" ng-click="singleMovieSearch(movie.imdbID, movie.Type)">{{movie.Title}} </h2>
 
-			<span class="movie_year"> ({{movie.Year}})</span>
+			<span class="search_movie_year"> ({{movie.Year}})</span>
 			<p class="search_plot" ng-show="check(movie.Plot)">{{movie.Plot}}</p>
-			<p class="movie_actors" ng-show="check(movie.Actors)"><strong>Starring: </strong>{{movie.Actors}}</p>
+			<p class="search_movie_actors" ng-show="check(movie.Actors)"><strong>Starring: </strong>{{movie.Actors}}</p>
 		</div>
 	</div>
 </div>
