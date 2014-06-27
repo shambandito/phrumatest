@@ -16,17 +16,17 @@
 					<li>
 						<div class="navbar-form small_search">
 							<div class="input-group">
-								<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query)">
+								<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query, 'search')">
 								<span class="input-group-btn">
 									<button class="btn btn-default small_searchbar_button" type="button" ng-click="doSearch(query)"><span class="glyphicon glyphicon-search"></span></button>
 								</span>
 							</div>
 						</div>
 					</li>
-					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">register</a></li>
-					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">login</button></li>
+					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">Register</a></li>
+					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">Login</button></li>
 					<li ng-show="getAuthen()"><p id="welcome_message">{{message}}</p></li>
-					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">logout</button></li>
+					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">Logout</button></li>
 				</ul>
 			</div>
 		</div>
@@ -41,14 +41,13 @@
 	<div class="row" id="movie_info">
 		<div class="movie_info_wrapper">
 			<div class="movieinfo-left col-md-3">
-				<p><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
-				<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')">Compare</button>
+				<p style="text-align: center;"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
+				<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')"><span class="glyphicon glyphicon-stats" style="margin-right: 5px; top: 2px;"></span> Compare</button>
+				<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()"><span class="glyphicon glyphicon-heart" style="margin-right: 5px; top: 2px;"></span> Add to Favourites</button>
 
 			</div>
 			<div class="movieinfo-right col-md-9 ">
-				<h2 class="highlight movie_title">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>
-
-				<button ng-click="addToWatchList()">Add Movie To Watchlist</button>
+				<h2 class="highlight movie_title">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>				
 
 				<div class="links_container">
 					<a class="movie_link" href="{{ trailerURL }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
@@ -80,9 +79,8 @@
 	</div>
 
 	<div id="moviedata-container" class="row">
-		<div class="movieratings_wrapper">
-			<h2 style="margin-top: 0">Ratings</h2>
-			<p class="rt_consensus">{{movieConsensus}} „Deftly balancing vulgarity and sincerity while placing its protagonists in excessive situations, Superbad is an authentic take on friendship and the overarching awkwardness of the high school experience.“</p>
+		<div class="movieratings_wrapper col-md-12">
+			<h2 style="margin-top: 0; margin-bottom: 30px;">Ratings</h2>
 			<div class="col-md-4" ng-class="getClass()">
 					<div class="knob_container">
 						<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
@@ -107,7 +105,7 @@
 
 	<div id="similar_and_critics" class="row" ng-show="isMovie">
 		<div class="col-md-6 critics_container" ng-show="hasReviews">
-			<h2>What The Critics Say</h2>
+			<h2 style=" margin-bottom: 30px;">What The Critics Say</h2>
 
 			<carousel>
 				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active">
@@ -125,7 +123,7 @@
 			</carousel>
 		</div>
 		<div class="col-md-6 similar_container" ng-show="hasSimilar">
-			<h2>Similar Movies</h2>
+			<h2 style="margin-bottom: 30px;">Similar Movies</h2>
 			<carousel>
 				<slide class="similar_movie" ng-repeat="similarMovie in similarMovies" active="slide.active">
 					<div class="col-xs-4">
@@ -157,8 +155,8 @@
 						<div class="col-sm-12">
 							<h3 class="highlight similar_movie_title">{{episode.title}}</h3>
 							<h4 class="episode_number">{{"Episode " + episode.episode}}</h4>
-							<p ng-if="episode.plot !== 'Add a Plot'">{{episode.plot}}</p>
-							<p ng-if="episode.plot == 'Add a Plot'">Unfortunately no Plot has been added for this episode.</p>
+							<p class="episode_plot" ng-if="episode.plot !== 'Add a Plot'">{{episode.plot}}</p>
+							<p class="episode_plot" ng-if="episode.plot == 'Add a Plot'">Unfortunately no Plot has been added for this episode.</p>
 						</div>
 				    </slide>
 				</carousel>
@@ -182,9 +180,11 @@
 
 
 	<div class="row" ng-show="hasGross">
-		<h2>Business Data</h2>
-		<p class="budget_p">{{movieTitle}} had a Budget of <span class="budget">{{movieBudget}}</span></p>
-        <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+		<div class="col-md-12">
+			<h2>Business Data</h2>
+			<p class="budget_p">{{movieTitle}} had a Budget of <span class="budget">{{movieBudget}}</span></p>
+	        <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+   		</div>
     </div>
 
 </div>
@@ -192,36 +192,34 @@
 
 <!-- OVERLAY FOR COMPARE SEARCH -->
 <div id="compare_search_overlay">
-	<h1>Search</h1>
-	<span class="close_overlay" ng-click="closeCompareSearch()">X</span>
-	<div class="row">
-		<div class="input-group compare_search_input">
-			<input type="text" ng-model="compareSearchQuery" class="compare_searchbar form-control" placeholder="Search for a Movie or TV Show"/>
-			<span class="input-group-btn">
-		      	<button class="btn btn-default compare_searchbar_button" type="button" ng-click="doCompareSearch()"><span class="glyphicon glyphicon-search"></span></button>
-		    </span>
-		</div>
-	</div>
+	<h2 style="margin: 30px 0px 30px 30px">Search</h2>
+	<span class="close_overlay glyphicon glyphicon-remove" ng-click="closeCompareSearch()"></span>
 	<div class="container">
+		<div class="col-md-12">
+			<div class="input-group compare_search_input">
+				<input type="text" ng-model="compareSearchQuery" class="compare_searchbar form-control" placeholder="Search for a Movie or TV Show" ng-keypress="pressEnter($event, compareSearchQuery, 'compare')"/>
+				<span class="input-group-btn">
+			      	<button class="btn btn-default compare_searchbar_button" type="button" ng-click="doCompareSearch()" ><span class="glyphicon glyphicon-search"></span></button>
+			    </span>
+			</div>
+		</div>
+
 		<div class="col-md-12">
 			<div ng-hide="errorMessage == ''" class="text-center" class="error_message">
 				<h3>{{ errorMessage }}</h3>
 			</div>
 
 			<div class="row movie_search_result" ng-repeat="movie in compareSearchMovies" >
-
-				<div class="movieinfo-left col-md-1 col-sm-2 col-xs-4">
+				<div class="movieinfo-left col-md-2 col-sm-2 col-xs-3">
 					<img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="doCompare(movie.imdbID, movie.Type)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
 				</div>
-				<div class="movieinfo-right col-md-11 col-sm-10 col-xs-8">
+				<div class="movieinfo-right col-md-10 col-sm-10 col-xs-9">
 
-					<h2 class="movie_title" ng-click="doCompare(movie.imdbID, movie.Type)">{{movie.Title}} </h2>
+					<h2 class="search_movie_title highlight" ng-click="doCompare(movie.imdbID, movie.Type)">{{movie.Title}} </h2>
 
-					<span class="movie_year"> ({{movie.Year}})</span>
-
-					<p style="font-size: 0.9em"></p>
-
-					<p class="movie_actors" ng-show="check(movie.Actors)">{{movie.Actors}}</p>
+					<span class="search_movie_year"> ({{movie.Year}})</span>
+					<p class="search_plot" ng-show="check(movie.Plot)">{{movie.Plot}}</p>
+					<p class="search_movie_actors" ng-show="check(movie.Actors)"><strong>Starring: </strong>{{movie.Actors}}</p>
 				</div>
 			</div>
 		</div>

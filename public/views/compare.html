@@ -16,7 +16,7 @@
 					<li>
 						<div class="navbar-form small_search">
 							<div class="input-group">
-								<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query)">
+								<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query, 'search')">
 								<span class="input-group-btn">
 									<button class="btn btn-default small_searchbar_button" type="button" ng-click="doSearch(query)"><span class="glyphicon glyphicon-search"></span></button>
 								</span>
