@@ -770,6 +770,7 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
   		$scope.message ='';
 
   		if(newuser.password  == user.passwordconfirm){
+  			newuser.password = window.btoa(user.password);
   		$http.post('/newuser',newuser)
   			.success(function(data, status, headers, config){
   				console.log("bin drin");
@@ -793,16 +794,17 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
   	$scope.login = function(username,password){
   		var user = {username : username, password : password };
 		var message = '';
-
+		user.password = window.btoa(user.password);
+		
 		    $http.post('/authenticate', user)
       		.success(function (data, status, headers, config) {
         		
         		$window.sessionStorage.token = data.token;
 
-        		var encodedProfile = data.token.split('.')[1];
+        	/*	var encodedProfile = data.token.split('.')[1];
         		var profile = JSON.parse(url_base64_decode(encodedProfile));
         		//MainFactory.setToken(data.token);
-        		console.log(profile);
+        		console.log(profile);*/
         		$modalInstance.dismiss('cancel');
       		})
       		.error(function (data, status, headers, config) {
