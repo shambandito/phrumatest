@@ -21,16 +21,16 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	//OPEN MODAL FUNCTION
 	$scope.openModal = function (size,modalziel) {
 		if(modalziel == 'login'){
-	    var modalInstance = $modal.open({
-	      templateUrl: 'myLoginModal.html',
-	      controller: ModalInstanceController,
-	      size: size,
-	      resolve: {
-	        items: function () {
-	          return $scope.items;
-	        }
-	      }
-	    });
+		    var modalInstance = $modal.open({
+		      templateUrl: 'myLoginModal.html',
+		      controller: ModalInstanceController,
+		      size: size,
+		      resolve: {
+		        items: function () {
+		          return $scope.items;
+		        }
+		      }
+		    });
 	    }
 	    else if(modalziel == 'signup'){
 	    	var modalInstance = $modal.open({
@@ -47,11 +47,15 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	};
 
 	// PRESS ENTER TO SEARCH FUNCTION
-	$scope.pressEnter = function(event, query) {
+	$scope.pressEnter = function(event, query, search_type) {
 
-		if(event.which == 13) {
 
+		if(event.which == 13 && search_type == 'search') {
 			$scope.doSearch(query);
+		}
+
+		if(event.which == 13 && search_type == 'compare') {
+			$scope.doCompareSearch(query);
 		}
 	}
 
@@ -152,7 +156,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 		ngProgress.reset();
 
-		//MAKE RESULT PAGE "PAGES" FULLSCREEN
+/*		//MAKE RESULT PAGE "PAGES" FULLSCREEN
 	    function fullheight() {
 	        jQuery('#movie_info').css({
 	            height: jQuery(window).height()-50
@@ -169,7 +173,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	    });
 
 	    // RUN FULLHEIGHT ONCE ON INIT
-	    fullheight();
+	    fullheight();*/
 
 
 
@@ -289,7 +293,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 					// MOVIE GROSS CHART STUFF
 					if($scope.movieType == "movie") {
-						if(typeof res.business.budget.money !== 'undefined' ) {
+						if(typeof res.business.budget !== 'undefined' ) {
 							$scope.movieBudget = res.business.budget.money;
 						}
 						$scope.hasGross = false;
@@ -396,12 +400,14 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		document.getElementById("compare_search_overlay").style.display = 'block';
 		document.getElementById("result_container").style.display = 'none';		
 		document.getElementById("result_container").style.opacity = '0';
+		document.getElementById("ngProgress-container").style.top = '0';
 	}
 
 	$scope.closeCompareSearch = function() {
 				document.getElementById("compare_search_overlay").style.display = 'none';	
 				document.getElementById("result_container").style.display = 'block';
 				document.getElementById("result_container").style.opacity = '1';
+				document.getElementById("ngProgress-container").style.top = '50px';
 	}
 
 	$scope.doCompareSearch = function() {
@@ -475,6 +481,8 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 	//COMPARE PAGE IS GENERATED HERE
 	$scope.compareInit = function() {
+
+		document.getElementById("ngProgress-container").style.top = '50px';
 		ngProgress.reset();
 
 		$scope.movieQuery = MainFactory.getQuery();

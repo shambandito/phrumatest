@@ -1,5 +1,5 @@
 /*FONT IMPORTS*/
-@import url(http://fonts.googleapis.com/css?family=Istok+Web:400,700);
+@import url(http://fonts.googleapis.com/css?family=Roboto:300,400);
 @import url(http://fonts.googleapis.com/css?family=Oxygen:400,700&subset=latin,latin-ext);
 @import url(http://fonts.googleapis.com/css?family=Lato:300,400,700,400italic,700italic);
 
@@ -14,8 +14,8 @@ body, html {
 
 h1, h2, h3, h4, h5, h6 {
 	color: #8A8984;
-	font-family: 'Oxygen', sans-serif;
-	font-weight: 700;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
 }
 
 strong {
@@ -38,13 +38,13 @@ span {
 }
 
 .error_message {
-	top: 50%;
+	top: 40%;
 	left: 50%;
 	float: left;
 	position: absolute;
-	transform: translate(-50%, -50%);
-	-webkit-transform: translate(-50%, -50%);
-	-moz-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -40%);
+	-webkit-transform: translate(-50%, -40%);
+	-moz-webkit-transform: translate(-50%, -40%);
 	width: 80%;
 }
 
@@ -59,6 +59,18 @@ span {
 		color: #fff;
 		background-color: #0096C4;
 		border: 1px solid #0096C4;
+	}
+
+.btn_red {
+	border: 1px solid #FF2F2F;
+	color: #FF2F2F;
+	background: transparent;
+}
+
+	.btn_red:hover {
+		color: #fff;
+		background-color: #FF2F2F;
+		border: 1px solid #FF2F2F;
 	}
 
 .modal-buttons {
@@ -92,6 +104,7 @@ span {
 	font-size: 2em;
     color: #FF2F2F;
 }
+
 /* IMPORTANT FOR ANGULAR BOOTSTRAP UI */
 .nav, .pagination, .carousel, .panel-title a { 
 	margin: 0;
@@ -106,7 +119,9 @@ span {
 	background: #444;
 }
 
-
+.navbar-collapse {
+	background: #444;
+}
 
 .main_logo {
 	position: absolute;
@@ -119,12 +134,12 @@ span {
 }
 
 .big_search {
-	top: 50%;
+	top: 40%;
 	float: left;
 	position: relative;
-	transform: translateY(-50%);
-	-webkit-transform: translateY(-50%);
-	-moz-webkit-transform: translateY(-50%);
+	transform: translateY(-40%);
+	-webkit-transform: translateY(-40%);
+	-moz-webkit-transform: translateY(-40%);
 }
 
 .big_searchbar {
@@ -150,6 +165,24 @@ span {
 
 .small_searchbar_button {
 	background: #f9f9f9;
+}
+
+@media screen and (max-width: 991px) {
+	 .small_search {
+		width: 100%;
+		border: none;
+		box-shadow: none;
+		margin: 0 auto;
+		padding: 10px 0;
+	}
+
+	.nav > li {
+		text-align: center;
+	}
+
+	.nav > li > .navbar-btn {
+		width: 100%;
+	}
 }
 
 /* SEARCH RESULTS */
@@ -221,8 +254,20 @@ span {
 	right: 15px;
 }
 
+@media screen and (max-width: 991px) {
+	.links_container {
+		position: relative;
+		top: 0;
+		left: 0;
+		text-align: center;
+		margin-bottom: 25px;
+		margin-top: 25px;
+	}
+}
+
 .movie_title {
 	max-width: 73%;
+	font-size: 35px;
 }
 
 .movie_link {
@@ -246,35 +291,25 @@ span {
 	margin: 0 auto;
 }
 
-@media screen and (max-width: 991px) {
-	.knob_container {
-		width: 50%;
-		margin: 0 auto;
-		margin-bottom: 15px;
-	}
-}
-
-
-	.knob_container > p {
-		text-align: center;
-		font-weight: bold;
-		margin-bottom: 0;
-	}
-
-#movie_info {
-}
-
 .movie_info_wrapper {
-	top: 50%;
 	float: left;
 	position: relative;
-	transform: translateY(-50%);
-	-webkit-transform: translateY(-50%);
-	-moz-webkit-transform: translateY(-50%);
 	width: 100%;
+	margin-top: 25px;
 } 
 
+
+.knob_container > p {
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 0;
+}
+
 .scrollmore {
+
+	display: none;
+
+
 	position: absolute;
 	bottom: 0px;
 	left: 50%;
@@ -298,18 +333,42 @@ span {
 	font-size: 24px;
 	font-style: italic;
 	text-align: center;
-	margin-bottom: 50px;
-	margin-top: 50px;
+	margin-bottom: 30px;
+	margin-top: 30px;
 }
 
 .movieratings_wrapper {
-	top: 50%;
-	float: left;
 	position: relative;
-	transform: translateY(-50%);
-	-webkit-transform: translateY(-50%);
-	-moz-webkit-transform: translateY(-50%);
-	margin-top: -15px;
+	margin-top: 25px;
+}
+
+@media screen and (max-width: 991px) {
+	.movie_title {
+		max-width: 100%;
+	}
+
+	.knob_container {
+		margin: 0 auto;
+		margin-bottom: 15px;
+	}
+
+	#movie_info, #moviedata-container {
+		height: auto !important;
+	}
+
+	.movie_link {
+		padding-right: 25px;
+		padding-left: 0;
+	}
+
+	.movieratings_wrapper {
+		margin-top: 25px;
+	}
+
+	.scrollmore {
+		display: none;
+	}
+
 }
 
 /* SIMILAR MOVIE STUFF */
@@ -396,9 +455,9 @@ span {
 
 .close_overlay {
 	position: absolute;
-	right: 25px;
+	right: 30px;
 	top: 25px;
-	font-size: 50px;
+	font-size: 45px;
 	opacity: 0.75;
 }
 
@@ -408,18 +467,20 @@ span {
 	}
 
 .compare_search_input {
-	width: 80%;
+	width: 100%;
 	margin: 0 auto;
-	margin-bottom: 50px;
+	margin-bottom: 25px;
 }
 
 .compare_searchbar {
 	height: 50px;
 	font-size: 20px;
+	border: 1px solid #0096C4;
 }
 
 .compare_searchbar_button {
 	height: 50px;
+	width: 50px;
 }
 
 /* CRITICS STUFF */
@@ -484,13 +545,28 @@ span {
 	margin: 0;
 }
 
+.episode_plot {
+	margin-bottom: 50px;
+}
+
+@media screen and (max-width: 991px) {
+	.episode_number {
+		position: relative;
+		top: 0;
+		left: 0;
+		float: left;
+		clear: both;
+		width: 100%;
+		margin-bottom: 10px;
+	}
+}
 
 
 
 /* PROGRESS BAR */
 
 #ngProgress-container {
-	top: 50px !important;
+	top: 50px;
 }
 
 

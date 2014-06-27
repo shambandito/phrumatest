@@ -25,7 +25,7 @@
 
 <div class="col-md-10 col-md-offset-1 big_search_container" >
 	<div class="input-group big_search">
-		<input type="text" ng-model="query" class="big_searchbar form-control" placeholder="Search for a Movie or TV Show" ng-keypress="pressEnter($event, query)"/>
+		<input type="text" ng-model="query" class="big_searchbar form-control" placeholder="Search for a Movie or TV Show" ng-keypress="pressEnter($event, query, 'search')"/>
 		<span class="input-group-btn">
 	      	<button class="btn btn-default big_searchbar_button" type="button" ng-click="doSearch(query)"><span class="glyphicon glyphicon-search"></span></button>
 	    </span>
@@ -42,11 +42,11 @@
         <form ng-show="!isAuthenticated" ng-submit="login(username,password)">
         	<div class="row">
         		<div class="col-md-2">Username/email :</div>
-        		<div class="col-md-4"><input type="text" ng-model="username" placeholder="Username"></div>
+        		<div class="col-md-4"><input class="form-control" type="text" ng-model="username" placeholder="Username"></div>
         	</div>
         	<div class="row">
         		<div class="col-md-2">Password : </div>
-        		<div class="col-md-4"><input type="password" ng-model="password" placeholder="Password"></div>
+        		<div class="col-md-4"><input class="form-control" type="password" ng-model="password" placeholder="Password"></div>
         	</div>        	
         	<div class="row">
         		<div class="col-md-10">{{message}}</div>        			
@@ -69,21 +69,21 @@
         <form  ng-submit="signup(newuser)">
         	<div class="row">
         		<div class="col-md-5">Username :</div>
-        		<div class="col-md-5"><input type="text" ng-model="newuser.username" placeholder="Username"></div>
+        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.username" placeholder="Username"></div>
                 <div>{{message}}</div>
         	</div>
         	<div class="row">
         		<div class="col-md-5">e-mail :</div>
-        		<div class="col-md-5"><input type="text" ng-model="newuser.email" placeholder="email"></div>
+        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.email" placeholder="email"></div>
                 <div>{{messageemail}}</div>
         	</div>
         	<div class="row">
         		<div class="col-md-5">password : </div>
-        		<div class="col-md-5"><input type="password" ng-model="newuser.password" placeholder="Password"></div>
+        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.password" placeholder="Password"></div>
         	</div>
         	<div class="row">
         		<div class="col-md-5">Confirm password: </div>
-        		<div class="col-md-5"><input type="password" ng-model="newuser.passwordconfirm" placeholder="Password"></div>
+        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.passwordconfirm" placeholder="Password"></div>
         	</div>            	
         	<div class="row">
         		<div class="col-md-10">{{message}}</div>        			
