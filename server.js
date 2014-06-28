@@ -73,6 +73,7 @@ app.post('/newuser',function(req,res){
             email : req.body.email,
             password : req.body.password
           }, function(err, data) {
+            console.log(req.body.password);
             if (err)
             res.send(err);
             res.json(data);
