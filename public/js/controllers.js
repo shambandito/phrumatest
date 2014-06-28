@@ -138,7 +138,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 	//START SETTING UP RESULT PAGE
 	$scope.singleMovieSearch = function(id, type) {
-
+		console.log(id);
 		//MainFactory.setRTurl(url);
 		MainFactory.setType(type);
 		MainFactory.setIMDBid(id);
@@ -727,6 +727,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
     		alert(data);
     	});
   	};
+  	//WATCHLIST
 
   	$scope.addToWatchList = function(){
   		if($window.sessionStorage.token != null){
@@ -748,22 +749,35 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			alert("Sie sind nicht eingelogt");
 		}
   		};
+
+  	$scope.goToWatchList = function(){
+  		$location.path("/watchlist");
+  	}
+
   	$scope.watchlistInit =  function(){
-  			if($window.sessionStorage.token != null){
   			var encodedProfile = $window.sessionStorage.token.split('.')[1];
     		var profile = JSON.parse(url_base64_decode(encodedProfile));
-
+    		var watchlistdata = [];
+    		var array = [];
+    		var i = 0;
   			$http({url: '/api/userwatchlist/'+profile.id ,
   			   	   method : 'Get',
   				}).success(function(data){
-  					$scope.watchlist = data;
-  					console.log(data);
+  					watchlistdata = data;
+  						for(i = 0 ; i < watchlistdata.length; i++){
+  							MainFactory.getIMDBmovie_omdb(watchlistdata[i].imdbid).success(function (res) {
+	    					
+	    							var movies = res;
+		    						if(movies.Type !== "episode"){
+					    				if(movies.Type !== "game") {
+							    			array[array.length] = res;
+					    				}
+					   				}
+								})
+						}
+						$scope.watchlist = array;
 				});
-			}
-			else{
-				alert("Sie sind nicht eingelogt");
-			}
-	  	};	
+	  	}
 }
 
 //CONTROLLER FOR MODAL OBJECTS

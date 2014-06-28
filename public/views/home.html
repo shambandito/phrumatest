@@ -15,7 +15,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">Register</a></li>
 					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">Login</button></li>
-					<li ng-show="getAuthen()"><p id="welcome_message">{{message}}</p></li>
+					<li ng-show="getAuthen()" ng-click="goToWatchList()"><p id="welcome_message">{{message}}</p></li>
 					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">Logout</button></li>
 				</ul>
 			</div>

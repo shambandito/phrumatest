@@ -24,16 +24,10 @@
 			controller: 'MainController'
 		})
 
-		/*.when('/login', {
-			templateUrl: 'views/login.html',
-			controller: 'LoginController'
+		.when('/watchlist', {
+			templateUrl: 'views/watchlist.html',
+			controller: 'MainController'
 		})
-
-		.when('/logged', {
-			templateUrl: 'views/logged.html',
-			controller: 'LoginController'
-		})
-		*/
 
 
 
