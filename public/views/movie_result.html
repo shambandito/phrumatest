@@ -65,8 +65,8 @@
 				<hr>
 				<div id="meta_container">
 					<p><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
-					<p><b>Studio: </b>{{movieStudio}}</p>
-					<p><b>Runtime:</b> {{movieRuntime}}</p>
+					<p ng-hide="movieStudio == ''"><b>Studio: </b>{{movieStudio}}</p>
+					<p><b>Runtime: </b>{{movieRuntime}}</p>
 					<p><b>Starring: </b><span style="cursor:pointer" popover="{{'As ' + actor.character}}" popover-trigger="mouseenter" ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
 					<p><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
 					<p><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
@@ -75,7 +75,6 @@
 			</div>
 
 		</div>
-		<a class="scrollmore" smooth-scroll-jquery target="moviedata-container" speed="500" offset="50"><span class="glyphicon glyphicon-chevron-down"></span></a>
 	</div>
 
 	<div id="moviedata-container" class="row">
@@ -99,8 +98,16 @@
 							<p>Rotten Tomatoes Audience</p>
 					</div>
 			</div>
+		</div>		
+	</div>
+
+	<div id="movietrivia_container" class="row">
+		<div class="col-md-12">
+			<h2 style=" margin-bottom: 30px;">Some things you might not know</h2>
+			<p class="trivia" ng-repeat="trivia in movieTrivia.slice(((currentPage-1)*maxSize), ((currentPage)*maxSize)) track by $index">{{trivia}}</p>
+			<pagination total-items="movieTrivia.length" ng-model="currentPage" max-size="10" class="pagination-sm" boundary-links="false" rotate="false" num-pages="numPages"></pagination>
 		</div>
-		<a class="scrollmore" smooth-scroll-jquery target="similar_and_critics" speed="500" offset="50"><span class="glyphicon glyphicon-chevron-down"></span></a>
+
 	</div>
 
 	<div id="similar_and_critics" class="row" ng-show="isMovie">

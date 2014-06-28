@@ -338,6 +338,12 @@ span {
 	margin-top: 25px;
 }
 
+.trivia {
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+	border-bottom: 1px solid #ccc;
+}
+
 @media screen and (max-width: 991px) {
 	.movie_title {
 		max-width: 100%;

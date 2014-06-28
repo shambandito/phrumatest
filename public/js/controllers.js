@@ -200,19 +200,20 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				//GET ROTTEN TOMATOES MOVIE JSON
 				MainFactory.getRTmovie(MainFactory.getIMDBid()).success(function (res) {
 					$scope.rtMovieID = res.id;
-					if(typeof res.ratings.critics_score !== 'undefined')
+					if(typeof res.ratings !== 'undefined') {
 			   		$scope.movieCriticsRating = res.ratings.critics_score;
-
+			   		}
 			   		//CHECK IF THERE IS ACTUALLY A CRITICS RATING
 			   		$scope.hasRTrating = true;
 
 			   		console.log($scope.movieCriticsRating);
-			   		if($scope.movieCriticsRating == '-1') {
+			   		if($scope.movieCriticsRating == '-1' || $scope.movieCriticsRating == '' ) {
 			   			$scope.hasRTrating = false;
 			   		}
 
 			   		$scope.movieUsersRating = res.ratings.audience_score;
 			   		$scope.movieSite = res.Website;
+			   		console.log(res.posters.detailed);
 			   		$scope.moviePoster = res.posters.detailed;
 			   		$scope.movieStudio = res.studio;
 			   		$scope.movieConsensus = res.critics_consensus;
@@ -278,9 +279,17 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					$scope.movieWriters = res.writers;
 					$scope.movieIMDBurl = res.urlIMDB;
 					$scope.movieLocations = res.filmingLocations;
+					$scope.movieTrivia = res.movieTrivia;
+					$scope.movieAgeRating = res.rated;
+
+					//TRIVIA STUFF
+					console.log($scope.movieTrivia.length)
+					$scope.maxSize = 10;
+					$scope.currentPage = 1;
+					$scope.totalItems = 0;
 
 
-				if(typeof res.trailer.videoURL !== 'undefined' ) {
+				if(typeof res.trailer !== 'undefined' ) {
 					$scope.trailerURL = res.trailer.videoURL;
 				}
 
