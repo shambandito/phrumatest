@@ -42,36 +42,150 @@
 
 	<!-- MOVIE 1 -->
 	<div class="col-md-6">
-		<p><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
-		<h2 class="highlight">{{ movieTitle }}</h2>
-		<p><span style="font-size: 0.7em; font-style: italic;" ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
-		<p>Plot:</p>
-		<p>{{ moviePlot }}</p>
-			<div class="knob_container">
-				<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
-				<p>IMDB</p>
+		<div class="row" id="movie_info">
+			<div class="movie_info_wrapper">
+				<div class="movieinfo-left col-xs-12">
+					<p style="text-align: center;"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
+					<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')"><span class="glyphicon glyphicon-stats" style="margin-right: 5px; top: 2px;"></span> Compare</button>
+					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()"><span class="glyphicon glyphicon-heart" style="margin-right: 5px; top: 2px;"></span> Add to Favourites</button>
+
+				</div>
+				<div class="movieinfo-right col-xs-12 ">
+					<h2 class="highlight movie_title">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>				
+
+					<div class="links_container">
+						<a class="movie_link" href="{{ trailerURL }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
+						<a class="movie_link" href="{{ movieIMDBurl }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
+						<a class="movie_link" href="{{ movieRTlink }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>
+					</div>
+
+					<p><b>Plot</b></p>
+
+					<div id="plot_container">
+						<p ng-hide="showPlot">{{ moviePlot }} <a ng-click="showFullPlot()">full plot</a></p>
+						<p ng-show="showPlot">{{ moviePlotFull }} <a ng-click="showFullPlot()">short plot</a></p>
+					</div>
+
+					<hr>
+					<div id="meta_container">
+						<p><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
+						<p ng-hide="movieStudio == ''"><b>Studio: </b>{{movieStudio}}</p>
+						<p><b>Runtime: </b>{{movieRuntime}}</p>
+						<p><b>Starring: </b><span style="cursor:pointer" popover="{{'As ' + actor.character}}" popover-trigger="mouseenter" ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
+						<p><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
+						<p><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
+					</div>
+
+				</div>
+
 			</div>
-			<div class="knob_container" ng-show="isMovie">
-				<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
-				<p>Rotten Tomatoes</p>
+
+			<div id="moviedata-container" class="row">
+				<div class="movieratings_wrapper col-md-12">
+					<h2 style="margin-top: 0; margin-bottom: 30px;">Ratings</h2>
+					<div class="col-md-4" ng-class="getClass()">
+							<div class="knob_container">
+								<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
+								<p>IMDB</p>
+							</div>
+					</div>
+					<div class="col-md-4" ng-show="isMovie" ng-hide="!hasRTrating">
+							<div class="knob_container">
+								<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
+									<p>Rotten Tomatoes Critics</p>
+							</div>
+					</div>
+					<div class="col-md-4" ng-show="isMovie" ng-hide="!hasRTrating">
+							<div class="knob_container">
+								<input type="text" value="N/A" class="knob" ng-model="movieUsersRating"/>
+									<p>Rotten Tomatoes Audience</p>
+							</div>
+					</div>
+				</div>		
 			</div>
+
+			<div class="row" ng-show="hasGross">
+				<div class="col-md-12">
+					<h2>Business & Money</h2>
+					<p class="budget_p">{{movieTitle}} had a Budget of <span class="budget">{{movieBudget}}</span></p>
+			        <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+		   		</div>
+   			</div>
+		</div>
 	</div>
 
 	<!-- MOVIE 2 (COMPARISON) -->
 	<div class="col-md-6">
-		<p><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster_compare }}" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
-		<h2 class="highlight">{{ movieTitle_compare }}</h2>
-		<p><span style="font-size: 0.7em; font-style: italic;" ng-repeat="genre in genres_compare">{{genre}}{{$last ? '' : ', '}}</span></p>
-		<p>Plot:</p>
-		<p>{{ moviePlot_compare }}</p>
-			<div class="knob_container">
-				<input type="text" value="N/A" class="knob" ng-model="IMDBRating_compare"/>
-				<p>IMDB</p>
+		<div class="row" id="movie_info">
+			<div class="movie_info_wrapper">
+				<div class="movieinfo-left col-xs-12">
+					<p style="text-align: center;"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster_compare }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
+					<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')"><span class="glyphicon glyphicon-stats" style="margin-right: 5px; top: 2px;"></span> Compare</button>
+					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()"><span class="glyphicon glyphicon-heart" style="margin-right: 5px; top: 2px;"></span> Add to Favourites</button>
+
+				</div>
+				<div class="movieinfo-right col-xs-12 ">
+					<h2 class="highlight movie_title">{{ movieTitle_compare }} <small>(<span ng-repeat="country in countries">{{country_compare}}{{$last ? '' : ', '}}</span> {{ movieYear_compare }})</small></h2>				
+
+					<div class="links_container">
+						<a class="movie_link" href="{{ trailerURL_compare }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
+						<a class="movie_link" href="{{ movieIMDBurl_compare }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
+						<a class="movie_link" href="{{ movieRTlink_compare }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>
+					</div>
+
+					<p><b>Plot</b></p>
+
+					<div id="plot_container">
+						<p ng-hide="showPlot">{{ moviePlot_compare }} <a ng-click="showFullPlot()">full plot</a></p>
+						<p ng-show="showPlot">{{ moviePlotFull_compare }} <a ng-click="showFullPlot()">short plot</a></p>
+					</div>
+
+					<hr>
+					<div id="meta_container">
+						<p><b>Genre: </b><span ng-repeat="genre in genres">{{genre_compare}}{{$last ? '' : ', '}}</span></p>
+						<p ng-hide="movieStudio == ''"><b>Studio: </b>{{movieStudio_compare}}</p>
+						<p><b>Runtime: </b>{{movieRuntime_compare}}</p>
+						<p><b>Starring: </b><span style="cursor:pointer" popover="{{'As ' + actor.character}}" popover-trigger="mouseenter" ng-repeat="actor in movieActors_compare|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
+						<p><b>Directed By: </b><span ng-repeat="director in movieDirectors_compare">{{director.name}}{{$last ? '' : ', '}}</span></p>
+						<p><b>Written By: </b><span ng-repeat="writer in movieWriters_compare">{{writer.name}}{{$last ? '' : ', '}}</span></p>
+					</div>
+
+				</div>
+
 			</div>
-			<div class="knob_container" ng-show="isMovie">
-				<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating_compare"/>
-				<p>Rotten Tomatoes</p>
+
+			<div id="moviedata-container" class="row">
+				<div class="movieratings_wrapper col-md-12">
+					<h2 style="margin-top: 0; margin-bottom: 30px;">Ratings</h2>
+					<div class="col-md-12" ng-class="getClass()">
+							<div class="knob_container">
+								<input type="text" value="N/A" class="knob" ng-model="IMDBRating_compare"/>
+								<p>IMDB</p>
+							</div>
+					</div>
+					<div class="col-md-12" ng-show="isMovie_compare" ng-hide="!hasRTrating_compare">
+							<div class="knob_container">
+								<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating_compare"/>
+									<p>Rotten Tomatoes Critics</p>
+							</div>
+					</div>
+					<div class="col-md-12" ng-show="isMovie_compare" ng-hide="!hasRTrating_compare">
+							<div class="knob_container">
+								<input type="text" value="N/A" class="knob" ng-model="movieUsersRating_compare"/>
+									<p>Rotten Tomatoes Audience</p>
+							</div>
+					</div>
+				</div>		
 			</div>
+
+			<div class="row" ng-show="hasGross_compare">
+				<div class="col-md-12">
+					<h2>Business & Money</h2>
+					<p class="budget_p">{{movieTitle_compare}} had a Budget of <span class="budget">{{movieBudget_compare}}</span></p>
+			        <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+		   		</div>
+   			</div>
+		</div>
 	</div>
 </div>
 
