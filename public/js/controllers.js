@@ -12,7 +12,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	var show = false;
 	$scope.showPlot = false;
 
-	ngProgress.height("8px");
+	ngProgress.height("4px");
 	ngProgress.color("#0096C4");
 
 	//TOGGLE FOR MENU COLLAPSE
@@ -138,7 +138,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 	//START SETTING UP RESULT PAGE
 	$scope.singleMovieSearch = function(id, type) {
-		console.log(id);
+		
 		//MainFactory.setRTurl(url);
 		MainFactory.setType(type);
 		MainFactory.setIMDBid(id);
@@ -382,8 +382,10 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					}
 
 					ngProgress.complete();
+					$scope.movieOnWatchlist();
 					document.getElementById("result_container").style.opacity = '1';
 					document.getElementById("result_container").style.display = 'block';
+					
 
 
 
@@ -714,8 +716,8 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	$scope.logout = function () {
     	$scope.welcome = '';
     	$scope.message = '';
-    	MainFactory.setAuthen(false);
-    	delete $window.sessionStorage.token;
+    	delete $window.sessionStorage.token; 
+    	$scope.movieOnWatchlist();
   	};
 
   	 $scope.callRestricted = function () {
@@ -727,6 +729,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
     		alert(data);
     	});
   	};
+
   	//WATCHLIST
 
   	$scope.addToWatchList = function(){
@@ -734,7 +737,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
   		var encodedProfile = $window.sessionStorage.token.split('.')[1];
     	var profile = JSON.parse(url_base64_decode(encodedProfile));
 		var imdbid = MainFactory.getIMDBid();
-		console.log($scope.movieTitle);
+		MainFactory.setMovieOnWatchlist(true);
 
   		$http({url: '/api/userwatchlist',
   			   method : 'POST',
@@ -748,10 +751,59 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		else{
 			alert("Sie sind nicht eingelogt");
 		}
-  		};
+  	};
+
+  	$scope.checkbutton =  function(){
+  		return MainFactory.getMovieOnWatchlist();
+  	}
 
   	$scope.goToWatchList = function(){
   		$location.path("/watchlist");
+  	};
+
+  	$scope.movieOnWatchlist = function(){
+  		
+  		if($window.sessionStorage.token != null){
+  		var encodedProfile = $window.sessionStorage.token.split('.')[1];
+    	var profile = JSON.parse(url_base64_decode(encodedProfile));
+
+  		$http({url: '/api/userwatchlist/'+profile.id,
+  			   method:'Get'
+  			})
+  		.success(function(data, status, headers, config){
+  			
+  				if(data.length == 0){
+  					MainFactory.setMovieOnWatchlist(false);
+  				}else{
+  					for(var i = 0 ; i < data.length ; i++){
+  						if(data[i].imdbid == MainFactory.getIMDBid()){
+  							MainFactory.setMovieOnWatchlist(true);
+  							break;
+  						}else{
+  							MainFactory.setMovieOnWatchlist(false);
+  						}
+  					}
+  					
+  				}
+  			});
+  		}else{
+  			MainFactory.setMovieOnWatchlist(false);
+  		}
+  	}
+
+  	$scope.removeFromWatchList = function(imdbID){
+  		var encodedProfile = $window.sessionStorage.token.split('.')[1];
+    	var profile = JSON.parse(url_base64_decode(encodedProfile));
+    	console.log(MainFactory.getIMDBid());
+
+			$http({
+				url: '/api/removeuserwatchlist/'+profile.id +'/'+imdbID,
+				method: "delete"
+			}).success(function(data){
+				MainFactory.setMovieOnWatchlist(false);
+				$scope.watchlistInit();
+			});
+		
   	}
 
   	$scope.watchlistInit =  function(){
@@ -778,6 +830,20 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 						$scope.watchlist = array;
 				});
 	  	}
+
+	  	$scope.singleMovieSearchWatchlist = function(id, type,query) {
+		
+		MainFactory.setType(type);
+		MainFactory.setIMDBid(id);
+		MainFactory.setQuery(query);
+
+		if($location.path() == "/result") {
+			$scope.singleMovieInit();
+		} else {
+			$location.path("/result");
+		}
+
+	}
 }
 
 //CONTROLLER FOR MODAL OBJECTS
@@ -795,7 +861,6 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
   			newuser.password = window.btoa(user.password);
   		$http.post('/newuser',newuser)
   			.success(function(data, status, headers, config){
-  				console.log("bin drin");
   				$modalInstance.dismiss('cancel');
   			})
   			.error(function(data, status, headers, config){
@@ -822,12 +887,8 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
       		.success(function (data, status, headers, config) {
         		
         		$window.sessionStorage.token = data.token;
-
-        	/*	var encodedProfile = data.token.split('.')[1];
-        		var profile = JSON.parse(url_base64_decode(encodedProfile));
-        		//MainFactory.setToken(data.token);
-        		console.log(profile);*/
         		$modalInstance.dismiss('cancel');
+        		$scope.movieOnWatchlist();
       		})
       		.error(function (data, status, headers, config) {
         	// Erase the token if the user fails to log in
@@ -837,4 +898,34 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
         		$scope.message = 'Error: Invalid user or password';
       		});
 	}
+
+	$scope.movieOnWatchlist = function(){
+  		
+  		if($window.sessionStorage.token != null){
+  		var encodedProfile = $window.sessionStorage.token.split('.')[1];
+    	var profile = JSON.parse(url_base64_decode(encodedProfile));
+
+  		$http({url: '/api/userwatchlist/'+profile.id,
+  			   method:'Get'
+  			})
+  		.success(function(data, status, headers, config){
+  			
+  				if(data.length == 0){
+  					MainFactory.setMovieOnWatchlist(false);
+  				}else{
+  					for(var i = 0 ; i < data.length ; i++){
+  						if(data[i].imdbid == MainFactory.getIMDBid()){
+  							MainFactory.setMovieOnWatchlist(true);
+  							break;
+  						}else{
+  							MainFactory.setMovieOnWatchlist(false);
+  						}
+  					}
+  					
+  				}
+  			});
+  		}else{
+  			MainFactory.setMovieOnWatchlist(false);
+  		}
+  	}
 };

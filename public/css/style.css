@@ -73,6 +73,17 @@ span {
 		border: 1px solid #FF2F2F;
 	}
 
+.btn_remove_red{
+	border: 1px solid #FF2F2F;
+	color: #FFF;
+	background-color: #FF2F2F;
+}
+	.btn_remove_red:hover{
+		border: 1px solid #FF2F2F;
+		color: #FF2F2F;
+		background: transparent;
+	}
+
 .modal-buttons {
 	height: 40px;
 }
@@ -178,9 +189,13 @@ span {
 
 	.nav > li > .navbar-btn {
 		width: 100%;
+		margin-left: 5px;
 	}
 }
 
+.nav > li >	.navbar-btn {
+		margin-left: 5px;
+	}
 /* SEARCH RESULTS */
 
 .search_container {
@@ -600,6 +615,10 @@ span {
 	width: 100%;
 	clear: both;
 	margin-top: 10px;
+}
+
+.btn_remove{
+	height: 35px;
 }
 
 

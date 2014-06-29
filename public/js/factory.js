@@ -9,7 +9,7 @@ angular.module('factory', [])
     var IMDBid_2 = "";
     var type = "";
     var message = "";
-    var isAuthenticated = false;
+    var MovieOnWatchlist = false;
 
 
     movie.setQuery = function(value) {
@@ -139,12 +139,12 @@ angular.module('factory', [])
     movie.getMessage = function(){
         return message;
     }
-    movie.setAuthen = function(authen){
-        isAuthenticated = authen;
+    movie.setMovieOnWatchlist = function(booleanvalue){
+        MovieOnWatchlist = booleanvalue;
     }
 
-    movie.getAuthen = function(){
-        return isAuthenticated;
+    movie.getMovieOnWatchlist = function(){
+        return MovieOnWatchlist;
     }
 
     return movie;           

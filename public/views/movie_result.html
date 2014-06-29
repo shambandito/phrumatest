@@ -25,7 +25,8 @@
 					</li>
 					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">Register</a></li>
 					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">Login</button></li>
-					<li ng-show="getAuthen()" ng-click="goToWatchList()"><p id="welcome_message">{{message}}</p></li>
+					<li ng-show="getAuthen()"><p id="welcome_message">{{message}}</p></li>
+					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="goToWatchList()">Watchlist</button></li>
 					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">Logout</button></li>
 				</ul>
 			</div>
@@ -43,7 +44,8 @@
 			<div class="movieinfo-left col-md-3">
 				<p style="text-align: center;"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
 				<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')"><span class="glyphicon glyphicon-stats" style="margin-right: 5px; top: 2px;"></span> Compare</button>
-				<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()"><span class="glyphicon glyphicon-heart" style="margin-right: 5px; top: 2px;"></span> Add to Favourites</button>
+				<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()" ng-show="!checkbutton()"><span class="glyphicon glyphicon-heart" style="margin-right: 5px; top: 2px;"></span>	Add to Favourites</button>
+				<button class="btn btn_remove_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid)" ng-show="checkbutton()"><span class="glyphicon glyphicon-heart" style="margin-right: 5px; top: 2px;"></span> Remove from Favourites</button>
 
 			</div>
 			<div class="movieinfo-right col-md-9 ">

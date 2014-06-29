@@ -31,7 +31,6 @@ var watchlistmovie = mongoose.model('Watchlistmovie', new Schema({
 
 app.post('/api/userwatchlist', function(req, res) {
 
-    console.log("Hallo");
     watchlistmovie.create({
       userid: req.body.userid,
       imdbid : req.body.imdbid,
@@ -51,6 +50,15 @@ app.get('/api/userwatchlist/:userid', function(req, res) {
       })
   });
 
+app.delete('/api/removeuserwatchlist/:userid/:imdbid', function(req,res){
+  watchlistmovie.remove({
+    userid : req.params.userid,
+    imdbid : req.params.imdbid
+  },function(err, data) {
+      if (err) res.send(err);
+      res.json(data);
+  })
+});
 
 app.post('/newuser',function(req,res){
 
