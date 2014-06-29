@@ -44,6 +44,18 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	      		}
 	    	});
 	    }
+	    else if(modalziel == 'notlogedin'){
+	    	var modalInstance = $modal.open({
+	      		templateUrl: 'myNotLogedInModal.html',
+	      		controller: ModalInstanceController,
+	      		size: size,
+	      		resolve: {
+	        		items: function () {
+	          			return $scope.items;
+	        		}
+	      		}
+	    	});
+	    }
 	};
 
 	// PRESS ENTER TO SEARCH FUNCTION
@@ -749,7 +761,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				});
 		}
 		else{
-			alert("Sie sind nicht eingelogt");
+			$scope.openModal('lg','notlogedin')
 		}
   	};
 
@@ -847,7 +859,49 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 }
 
 //CONTROLLER FOR MODAL OBJECTS
-function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactory) {
+function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactory,$modal) {
+
+	$scope.openModal = function (size,modalziel) {
+
+		$modalInstance.dismiss('cancel');
+		
+		if(modalziel == 'login'){
+		    var modalInstance = $modal.open({
+		      templateUrl: 'myLoginModal.html',
+		      controller: ModalInstanceController,
+		      size: size,
+		      resolve: {
+		        items: function () {
+		          return $scope.items;
+		        }
+		      }
+		    });
+	    }
+	    else if(modalziel == 'signup'){
+	    	var modalInstance = $modal.open({
+	      		templateUrl: 'mySignUpModal.html',
+	      		controller: ModalInstanceController,
+	      		size: size,
+	      		resolve: {
+	        		items: function () {
+	          			return $scope.items;
+	        		}
+	      		}
+	    	});
+	    }
+	    else if(modalziel == 'notlogedin'){
+	    	var modalInstance = $modal.open({
+	      		templateUrl: 'myNotLogedInModal.html',
+	      		controller: ModalInstanceController,
+	      		size: size,
+	      		resolve: {
+	        		items: function () {
+	          			return $scope.items;
+	        		}
+	      		}
+	    	});
+	    }
+	};
   
   	$scope.cancel = function () {
     	$modalInstance.dismiss('cancel');
