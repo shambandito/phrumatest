@@ -202,12 +202,12 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					$scope.rtMovieID = res.id;
 
 			   		//CHECK IF THERE IS ACTUALLY A CRITICS RATING
-			   		$scope.hasRTrating = true;
+			   		$scope.hasRTrating = false;
 
 					if(typeof res.ratings !== 'undefined') {
 			   			$scope.movieCriticsRating = res.ratings.critics_score;
 			   			$scope.movieUsersRating = res.ratings.audience_score;
-			   			$scope.hasRTrating = false;
+			   			$scope.hasRTrating = true;
 			   		}
 			   		
 			   		$scope.movieSite = res.Website;
@@ -252,7 +252,8 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 	    //GET CLASS FUNCTION
 	    $scope.getClass = function() {
-				if($scope.isMovie == false || $scope.hasRTrating == false) {
+	    		
+				if($scope.hasRTrating == false) {
 					return "series_knob"
 				} else {
 					return "";

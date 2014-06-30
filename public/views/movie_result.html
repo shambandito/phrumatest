@@ -81,19 +81,19 @@
 	<div id="moviedata-container" class="row">
 		<div class="movieratings_wrapper col-md-12">
 			<h2 style="margin-top: 0; margin-bottom: 30px;">Ratings</h2>
-			<div class="col-md-4" ng-class="getClass()">
+			<div class="col-md-4" ng-class="hasRTrating ? '' : 'series_knob'">
 					<div class="knob_container">
 						<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
 						<p>IMDB</p>
 					</div>
 			</div>
-			<div class="col-md-4" ng-show="isMovie" ng-hide="!hasRTrating">
+			<div class="col-md-4" ng-show="hasRTrating">
 					<div class="knob_container">
 						<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
 							<p>Rotten Tomatoes Critics</p>
 					</div>
 			</div>
-			<div class="col-md-4" ng-show="isMovie" ng-hide="!hasRTrating">
+			<div class="col-md-4" ng-show="hasRTrating">
 					<div class="knob_container">
 						<input type="text" value="N/A" class="knob" ng-model="movieUsersRating"/>
 							<p>Rotten Tomatoes Audience</p>
@@ -227,33 +227,64 @@
 
 <!-- LOGIN MODAL -->
 <div id="login_modal">
-    <script type="text/ng-template" id="myModalContent.html">
+    <script type="text/ng-template" id="myLoginModal.html">
         <div class="modal-header">
             <h3 class="modal-title">Log in to User Account</h3>
         </div>
         <div class="modal-body">
+        <form ng-show="!isAuthenticated" ng-submit="login(username,password)">
         	<div class="row">
-        		<div class="col-md-2">
-        			username/email
-        		</div>
-        		<div class="col-md-4">
-        			<input type="text">
-        		</div>
-        	</div> 
-        	<div class="row" style="margin-top: 1%;">
-        		<div class="col-md-2">
-        			password
-        		</div>
-        		<div class="col-md-4">
-        			<input type="password">
-        		</div>
-        	</div> 
-        </div>
+        		<div class="col-md-2">Username/email :</div>
+        		<div class="col-md-4"><input class="form-control" type="text" ng-model="username" placeholder="Username"></div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-2">Password : </div>
+        		<div class="col-md-4"><input class="form-control" type="password" ng-model="password" placeholder="Password"></div>
+        	</div>        	
+        	<div class="row">
+        		<div class="col-md-10">{{message}}</div>        			
+        	</div>
         <div class="modal-footer">
-	        <div class="modal-buttons">
-	        	<button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">login</button>
-            	<button class="btn btn-default modal-btn-close" ng-click="cancel()">close</button>
-	        </div>
+                <button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">Login</button>
+                <button class="btn btn-default modal-btn-close" type ="button"ng-click="cancel()">Close</button>
+            </div>
+        	</form>
+        </div>
+    </script>
+</div>
+
+<div id="signup_modal">
+    <script type="text/ng-template" id="mySignUpModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">SignUp</h3>
+        </div>
+        <div class="modal-body">
+        <form  ng-submit="signup(newuser)">
+        	<div class="row">
+        		<div class="col-md-5">Username :</div>
+        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.username" placeholder="Username"></div>
+                <div>{{message}}</div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">e-mail :</div>
+        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.email" placeholder="email"></div>
+                <div>{{messageemail}}</div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">password : </div>
+        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.password" placeholder="Password"></div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">Confirm password: </div>
+        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.passwordconfirm" placeholder="Password"></div>
+        	</div>            	
+        	<div class="row">
+        		<div class="col-md-10">{{message}}</div>        			
+        	</div>
+        <div class="modal-footer">
+        	<button class="btn btn-default modal-btn-login"  type="submit" >Register</button>
+        	<button class="btn btn-default modal-btn-close" type="button" ng-click="cancel()">Close</button>  
+        	</form>
         </div>
     </script>
 </div>
