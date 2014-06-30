@@ -16,71 +16,102 @@
 					<li>
 						<div class="navbar-form small_search">
 							<div class="input-group">
-								<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query)">
+								<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query, 'search')">
 								<span class="input-group-btn">
 									<button class="btn btn-default small_searchbar_button" type="button" ng-click="doSearch(query)"><span class="glyphicon glyphicon-search"></span></button>
 								</span>
 							</div>
 						</div>
 					</li>
-					<li><a class="register" href="#">Register</a></li>
-					<li><button class="btn btn-default navbar-btn login-btn" ng-click="openModal('lg')">Login</button></li>
+					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">Register</a></li>
+					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">Login</button></li>
+					<li ng-show="getAuthen()"><p id="welcome_message">{{message}}</p></li>
+					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">Logout</button></li>
 				</ul>
 			</div>
 		</div>
 </nav>
 
 <div class="col-md-10 col-md-offset-1 search_container" ng-init="searchInit()">
-	<div ng-hide="errorMessage == ''" class="text-center" style="padding-top: 300px">
+	<div ng-hide="errorMessage == ''" class="text-center error_message">
 		<h3>{{ errorMessage }}</h3>
 	</div>
 	<div class="row movie_search_result" ng-repeat="movie in movies" >
 
-		<div class="movieinfo-left col-md-1 col-sm-2 col-xs-4">
+		<div class="movieinfo-left col-md-2 col-sm-2 col-xs-3">
 			<img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="singleMovieSearch(movie.imdbID, movie.Type)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
 		</div>
-		<div class="movieinfo-right col-md-11 col-sm-10 col-xs-8">
+		<div class="movieinfo-right col-md-10 col-sm-10 col-xs-9">
 
-			<h2 class="movie_title highlight" ng-click="singleMovieSearch(movie.imdbID, movie.Type)">{{movie.Title}} </h2>
+			<h2 class="search_movie_title highlight" ng-click="singleMovieSearch(movie.imdbID, movie.Type)">{{movie.Title}} </h2>
 
-			<span class="movie_year"> ({{movie.Year}})</span>
-
-			<p style="font-size: 0.9em"></p>
-
-			<p class="movie_actors" ng-show="check(movie.Actors)">{{movie.Actors}}</p>
+			<span class="search_movie_year"> ({{movie.Year}})</span>
+			<p class="search_plot" ng-show="check(movie.Plot)">{{movie.Plot}}</p>
+			<p class="search_movie_actors" ng-show="check(movie.Actors)"><strong>Starring: </strong>{{movie.Actors}}</p>
 		</div>
 	</div>
 </div>
 
 <!-- LOGIN MODAL -->
 <div id="login_modal">
-    <script type="text/ng-template" id="myModalContent.html">
+    <script type="text/ng-template" id="myLoginModal.html">
         <div class="modal-header">
             <h3 class="modal-title">Log in to User Account</h3>
         </div>
         <div class="modal-body">
+        <form ng-show="!isAuthenticated" ng-submit="login(username,password)">
         	<div class="row">
-        		<div class="col-md-2">
-        			username/email
-        		</div>
-        		<div class="col-md-4">
-        			<input type="text">
-        		</div>
-        	</div> 
-        	<div class="row" style="margin-top: 1%;">
-        		<div class="col-md-2">
-        			password
-        		</div>
-        		<div class="col-md-4">
-        			<input type="password">
-        		</div>
-        	</div> 
-        </div>
+        		<div class="col-md-2">Username/email :</div>
+        		<div class="col-md-4"><input class="form-control" type="text" ng-model="username" placeholder="Username"></div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-2">Password : </div>
+        		<div class="col-md-4"><input class="form-control" type="password" ng-model="password" placeholder="Password"></div>
+        	</div>        	
+        	<div class="row">
+        		<div class="col-md-10">{{message}}</div>        			
+        	</div>
         <div class="modal-footer">
-	        <div class="modal-buttons">
-	        	<button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">login</button>
-            	<button class="btn btn-default modal-btn-close" ng-click="cancel()">close</button>
-	        </div>
+                <button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">Login</button>
+                <button class="btn btn-default modal-btn-close" type ="button"ng-click="cancel()">Close</button>
+            </div>
+        	</form>
+        </div>
+    </script>
+</div>
+
+<div id="signup_modal">
+    <script type="text/ng-template" id="mySignUpModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">SignUp</h3>
+        </div>
+        <div class="modal-body">
+        <form  ng-submit="signup(newuser)">
+        	<div class="row">
+        		<div class="col-md-5">Username :</div>
+        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.username" placeholder="Username"></div>
+                <div>{{message}}</div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">e-mail :</div>
+        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.email" placeholder="email"></div>
+                <div>{{messageemail}}</div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">password : </div>
+        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.password" placeholder="Password"></div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">Confirm password: </div>
+        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.passwordconfirm" placeholder="Password"></div>
+        	</div>            	
+        	<div class="row">
+        		<div class="col-md-10">{{message}}</div>        			
+        	</div>
+        <div class="modal-footer">
+        	<button class="btn btn-default modal-btn-login"  type="submit" >Register</button>
+        	<button class="btn btn-default modal-btn-close" type="button" ng-click="cancel()">Close</button>  
+        	</form>
         </div>
     </script>
 </div>

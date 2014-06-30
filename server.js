@@ -23,6 +23,35 @@ var user = mongoose.model('User', new Schema({
   password : String
 }),'users');
 
+var watchlistmovie = mongoose.model('Watchlistmovie', new Schema({
+  userid : String,
+  imdbid : String,
+  movieltitle :  String
+}), 'watchlist');
+
+app.post('/api/userwatchlist', function(req, res) {
+
+    console.log("Hallo");
+    watchlistmovie.create({
+      userid: req.body.userid,
+      imdbid : req.body.imdbid,
+      movieltitle : req.body.movieltitle
+    }, function(err, data) {
+      if (err)
+        res.send(err);
+      res.send();
+      })
+  });
+
+app.get('/api/userwatchlist/:userid', function(req, res) {
+    watchlistmovie.find({'userid': req.params.userid}, function(err, data) {
+      if (err)
+        res.send(err);
+      else res.json(data);
+      })
+  });
+
+
 app.post('/newuser',function(req,res){
 
   user.find({username : req.body.username},function(err,data){
@@ -44,6 +73,7 @@ app.post('/newuser',function(req,res){
             email : req.body.email,
             password : req.body.password
           }, function(err, data) {
+            console.log(req.body.password);
             if (err)
             res.send(err);
             res.json(data);
@@ -55,9 +85,6 @@ app.post('/newuser',function(req,res){
 });
 
   
-
- 
-
 
 app.post('/authenticate', function (req, res) {
 
@@ -75,6 +102,7 @@ app.post('/authenticate', function (req, res) {
   //Wenn keine email email == false und stringvergleich mit data[0].username
   if(email == false){
     user.find({username : username},function(err, data) {
+      if(data[0]!=null){
       if (!(username == data[0].username && req.body.password == data[0].password)) {
       res.send(401, 'Wrong user or password');
       return;
@@ -83,15 +111,19 @@ app.post('/authenticate', function (req, res) {
     var profile = {
       username: username,
       email : data[0].email,
-      id: 123
+      id: data[0]._id
     };
 
   var token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
 
   res.json({ token: token });
+}else{
+  res.send(401, 'Wrong user or password');
+}
   });
   } else{
     user.find({email : username},function(err, data) {
+      if(data[0] != null){
       if (!(username == data[0].email && req.body.password == data[0].password)) {
         res.send(401, 'Wrong user or password');
         return;
@@ -100,14 +132,17 @@ app.post('/authenticate', function (req, res) {
   var profile = {
     username: data[0].username,
     email : username,
-    id: 123
+    id: data[0]._id
   };
 
   var token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
 
   res.json({ token: token });
-  })
-  }
+}else{
+   res.send(401, 'Wrong user or password');
+}
+})
+}
     
 
 });
