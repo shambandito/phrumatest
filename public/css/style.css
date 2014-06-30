@@ -686,6 +686,16 @@ span {
 }
 
 
+.notloggedin {
+	top: 40%;
+	left: 50%;
+	float: left;
+	position: absolute;
+	transform: translate(-50%, -40%);
+	-webkit-transform: translate(-50%, -40%);
+	-moz-webkit-transform: translate(-50%, -40%);	
+}
+
 
 /* PROGRESS BAR */
 

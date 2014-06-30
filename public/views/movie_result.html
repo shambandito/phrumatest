@@ -294,28 +294,8 @@
 
 <div id="notloggedin_modal">
     <script type="text/ng-template" id="myNotLoggedInModal.html">
-        <div class="modal-header">
-            <h3 class="modal-title">Log in to User Account</h3>
-        </div>
-        <div class="modal-body">
-        <form ng-show="!isAuthenticated" ng-submit="login(username,password)">
-        	<div class="row">
-        		<div class="col-md-2">Username/email :</div>
-        		<div class="col-md-4"><input class="form-control" type="text" ng-model="username" placeholder="Username"></div>
-        	</div>
-        	<div class="row">
-        		<div class="col-md-2">Password : </div>
-        		<div class="col-md-4"><input class="form-control" type="password" ng-model="password" placeholder="Password"></div>
-        	</div>        	
-        	<div class="row">
-        		<div class="col-md-10">{{message}}</div>     
-        		<a ng-click="openModal('lg','signup')">Register</a>   			
-        	</div>
-        <div class="modal-footer">
-                <button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">Login</button>
-                <button class="btn btn-default modal-btn-close" type ="button"ng-click="cancel()">Close</button>
-            </div>
-        	</form>
+        <div class="modal-body" style="text-align: center">
+        	<h4>You need to register/login before you can add things to your Watchlist</h4>
         </div>
     </script>
 </div>
