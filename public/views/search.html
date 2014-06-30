@@ -27,7 +27,7 @@
 					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">Register</a></li>
 					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">Login</button></li>
 					<li ng-show="getAuthen()"><p id="welcome_message">{{message}}</p></li>
-                    <li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="goToWatchList()">My Watchlist</button></li>
+                    <li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="goToWatchList()" style="margin-right: 15px">My Watchlist</button></li>
 					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">Logout</button></li>
 
 				</ul>
@@ -41,10 +41,10 @@
 	</div>
 	<div class="row movie_search_result" ng-repeat="movie in movies" >
 
-		<div class="movieinfo-left col-md-2 col-sm-2 col-xs-3">
+		<div class="movieinfo-left col-sm-2 col-xs-3">
 			<img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="singleMovieSearch(movie.imdbID, movie.Type)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
 		</div>
-		<div class="movieinfo-right col-md-10 col-sm-10 col-xs-9">
+		<div class="movieinfo-right col-sm-10 col-xs-9">
 
 			<h2 class="search_movie_title highlight" ng-click="singleMovieSearch(movie.imdbID, movie.Type)">{{movie.Title}} </h2>
 

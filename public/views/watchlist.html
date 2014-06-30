@@ -13,7 +13,6 @@
 
 			<div class="collapse navbar-collapse" collapse="isCollapsed">
 				<ul class="nav navbar-nav navbar-right">					
-					<li ng-show="getAuthen()" ng-click="goToWatchList()"><p id="welcome_message">{{message}}</p></li>
 					<li>
 						<div class="navbar-form small_search">
 							<div class="input-group">
@@ -25,7 +24,7 @@
 						</div>
 					</li>
 					<li ng-show="getAuthen()"><p id="welcome_message">{{message}}</p></li>
-                    <li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="goToWatchList()">My Watchlist</button></li>
+                    <li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="goToWatchList()" style="margin-right: 15px">My Watchlist</button></li>
 					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">Logout</button></li>
 				</ul>
 			</div>
@@ -35,21 +34,18 @@
 
 <div class="watchlist_container" ng-init="watchlistInit()">
     <div ng-repeat="movie in watchlist" class="row watchlist_search_result">
-        <div class="col-md2 col-sm-2 col-xs-3">
-            <img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="singleMovieSearch(movie.imdbID, movie.Type)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
-        </div>
-        <div class="movieinfo-right col-md-10 col-sm-10 col-xs-9">
-            <h2 class="watchlist_movie_title highlight" ng-click="singleMovieSearch(movie.imdbID, movie.Type)">{{movie.Title}}</h2>
+        <div class="col-sm-2 col-xs-3">
             <img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="singleMovieSearchWatchlist(movie.imdbID, movie.Type,movie.Title)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
         </div>
-        <div class="movieinfo-right col-md-8 col-sm-8 col-xs-7">
+        <div class="movieinfo-right col-sm-10 col-xs-9">
             <h2 class="watchlist_movie_title highlight" ng-click="singleMovieSearchWatchlist(movie.imdbID, movie.Type,movie.Title)">{{movie.Title}}</h2>
             <span class="watchlist_movie_year">({{movie.Year}})</span>
             <p class="watchlist_plot" ng-show="check(movie.Plot)">{{movie.Plot}}</p>
             <p class="watchlist_movie_actors" ng-show="check(movie.Actors)"><strong>Starring: </strong>{{movie.Actors}}</p>
+            <button class="btn btn_red btn_remove glyphicon glyphicon-remove" ng-click="removeFromWatchList(movie.imdbID)"></button>
         </div>
 
-        <div class="col-md-2 col-sm-2 col-xs-2"><button class="btn btn_remove_red btn_remove glyphicon glyphicon-remove" ng-click="removeFromWatchList(movie.imdbID)"></button></div>
+        
 
     </div>
 </div>

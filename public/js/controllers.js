@@ -370,7 +370,10 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 										borderRadius: 0,
 										plotBackgroundColor: null,
 										plotShadow: false,
-										plotBorderWidth: 0
+										plotBorderWidth: 0,
+										style: {
+											fontFamily: 'Lato'
+										}
 						            },
 						            tooltip: {
 										backgroundColor: '#FFF',
@@ -389,7 +392,12 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 						        
 						        xAxis: {
 						        	categories: dataForChartX
-								},
+								},        
+								yAxis: {           
+						            title: {
+						                text: null
+						            }
+						        },
 						        series: [{
 						        	name: "Gross",
 						            data: dataForChartY,
@@ -398,7 +406,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 						        }],
 
 						        title: {
-						            text: 'US Gross'
+						            text: 'US Box Office Gross'
 						        }
 
 

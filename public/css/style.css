@@ -37,6 +37,24 @@ span {
 	 cursor: auto;
 }
 
+@media (min-width: 768px) {
+	.container {
+		width: 760px;
+	}
+}
+
+@media (min-width:992px) {
+	.container{
+		width:970px;
+	}
+}
+
+@media (min-width:1200px) {
+	.container{
+		width:1170px;
+	}
+}
+
 .error_message {
 	top: 40%;
 	left: 50%;
@@ -195,7 +213,9 @@ span {
 
 .nav > li >	.navbar-btn {
 		margin-left: 5px;
-	}
+}
+
+
 /* SEARCH RESULTS */
 
 .search_container {
@@ -415,7 +435,7 @@ span {
 
 .similar_movie {
 	text-align: left;
-	min-height: 250px;
+	min-height: 230px;
 }
 
 	.similar_movie .similar_movie_title {
@@ -426,6 +446,10 @@ span {
 	.similar_movie .similar_movie_title span {
 		cursor: pointer;
 	}
+
+.btn_similar_compare, .review_content {
+	margin-bottom: 50px;
+}
 
 .carousel-control.right, .carousel-control.left {
 	color: #000;
@@ -583,7 +607,7 @@ span {
 }
 
 .episode_plot {
-	margin-bottom: 50px;
+	margin-bottom: 75px;
 }
 
 @media screen and (max-width: 991px) {
@@ -656,6 +680,9 @@ span {
 
 .btn_remove{
 	height: 35px;
+	position:absolute;
+	top: 0;
+	right: 15px;
 }
 
 
