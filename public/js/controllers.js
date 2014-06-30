@@ -746,22 +746,24 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
   	$scope.addToWatchList = function(){
   		if($window.sessionStorage.token != null){
-  		var encodedProfile = $window.sessionStorage.token.split('.')[1];
-    	var profile = JSON.parse(url_base64_decode(encodedProfile));
-		var imdbid = MainFactory.getIMDBid();
-		MainFactory.setMovieOnWatchlist(true);
+	  		var encodedProfile = $window.sessionStorage.token.split('.')[1];
+	    	var profile = JSON.parse(url_base64_decode(encodedProfile));
+			var imdbid = MainFactory.getIMDBid();
+			if(MainFactory.getMovieOnWatchlist() == false){
+				MainFactory.setMovieOnWatchlist(true);
 
-  		$http({url: '/api/userwatchlist',
-  			   method : 'POST',
-  				data: {userid : profile.id,
-  					   imdbid : imdbid,
-  					   movieltitle : $scope.movieTitle}
-  				}).success(function(){
-  					$scope.successmessage = "movie was added to the watchlist";
-				});
+		  		$http({url: '/api/userwatchlist',
+		  			   method : 'POST',
+		  				data: {userid : profile.id,
+		  					   imdbid : imdbid,
+		  					   movieltitle : $scope.movieTitle}
+		  				}).success(function(){
+		  					$scope.successmessage = "movie was added to the watchlist";
+						});
+			}
 		}
 		else{
-			$scope.openModal('lg','notlogedin')
+			$scope.openModal('lg','notlogedin');
 		}
   	};
 
@@ -806,7 +808,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
   	$scope.removeFromWatchList = function(imdbID){
   		var encodedProfile = $window.sessionStorage.token.split('.')[1];
     	var profile = JSON.parse(url_base64_decode(encodedProfile));
-    	console.log(MainFactory.getIMDBid());
 
 			$http({
 				url: '/api/removeuserwatchlist/'+profile.id +'/'+imdbID,
