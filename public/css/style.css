@@ -73,6 +73,17 @@ span {
 		border: 1px solid #FF2F2F;
 	}
 
+.btn_remove_red{
+	border: 1px solid #FF2F2F;
+	color: #FFF;
+	background-color: #FF2F2F;
+}
+	.btn_remove_red:hover{
+		border: 1px solid #FF2F2F;
+		color: #FF2F2F;
+		background: transparent;
+	}
+
 .modal-buttons {
 	height: 40px;
 }
@@ -178,9 +189,13 @@ span {
 
 	.nav > li > .navbar-btn {
 		width: 100%;
+		margin-left: 5px;
 	}
 }
 
+.nav > li >	.navbar-btn {
+		margin-left: 5px;
+	}
 /* SEARCH RESULTS */
 
 .search_container {
@@ -592,6 +607,55 @@ span {
 		width: 100%;
 
 	}
+}
+
+/* WATCHLIST */
+
+.watchlist_container {
+	margin-top: 75px;
+}
+.watchlist_search_result {
+	border-bottom: 1px solid #ddd;
+	padding: 15px 0;
+
+}
+
+.watchlist_movie_title {
+	font-size: 24px;
+	line-height: 30px;
+	width: 100%;
+	text-overflow: ellipsis;
+	float: left;
+	overflow: hidden;
+	white-space: nowrap;
+	margin: 0;
+}
+
+	.watchlist_movie_title:hover {
+		cursor: pointer;
+		color: #FF2F2F;
+	}
+
+.watchlist_movie_year {
+	float: left;
+	clear: both;
+}
+
+.watchlist_movie_actors {
+	float: left;
+	width: 100%;
+	font-size: 0.9em;
+}
+
+.watchlist_plot {
+	float: left;
+	width: 100%;
+	clear: both;
+	margin-top: 10px;
+}
+
+.btn_remove{
+	height: 35px;
 }
 
 
