@@ -985,7 +985,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			}
 		}
 		else{
-			$scope.openModal('lg','notlogedin');
+			$scope.openModal('lg','notloggedin');
 		}
   	};
 
@@ -1112,9 +1112,9 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
 	      		}
 	    	});
 	    }
-	    else if(modalziel == 'notlogedin'){
+	    else if(modalziel == 'notloggedin'){
 	    	var modalInstance = $modal.open({
-	      		templateUrl: 'myNotLogedInModal.html',
+	      		templateUrl: 'myNotLoggedInModal.html',
 	      		controller: ModalInstanceController,
 	      		size: size,
 	      		resolve: {
