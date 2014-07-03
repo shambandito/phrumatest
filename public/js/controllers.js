@@ -450,7 +450,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				document.getElementById("compare_search_overlay").style.display = 'none';	
 				document.getElementById("result_container").style.display = 'block';
 				document.getElementById("result_container").style.opacity = '1';
-				document.getElementById("ngProgress-container").style.top = '50px';
+				document.getElementById("ngProgress-container").style.top = '60px';
 	}
 
 	$scope.doCompareSearch = function() {
@@ -525,7 +525,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	//COMPARE PAGE IS GENERATED HERE
 	$scope.compareInit = function() {
 
-		document.getElementById("ngProgress-container").style.top = '50px';
+		document.getElementById("ngProgress-container").style.top = '60px';
 		ngProgress.reset();
 
 		$scope.movieQuery = MainFactory.getQuery();
@@ -544,21 +544,22 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			window.scrollTo(0, 0);
 			ngProgress.start();
 
-			if(MainFactory.getType == "movie") {	
+			//if(MainFactory.getType == "movie") {	
 
 				$scope.isMovie = true;
 
-				//GET ROTTEN TOMATOES MOVIE JSON
+				//GET ROTTEN TOMATOES MOVIE JSON FOR MOVIE 1
 				MainFactory.getRTmovie(MainFactory.getIMDBid()).success(function (res) {
 					$scope.rtMovieID = res.id;
 
 			   		//CHECK IF THERE IS ACTUALLY A CRITICS RATING
-			   		$scope.hasRTrating = true;
+			   		$scope.hasRTrating = false;
 
 					if(typeof res.ratings !== 'undefined') {
 			   			$scope.movieCriticsRating = res.ratings.critics_score;
 			   			$scope.movieUsersRating = res.ratings.audience_score;
-			   			$scope.hasRTrating = false;
+			   			$scope.hasRTrating = true;
+			   			console.log("RT1");
 			   		}
 			   		
 			   		$scope.movieSite = res.Website;
@@ -599,19 +600,20 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
 				});
-			}
+			//}
 
 				//GET ROTTEN TOMATOES MOVIE JSON FOR MOVIE 2
 				MainFactory.getRTmovie(MainFactory.getIMDBid_movie2()).success(function (res) {
-					$scope.rtMovieID = res.id;
+					$scope.rtMovieID_compare = res.id;
 
 			   		//CHECK IF THERE IS ACTUALLY A CRITICS RATING
-			   		$scope.hasRTrating_compare = true;
+			   		$scope.hasRTrating_compare = false;
 
 					if(typeof res.ratings !== 'undefined') {
 			   			$scope.movieCriticsRating_compare = res.ratings.critics_score;
 			   			$scope.movieUsersRating_compare = res.ratings.audience_score;
-			   			$scope.hasRTrating_compare = false;
+			   			$scope.hasRTrating_compare = true;
+			   			console.log("ASDASDGZASHDGASD");
 			   		}
 			   		
 			   		$scope.movieSite_compare = res.Website;
@@ -623,7 +625,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 
 			   		//GET SIMILAR MOVIES
-					MainFactory.getRTsimilar($scope.rtMovieID).success(function (res) {
+					MainFactory.getRTsimilar($scope.rtMovieID_compare).success(function (res) {
 						$scope.similarMovies_compare = res.movies;
 						$scope.hasSimilar_compare = true;
 						if($scope.similarMovies_compare == "") {

@@ -104,16 +104,7 @@
 		</div>		
 	</div>
 
-	<div id="movietrivia_container" class="row">
-		<div class="col-md-12">
-			<h2 style=" margin-bottom: 30px;">Did you know?</h2>
-			<p class="trivia" ng-repeat="trivia in movieTrivia.slice(((currentPage-1)*maxSize), ((currentPage)*maxSize)) track by $index">{{trivia}}</p>
-			<div class="col-md-12 pagination_container" ng-hide="numPages == '1'">
-				<pagination total-items="movieTrivia.length" ng-model="currentPage" max-size="10" class="pagination-sm" boundary-links="false" rotate="false" num-pages="numPages"></pagination>
-			</div>
-		</div>
 
-	</div>
 
 	<div id="similar_and_critics" class="row" ng-show="isMovie">
 		<div class="col-md-6 critics_container" ng-show="hasReviews">
@@ -157,6 +148,17 @@
 
 
 	</div>
+
+	<div id="movietrivia_container" class="row">
+		<div class="col-md-12">
+			<h2 style=" margin-bottom: 30px;">Did you know?</h2>
+			<p class="trivia" ng-repeat="trivia in movieTrivia.slice(((currentPage-1)*maxSize), ((currentPage)*maxSize)) track by $index">{{trivia}}</p>
+			<div class="col-md-12 pagination_container" ng-hide="numPages == '1'">
+				<pagination total-items="movieTrivia.length" ng-model="currentPage" max-size="5" class="pagination-sm" boundary-links="false" rotate="false" num-pages="numPages"></pagination>
+			</div>
+		</div>
+
+	</div>	
 
 	<div id="series_container" class="row" ng-hide="isMovie">
 		<div class="col-sm-12" >

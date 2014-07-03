@@ -23,11 +23,11 @@
 							</div>
 						</div>
 					</li>
-					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">register</a></li>
-					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">login</button></li>
+					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">Register</a></li>
+					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">Login</button></li>
 					<li ng-show="getAuthen()" ng-click="goToWatchList()"s><p id="welcome_message">{{message}}</p></li>
-					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="goToWatchList()">Watchlist</button></li>
-					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">logout</button></li>
+					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="goToWatchList()">My Watchlist</button></li>
+					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">Logout</button></li>
 				</ul>
 			</div>
 		</div>
@@ -39,7 +39,7 @@
 
 <div ng-init="compareInit()" id="result_container" ng-hide="movieQuery == ''">
 
-<div clas="row">
+<div clas="row" id="compare_results">
 
 	<!-- MOVIE 1 -->
 	<div class="col-md-6">
@@ -47,17 +47,17 @@
 			<div class="movie_info_wrapper">
 				<div class="movieinfo-left col-xs-12">
 					<p style="text-align: center;"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
-					<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')"><span class="glyphicon glyphicon-stats" style="margin-right: 5px; top: 2px;"></span> Compare</button>
-					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()"><span class="glyphicon glyphicon-heart" style="margin-right: 5px; top: 2px;"></span> Add to Favourites</button>
+					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()" ng-show="!checkbutton()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
+					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid)" ng-show="checkbutton()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>
 
 				</div>
 				<div class="movieinfo-right col-xs-12 ">
 					<h2 class="highlight movie_title">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>				
 
 					<div class="links_container">
-						<a class="movie_link" href="{{ trailerURL }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
-						<a class="movie_link" href="{{ movieIMDBurl }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
-						<a class="movie_link" href="{{ movieRTlink }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>
+						<a ng-hide="!trailerURL" class="movie_link" href="{{ trailerURL }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
+						<a ng-hide="!movieIMDBurl" class="movie_link" href="{{ movieIMDBurl }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
+						<a ng-hide="!movieRTlink" class="movie_link" href="{{ movieRTlink }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>
 					</div>
 
 					<p><b>Plot</b></p>
@@ -69,12 +69,13 @@
 
 					<hr>
 					<div id="meta_container">
-						<p><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
-						<p ng-hide="movieStudio == ''"><b>Studio: </b>{{movieStudio}}</p>
-						<p><b>Runtime: </b>{{movieRuntime}}</p>
+						<p ng-hide="!genres"><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
+						<p ng-hide="!movieStudio"><b>Studio: </b>{{movieStudio}}</p>
+						<p ng-hide="!movieRuntime"><b>Runtime: </b>{{movieRuntime}}</p>
+						<p ng-hide="!movieAgeRating"><b>Age Rating: </b>{{movieAgeRating}}</p>
 						<p><b>Starring: </b><span style="cursor:pointer" popover="{{'As ' + actor.character}}" popover-trigger="mouseenter" ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
-						<p><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
-						<p><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
+						<p ng-hide="!hasDirectors"><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
+						<p ng-hide="!hasWriters"><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
 					</div>
 
 				</div>
@@ -84,19 +85,19 @@
 			<div id="moviedata-container" class="row">
 				<div class="movieratings_wrapper col-md-12">
 					<h2 style="margin-top: 0; margin-bottom: 30px;">Ratings</h2>
-					<div class="col-md-4" ng-class="getClass()">
+					<div class="col-md-12" ng-class="hasRTrating ? '' : 'series_knob'">
 							<div class="knob_container">
 								<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
 								<p>IMDB</p>
 							</div>
 					</div>
-					<div class="col-md-4" ng-show="isMovie" ng-hide="!hasRTrating">
+					<div class="col-md-12" ng-show="hasRTrating">
 							<div class="knob_container">
 								<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
 									<p>Rotten Tomatoes Critics</p>
 							</div>
 					</div>
-					<div class="col-md-4" ng-show="isMovie" ng-hide="!hasRTrating">
+					<div class="col-md-12" ng-show="hasRTrating">
 							<div class="knob_container">
 								<input type="text" value="N/A" class="knob" ng-model="movieUsersRating"/>
 									<p>Rotten Tomatoes Audience</p>
@@ -121,17 +122,17 @@
 			<div class="movie_info_wrapper">
 				<div class="movieinfo-left col-xs-12">
 					<p style="text-align: center;"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster_compare }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
-					<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')"><span class="glyphicon glyphicon-stats" style="margin-right: 5px; top: 2px;"></span> Compare</button>
-					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()"><span class="glyphicon glyphicon-heart" style="margin-right: 5px; top: 2px;"></span> Add to Favourites</button>
+					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()" ng-show="!checkbutton()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
+					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid)" ng-show="checkbutton()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>
 
 				</div>
 				<div class="movieinfo-right col-xs-12 ">
 					<h2 class="highlight movie_title">{{ movieTitle_compare }} <small>(<span ng-repeat="country in countries">{{country_compare}}{{$last ? '' : ', '}}</span> {{ movieYear_compare }})</small></h2>				
 
 					<div class="links_container">
-						<a class="movie_link" href="{{ trailerURL_compare }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
-						<a class="movie_link" href="{{ movieIMDBurl_compare }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
-						<a class="movie_link" href="{{ movieRTlink_compare }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>
+						<a ng-hide="!trailerURL_compare" class="movie_link" href="{{ trailerURL_compare }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
+						<a ng-hide="!movieIMDBurl_compare" class="movie_link" href="{{ movieIMDBurl_compare }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
+						<a ng-hide="!movieRTlink_compare" class="movie_link" href="{{ movieRTlink_compare }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>
 					</div>
 
 					<p><b>Plot</b></p>
@@ -143,12 +144,13 @@
 
 					<hr>
 					<div id="meta_container">
-						<p><b>Genre: </b><span ng-repeat="genre in genres">{{genre_compare}}{{$last ? '' : ', '}}</span></p>
-						<p ng-hide="movieStudio == ''"><b>Studio: </b>{{movieStudio_compare}}</p>
-						<p><b>Runtime: </b>{{movieRuntime_compare}}</p>
+						<p ng-hide="!genres_compare"><b>Genre: </b><span ng-repeat="genre in genres_compare">{{genre}}{{$last ? '' : ', '}}</span></p>
+						<p ng-hide="!movieStudio"><b>Studio: </b>{{movieStudio_compare}}</p>
+						<p ng-hide="!movieRuntime_compare"><b>Runtime: </b>{{movieRuntime}}</p>
+						<p ng-hide="!movieAgeRating_compare"><b>Age Rating: </b>{{movieAgeRating}}</p>
 						<p><b>Starring: </b><span style="cursor:pointer" popover="{{'As ' + actor.character}}" popover-trigger="mouseenter" ng-repeat="actor in movieActors_compare|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
-						<p><b>Directed By: </b><span ng-repeat="director in movieDirectors_compare">{{director.name}}{{$last ? '' : ', '}}</span></p>
-						<p><b>Written By: </b><span ng-repeat="writer in movieWriters_compare">{{writer.name}}{{$last ? '' : ', '}}</span></p>
+						<p ng-hide="!hasDirectors_compare"><b>Directed By: </b><span ng-repeat="director in movieDirectors_compare">{{director.name}}{{$last ? '' : ', '}}</span></p>
+						<p ng-hide="!hasWriters_compare"><b>Written By: </b><span ng-repeat="writer in movieWriters_compare">{{writer.name}}{{$last ? '' : ', '}}</span></p>
 					</div>
 
 				</div>
@@ -158,19 +160,19 @@
 			<div id="moviedata-container" class="row">
 				<div class="movieratings_wrapper col-md-12">
 					<h2 style="margin-top: 0; margin-bottom: 30px;">Ratings</h2>
-					<div class="col-md-12" ng-class="getClass()">
+					<div class="col-md-12" ng-class="hasRTrating_compare ? '' : 'series_knob'">
 							<div class="knob_container">
 								<input type="text" value="N/A" class="knob" ng-model="IMDBRating_compare"/>
 								<p>IMDB</p>
 							</div>
 					</div>
-					<div class="col-md-12" ng-show="isMovie_compare" ng-hide="!hasRTrating_compare">
+					<div class="col-md-12" ng-show="hasRTrating_compare">
 							<div class="knob_container">
 								<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating_compare"/>
 									<p>Rotten Tomatoes Critics</p>
 							</div>
 					</div>
-					<div class="col-md-12" ng-show="isMovie_compare" ng-hide="!hasRTrating_compare">
+					<div class="col-md-12" ng-show="hasRTrating_compare">
 							<div class="knob_container">
 								<input type="text" value="N/A" class="knob" ng-model="movieUsersRating_compare"/>
 									<p>Rotten Tomatoes Audience</p>
