@@ -328,6 +328,7 @@ span {
 
 	.similar_movie .similar_movie_title {
 		margin-top: 0;
+		width: 75%;
 
 	}
 
@@ -503,5 +504,15 @@ span {
 #welcome_message {
 	color : #999;
 	margin: 15px 15px 0px;
+}
+
+/* MODAL STYLES */
+
+.modal {
+	overflow: hidden;
+}
+
+.modal-open {
+	overflow: auto;
 }
 
