@@ -9,7 +9,7 @@ angular.module('factory', [])
     var IMDBid_2 = "";
     var type = "";
     var message = "";
-    var isAuthenticated = false;
+    var MovieOnWatchlist = false;
 
 
     movie.setQuery = function(value) {
@@ -81,7 +81,7 @@ angular.module('factory', [])
     movie.getRTreviews_top = function(id) {
       return $http({
         method: 'JSONP', 
-        url: 'http://api.rottentomatoes.com/api/public/v1.0/movies/' + id + '/reviews.json?apikey=4nktdb9q9p54q9krkmagc7u3&limit=4&review_type=top_critic&page_limit=10&callback=JSON_CALLBACK'
+        url: 'http://api.rottentomatoes.com/api/public/v1.0/movies/' + id + '/reviews.json?apikey=4nktdb9q9p54q9krkmagc7u3&limit=4&review_type=top_critic&page_limit=15&callback=JSON_CALLBACK'
       });        
     }
 
@@ -128,7 +128,7 @@ angular.module('factory', [])
     movie.getIMDBmovie = function(id) {
       return $http({
         method: 'JSONP', 
-        url: 'http://www.myapifilms.com/search?idIMDB=' + id + '&format=JSONP&aka=0&business=1&seasons=1&technical=0&lang=en-us&actors=S&biography=0&trailer=1&callback=JSON_CALLBACK'
+        url: 'http://www.myapifilms.com/search?idIMDB=' + id + '&format=JSONP&aka=0&business=1&seasons=1&technical=0&lang=en-us&actors=S&biography=0&trailer=1&movieTrivia=1&callback=JSON_CALLBACK'
       });
     }  
 
@@ -139,12 +139,12 @@ angular.module('factory', [])
     movie.getMessage = function(){
         return message;
     }
-    movie.setAuthen = function(authen){
-        isAuthenticated = authen;
+    movie.setMovieOnWatchlist = function(booleanvalue){
+        MovieOnWatchlist = booleanvalue;
     }
 
-    movie.getAuthen = function(){
-        return isAuthenticated;
+    movie.getMovieOnWatchlist = function(){
+        return MovieOnWatchlist;
     }
 
     return movie;           

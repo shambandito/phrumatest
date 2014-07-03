@@ -16,17 +16,18 @@
 					<li>
 						<div class="navbar-form small_search">
 							<div class="input-group">
-								<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query)">
+								<input type="text" ng-model="query" class="small_searchbar form-control" placeholder="Search" ng-keypress="pressEnter($event, query, 'search')">
 								<span class="input-group-btn">
 									<button class="btn btn-default small_searchbar_button" type="button" ng-click="doSearch(query)"><span class="glyphicon glyphicon-search"></span></button>
 								</span>
 							</div>
 						</div>
 					</li>
-					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">register</a></li>
-					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">login</button></li>
+					<li ng-show="!getAuthen()"><a ng-click="openModal('lg','signup')">Register</a></li>
+					<li ng-show="!getAuthen()"><button class="btn btn-default navbar-btn" ng-click="openModal('lg','login')">Login</button></li>
 					<li ng-show="getAuthen()"><p id="welcome_message">{{message}}</p></li>
-					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">logout</button></li>
+					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="goToWatchList()" style="margin-right: 15px">My Watchlist</button></li>
+					<li ng-show="getAuthen()"><button class="btn btn-default navbar-btn" ng-click="logout()">Logout</button></li>
 				</ul>
 			</div>
 		</div>
@@ -41,17 +42,19 @@
 	<div class="row" id="movie_info">
 		<div class="movie_info_wrapper">
 			<div class="movieinfo-left col-md-3">
-				<p><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
-				<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')">Compare</button>
+				<p style="text-align: center;"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
+				<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')"><span class="glyphicon glyphicon-stats" style="margin-right: 5px; top: 2px;"></span> Compare</button>
+				<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()" ng-show="!checkbutton()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
+				<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid)" ng-show="checkbutton()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>
 
 			</div>
 			<div class="movieinfo-right col-md-9 ">
-				<h2 class="highlight movie_title">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>
+				<h2 class="highlight movie_title">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>				
 
 				<div class="links_container">
-					<a class="movie_link" href="{{ trailerURL }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
-					<a class="movie_link" href="{{ movieIMDBurl }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
-					<a class="movie_link" href="{{ movieRTlink }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>
+					<a ng-hide="!trailerURL" class="movie_link" href="{{ trailerURL }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
+					<a ng-hide="!movieIMDBurl" class="movie_link" href="{{ movieIMDBurl }}" target="_blank"><span class="glyphicon glyphicon-link"></span>IMDB</a>
+					<a ng-hide="!movieRTlink" class="movie_link" href="{{ movieRTlink }}" target="_blank"><span class="glyphicon glyphicon-link"></span>Rotten Tomatoes</a>
 				</div>
 
 				<p><b>Plot</b></p>
@@ -63,53 +66,62 @@
 
 				<hr>
 				<div id="meta_container">
-					<p><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
-					<p><b>Studio: </b>{{movieStudio}}</p>
-					<p><b>Runtime:</b> {{movieRuntime}}</p>
+					<p ng-hide="!genres"><b>Genre: </b><span ng-repeat="genre in genres">{{genre}}{{$last ? '' : ', '}}</span></p>
+					<p ng-hide="!movieStudio"><b>Studio: </b>{{movieStudio}}</p>
+					<p ng-hide="!movieRuntime"><b>Runtime: </b>{{movieRuntime}}</p>
+					<p ng-hide="!movieAgeRating"><b>Age Rating: </b>{{movieAgeRating}}</p>
 					<p><b>Starring: </b><span style="cursor:pointer" popover="{{'As ' + actor.character}}" popover-trigger="mouseenter" ng-repeat="actor in movieActors|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
-					<p><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
-					<p><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
+					<p ng-hide="!hasDirectors"><b>Directed By: </b><span ng-repeat="director in movieDirectors">{{director.name}}{{$last ? '' : ', '}}</span></p>
+					<p ng-hide="!hasWriters"><b>Written By: </b><span ng-repeat="writer in movieWriters">{{writer.name}}{{$last ? '' : ', '}}</span></p>
 				</div>
 
 			</div>
 
 		</div>
-		<a class="scrollmore" smooth-scroll-jquery target="moviedata-container" speed="500" offset="50"><span class="glyphicon glyphicon-chevron-down"></span></a>
 	</div>
 
 	<div id="moviedata-container" class="row">
-		<div class="movieratings_wrapper">
-			<h2 style="margin-top: 0">Ratings</h2>
-			<p class="rt_consensus">{{movieConsensus}} „Deftly balancing vulgarity and sincerity while placing its protagonists in excessive situations, Superbad is an authentic take on friendship and the overarching awkwardness of the high school experience.“</p>
-			<div class="col-md-4" ng-class="getClass()">
+		<div class="movieratings_wrapper col-md-12">
+			<h2 style="margin-top: 0; margin-bottom: 30px;">Ratings</h2>
+			<div class="col-md-4" ng-class="hasRTrating ? '' : 'series_knob'">
 					<div class="knob_container">
 						<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
 						<p>IMDB</p>
 					</div>
 			</div>
-			<div class="col-md-4" ng-show="isMovie || hasRTrating">
+			<div class="col-md-4" ng-show="hasRTrating">
 					<div class="knob_container">
 						<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
 							<p>Rotten Tomatoes Critics</p>
 					</div>
 			</div>
-			<div class="col-md-4" ng-show="isMovie">
+			<div class="col-md-4" ng-show="hasRTrating">
 					<div class="knob_container">
 						<input type="text" value="N/A" class="knob" ng-model="movieUsersRating"/>
 							<p>Rotten Tomatoes Audience</p>
 					</div>
 			</div>
+		</div>		
+	</div>
+
+	<div id="movietrivia_container" class="row">
+		<div class="col-md-12">
+			<h2 style=" margin-bottom: 30px;">Did you know?</h2>
+			<p class="trivia" ng-repeat="trivia in movieTrivia.slice(((currentPage-1)*maxSize), ((currentPage)*maxSize)) track by $index">{{trivia}}</p>
+			<div class="col-md-12 pagination_container" ng-hide="numPages == '1'">
+				<pagination total-items="movieTrivia.length" ng-model="currentPage" max-size="10" class="pagination-sm" boundary-links="false" rotate="false" num-pages="numPages"></pagination>
+			</div>
 		</div>
-		<a class="scrollmore" smooth-scroll-jquery target="similar_and_critics" speed="500" offset="50"><span class="glyphicon glyphicon-chevron-down"></span></a>
+
 	</div>
 
 	<div id="similar_and_critics" class="row" ng-show="isMovie">
 		<div class="col-md-6 critics_container" ng-show="hasReviews">
-			<h2>What The Critics Say</h2>
+			<h2 style=" margin-bottom: 30px;">What The Critics Say</h2>
 
 			<carousel>
-				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active">
-					<div class="col-sm-12">
+				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active" ng-if="review.quote !== ''">
+					<div class="col-sm-12 review_content">
 						<h3 class="highlight similar_movie_title">{{review.critic}}</h3>
 						<h4>{{review.publication}}</h4>
 						<span ng-show="review.freshness == 'fresh'" class="glyphicon glyphicon-thumbs-up critic_freshness"></span>
@@ -123,20 +135,21 @@
 			</carousel>
 		</div>
 		<div class="col-md-6 similar_container" ng-show="hasSimilar">
-			<h2>Similar Movies</h2>
+			<h2 style="margin-bottom: 30px;">Similar Movies</h2>
 			<carousel>
 				<slide class="similar_movie" ng-repeat="similarMovie in similarMovies" active="slide.active">
-					<div class="col-xs-4">
+					<div class="col-xs-3 col-sm-2">
 						<img style="width: 100%;" src="{{similarMovie.posters.detailed}}" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')"/>
 					</div>
-					<div class="col-xs-8">
+					<div class="col-xs-9 col-sm-10">
 						<h3 class="highlight similar_movie_title"><span ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">{{similarMovie.title}}</span></h3>
 						<h4>({{similarMovie.year}})</h4>
 						<p><span ng-repeat="actor in similarMovie.abridged_cast">{{actor.name}}{{$last ? '' : ', '}}</span></p>
-						<button class="btn btn-default btn-block btn-lg" type="button" ng-click="doCompare('tt' + similarMovie.alternate_ids.imdb, 'movie')">Compare</button>
+						
 					</div>
-
-
+					<div class="col-xs-12">
+						<button class="btn btn-default btn-block btn-lg btn_similar_compare" type="button" ng-click="doCompare('tt' + similarMovie.alternate_ids.imdb, 'movie')"><span class="glyphicon glyphicon-stats" style="margin-right: 5px; top: 2px;"></span> Compare</button>
+					</div>
 			    </slide>
 			</carousel>
 		</div>
@@ -146,43 +159,33 @@
 	</div>
 
 	<div id="series_container" class="row" ng-hide="isMovie">
-		<h2 style="margin-bottom: 30px">Seasons & Episodes</h2>
 		<div class="col-sm-12" >
-		<tabset vertical="true" type="pills">
-		    <tab heading="Season {{season.numSeason}}" ng-repeat="season in seriesSeasons">
-				<carousel>
-					<slide class="similar_movie" ng-repeat="episode in season.episodes" active="slide.active">
-						<div class="col-sm-12">
-							<h3 class="highlight similar_movie_title">{{episode.title}}</h3>
-							<h4 class="episode_number">{{"Episode " + episode.episode}}</h4>
-							<p ng-if="episode.plot !== 'Add a Plot'">{{episode.plot}}</p>
-							<p ng-if="episode.plot == 'Add a Plot'">Unfortunately no Plot has been added for this episode.</p>
-						</div>
-				    </slide>
-				</carousel>
-		    </tab>
-
-		</tabset>
-
-<!-- 
-				<h2>Season {{season.numSeason}}</h2>
-				<carousel>
-				<slide class="similar_movie" ng-repeat="episode in season.episodes" active="slide.active">
-					<div class="col-sm-12">
-						<h3 class="highlight similar_movie_title">{{episode.title}}</h3>
-						<p>{{episode.plot}}</p>
-					</div>
-			    </slide>
-			</carousel> -->
+			<h2 style="margin-bottom: 30px">Seasons & Episodes</h2>
+			<tabset vertical="true" type="pills">
+			    <tab heading="Season {{season.numSeason}}" ng-repeat="season in seriesSeasons">
+					<carousel>
+						<slide class="similar_movie episodes" ng-repeat="episode in season.episodes" active="slide.active">
+							<div class="col-sm-12">
+								<h3 class="highlight similar_movie_title">{{episode.title}}</h3>
+								<h4 class="episode_number">{{"Episode " + episode.episode}}</h4>
+								<p class="episode_plot" ng-if="episode.plot !== 'Add a Plot'">{{episode.plot}}</p>
+								<p class="episode_plot" ng-if="episode.plot == 'Add a Plot'">Unfortunately no Plot has been added for this episode.</p>
+							</div>
+					    </slide>
+					</carousel>
+			    </tab>
+			</tabset>
 		</div>
 	</div>
 
 
 
 	<div class="row" ng-show="hasGross">
-		<h2>Business Data</h2>
-		<p class="budget_p">{{movieTitle}} had a Budget of <span class="budget">{{movieBudget}}</span></p>
-        <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+		<div class="col-md-12">
+			<h2>Business & Money</h2>
+			<p class="budget_p" ng-hide="!movieBudget">{{movieTitle}} had a Budget of <span class="budget">{{movieBudget}}</span></p>
+	        <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+   		</div>
     </div>
 
 </div>
@@ -190,36 +193,34 @@
 
 <!-- OVERLAY FOR COMPARE SEARCH -->
 <div id="compare_search_overlay">
-	<h1>Search</h1>
-	<span class="close_overlay" ng-click="closeCompareSearch()">X</span>
-	<div class="row">
-		<div class="input-group compare_search_input">
-			<input type="text" ng-model="compareSearchQuery" class="compare_searchbar form-control" placeholder="Search for a Movie or TV Show"/>
-			<span class="input-group-btn">
-		      	<button class="btn btn-default compare_searchbar_button" type="button" ng-click="doCompareSearch()"><span class="glyphicon glyphicon-search"></span></button>
-		    </span>
-		</div>
-	</div>
+	<span class="close_overlay glyphicon glyphicon-remove" ng-click="closeCompareSearch()"></span>
 	<div class="container">
+		<div class="col-md-12" style="margin-top: 80px">
+			<h4 class="text-center">Search for any movie or TV Show you want to compare with {{movieTitle}}</h4>
+			<div class="input-group compare_search_input">
+				<input type="text" ng-model="compareSearchQuery" class="compare_searchbar form-control" placeholder="Start comparing..." ng-keypress="pressEnter($event, compareSearchQuery, 'compare')"/>
+				<span class="input-group-btn">
+			      	<button class="btn btn-default compare_searchbar_button" type="button" ng-click="doCompareSearch()" ><span class="glyphicon glyphicon-search"></span></button>
+			    </span>
+			</div>
+		</div>
+
 		<div class="col-md-12">
 			<div ng-hide="errorMessage == ''" class="text-center" class="error_message">
 				<h3>{{ errorMessage }}</h3>
 			</div>
 
 			<div class="row movie_search_result" ng-repeat="movie in compareSearchMovies" >
-
-				<div class="movieinfo-left col-md-1 col-sm-2 col-xs-4">
+				<div class="movieinfo-left col-md-2 col-sm-2 col-xs-3">
 					<img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="doCompare(movie.imdbID, movie.Type)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
 				</div>
-				<div class="movieinfo-right col-md-11 col-sm-10 col-xs-8">
+				<div class="movieinfo-right col-md-10 col-sm-10 col-xs-9">
 
-					<h2 class="movie_title" ng-click="doCompare(movie.imdbID, movie.Type)">{{movie.Title}} </h2>
+					<h2 class="search_movie_title highlight" ng-click="doCompare(movie.imdbID, movie.Type)">{{movie.Title}} </h2>
 
-					<span class="movie_year"> ({{movie.Year}})</span>
-
-					<p style="font-size: 0.9em"></p>
-
-					<p class="movie_actors" ng-show="check(movie.Actors)">{{movie.Actors}}</p>
+					<span class="search_movie_year"> ({{movie.Year}})</span>
+					<p class="search_plot" ng-show="check(movie.Plot)">{{movie.Plot}}</p>
+					<p class="search_movie_actors" ng-show="check(movie.Actors)"><strong>Starring: </strong>{{movie.Actors}}</p>
 				</div>
 			</div>
 		</div>
@@ -229,33 +230,72 @@
 
 <!-- LOGIN MODAL -->
 <div id="login_modal">
-    <script type="text/ng-template" id="myModalContent.html">
+    <script type="text/ng-template" id="myLoginModal.html">
         <div class="modal-header">
             <h3 class="modal-title">Log in to User Account</h3>
         </div>
         <div class="modal-body">
+        <form ng-show="!isAuthenticated" ng-submit="login(username,password)">
         	<div class="row">
-        		<div class="col-md-2">
-        			username/email
-        		</div>
-        		<div class="col-md-4">
-        			<input type="text">
-        		</div>
-        	</div> 
-        	<div class="row" style="margin-top: 1%;">
-        		<div class="col-md-2">
-        			password
-        		</div>
-        		<div class="col-md-4">
-        			<input type="password">
-        		</div>
-        	</div> 
-        </div>
+        		<div class="col-md-2">Username/email :</div>
+        		<div class="col-md-4"><input class="form-control" type="text" ng-model="username" placeholder="Username"></div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-2">Password : </div>
+        		<div class="col-md-4"><input class="form-control" type="password" ng-model="password" placeholder="Password"></div>
+        	</div>        	
+        	<div class="row">
+        		<div class="col-md-10">{{message}}</div>        			
+        	</div>
         <div class="modal-footer">
-	        <div class="modal-buttons">
-	        	<button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">login</button>
-            	<button class="btn btn-default modal-btn-close" ng-click="cancel()">close</button>
-	        </div>
+                <button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">Login</button>
+                <button class="btn btn-default modal-btn-close" type ="button"ng-click="cancel()">Close</button>
+            </div>
+        	</form>
+        </div>
+    </script>
+</div>
+
+<div id="signup_modal">
+    <script type="text/ng-template" id="mySignUpModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">SignUp</h3>
+        </div>
+        <div class="modal-body">
+        <form  ng-submit="signup(newuser)">
+        	<div class="row">
+        		<div class="col-md-5">Username :</div>
+        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.username" placeholder="Username"></div>
+                <div>{{message}}</div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">e-mail :</div>
+        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.email" placeholder="email"></div>
+                <div>{{messageemail}}</div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">password : </div>
+        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.password" placeholder="Password"></div>
+        	</div>
+        	<div class="row">
+        		<div class="col-md-5">Confirm password: </div>
+        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.passwordconfirm" placeholder="Password"></div>
+        	</div>            	
+        	<div class="row">
+        		<div class="col-md-10">{{message}}</div>        			
+        	</div>
+        <div class="modal-footer">
+        	<button class="btn btn-default modal-btn-login"  type="submit" >Register</button>
+        	<button class="btn btn-default modal-btn-close" type="button" ng-click="cancel()">Close</button>  
+        	</form>
+        </div>
+    </script>
+</div>
+
+<div id="notloggedin_modal">
+    <script type="text/ng-template" id="myNotLoggedInModal.html">
+        <div class="modal-body" style="text-align: center">
+        	<h4>You need to register/login before you can add things to your Watchlist</h4>
         </div>
     </script>
 </div>
