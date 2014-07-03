@@ -37,11 +37,6 @@ span {
 	 cursor: auto;
 }
 
-@media (min-width: 768px) {
-	.container {
-		width: 760px;
-	}
-}
 
 @media (min-width:992px) {
 	.container{
@@ -121,6 +116,7 @@ span {
 .modal-btn-login {
 	color: #0096C4;
 	border: 1px solid #0096C4;
+	margin-right: 10px;
 }
 
 .modal-btn-close {
@@ -164,6 +160,7 @@ span {
 
 .navbar-collapse {
 	background: #444;
+	overflow: hidden;
 }
 
 .main_logo {
@@ -208,11 +205,22 @@ span {
 		background: #f9f9f9;
 	}
 
+
 .small_searchbar_button {
 	background: #f9f9f9;
 }
 
-@media screen and (max-width: 767px) {
+@media (max-width: 991px) { 
+	 .small_search {
+		width: 250px;
+		border: none;
+		box-shadow: none;
+		margin: 0 auto;
+		padding: 10px 0;
+	}
+}
+
+@media (max-width: 767px) {
 	 .small_search {
 		width: 100%;
 		border: none;
@@ -227,7 +235,7 @@ span {
 
 	.nav > li > .navbar-btn {
 		width: 100%;
-		margin-left: 5px;
+		margin-left: 0px !important;
 	}
 }
 
@@ -317,7 +325,7 @@ span {
 }
 
 .movie_title {
-	max-width: 63%;
+	max-width: 60%;
 	font-size: 35px;
 }
 
@@ -577,6 +585,10 @@ span {
 	padding-left: 0;
 }
 
+#compare_results .movie_title {
+	width: 100%;
+}
+
 
 
 /* CRITICS STUFF */
@@ -760,7 +772,22 @@ span {
 	overflow: hidden;
 }
 
+.modal-content {
+	background: #f9f9f9;
+}
+
+.modal-header {
+	padding-bottom: 0;
+	border-bottom: 0px solid transparent;
+}
+
 .modal-open {
 	overflow: auto;
+}
+
+.modal-body input {
+	margin-bottom: 10px;
+	border: 1px solid #0096C4;
+	background: #f9f9f9;
 }
 

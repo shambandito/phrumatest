@@ -56,6 +56,18 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	      		}
 	    	});
 	    }
+	    else if(modalziel == 'logout'){
+	    	var modalInstance = $modal.open({
+	      		templateUrl: 'confirmLogoutModal.html',
+	      		controller: ModalInstanceController,
+	      		size: size,
+	      		resolve: {
+	        		items: function () {
+	          			return $scope.items;
+	        		}
+	      		}
+	    	});
+	    }
 	};
 
 	// PRESS ENTER TO SEARCH FUNCTION
@@ -525,6 +537,8 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	//COMPARE PAGE IS GENERATED HERE
 	$scope.compareInit = function() {
 
+		var movieGross;
+
 		document.getElementById("ngProgress-container").style.top = '60px';
 		ngProgress.reset();
 
@@ -691,92 +705,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 						console.log(res.seasons);
 					}
 
-
-					// MOVIE GROSS CHART STUFF
-					if($scope.movieType == "movie") {
-						if(typeof res.business.budget !== 'undefined' ) {
-							$scope.movieBudget = res.business.budget.money;
-						}
-						$scope.hasGross = false;
-
-						var movieGross = res.business.gross;
-						console.log(movieGross);
-						var array = [];
-
-			    		if(typeof movieGross !== 'undefined') {
-			    			$scope.hasGross = true;
-				    		for (var i = 0; i < movieGross.length; i++) {
-				    			if(movieGross[i].country == "USA"){
-				    				array[array.length] = movieGross[i];
-				    			}
-				    		};
-
-				    		$scope.movieUSGross = array;
-
-				    		if($scope.movieUSGross.length < 1) {
-				    			$scope.hasGross = false;
-				    		}
-
-				    		var dataForChartY = [];
-				    		var dataForChartX = [];
-
-
-							
-							for (var i = 0; i < array.length; i++) {
-								dataForChartY[dataForChartY.length] = [array[i].day + "." + array[i].month + "." + array[i].year, parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
-								dataForChartX[dataForChartX.length] = [array[i].day + "." + array[i].month + "." + array[i].year]			
-							}
-
-							dataForChartY.reverse();
-							dataForChartX.reverse();	
-
-						    $scope.chartConfig = {
-						        options: {
-						            chart: {
-						                type: 'spline',
-						                backgroundColor: null,
-										borderWidth: 0,
-										borderRadius: 0,
-										plotBackgroundColor: null,
-										plotShadow: false,
-										plotBorderWidth: 0
-						            },
-						            tooltip: {
-										backgroundColor: '#FFF',
-										borderWidth: 0,
-										style: {
-											color: '#000'
-										},
-										formatter: function() {
-									        return this.x + '<br>' + '<strong>$' + Highcharts.numberFormat(this.y, 0) + '</strong>'
-									    }
-									},
-									legend: {
-	            						enabled: false
-	        						}
-						        },
-						        
-						        xAxis: {
-						        	categories: dataForChartX
-								},
-						        series: [{
-						        	name: "Gross",
-						            data: dataForChartY,
-						            color: '#0096C4',
-						            lineWidth: 3
-						        }],
-
-						        title: {
-						            text: 'US Gross'
-						        }
-
-
-
-						    };
-
-						}
-					}
-
 					//SET RT LINK VIA SERIES TITLE
 					if(MainFactory.getType() == "series") {					
 						$scope.movieRTlink = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
@@ -816,6 +744,12 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					$scope.trailerURL_compare = res.trailer.videoURL;
 				}
 
+				movieGross = res.business.gross;
+
+				if(typeof res.business.budget !== 'undefined' ) {
+					$scope.movieBudget_compare = res.business.budget.money;
+				}				
+
 					//GET SEASONS & EPISODES IF QUERY IS A SERIES
 					if(MainFactory.getType() == "series") {
 						$scope.seriesSeasons_compare = res.seasons;
@@ -823,29 +757,38 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					}
 
 
-					// MOVIE GROSS CHART STUFF
-					if($scope.movieType == "movie") {
-						if(typeof res.business.budget !== 'undefined' ) {
-							$scope.movieBudget_compare = res.business.budget.money;
-						}
-						$scope.hasGross_compare = false;
+					//SET RT LINK VIA SERIES TITLE
+					if(MainFactory.getType() == "series") {					
+						$scope.movieRTlink_compare = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
+					}
 
-						var movieGross = res.business.gross;
+					ngProgress.complete();
+					document.getElementById("result_container").style.opacity = '1';
+					document.getElementById("result_container").style.display = 'block';
+					ngProgress.reset();
+
+			});
+		
+					if($scope.movieType == "movie") {
+
+						$scope.hasGross = false;
+
 						console.log(movieGross);
 						var array = [];
 
 			    		if(typeof movieGross !== 'undefined') {
-			    			$scope.hasGross_compare = true;
+			    			$scope.hasGross = true;
 				    		for (var i = 0; i < movieGross.length; i++) {
 				    			if(movieGross[i].country == "USA"){
 				    				array[array.length] = movieGross[i];
 				    			}
 				    		};
 
-				    		$scope.movieUSGross_compare = array;
+				    		$scope.movieUSGross = array;
+				    		console.log("ARRAY: " + array);
 
-				    		if($scope.movieUSGross_compare.length < 1) {
-				    			$scope.hasGross_compare = false;
+				    		if($scope.movieUSGross.length < 1) {
+				    			$scope.hasGross = false;
 				    		}
 
 				    		var dataForChartY = [];
@@ -861,7 +804,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 							dataForChartY.reverse();
 							dataForChartX.reverse();	
 
-						    $scope.chartConfig_compare = {
+						    $scope.chartConfig = {
 						        options: {
 						            chart: {
 						                type: 'spline',
@@ -870,7 +813,10 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 										borderRadius: 0,
 										plotBackgroundColor: null,
 										plotShadow: false,
-										plotBorderWidth: 0
+										plotBorderWidth: 0,
+										style: {
+											fontFamily: 'Lato'
+										}
 						            },
 						            tooltip: {
 										backgroundColor: '#FFF',
@@ -889,7 +835,12 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 						        
 						        xAxis: {
 						        	categories: dataForChartX
-								},
+								},        
+								yAxis: {           
+						            title: {
+						                text: null
+						            }
+						        },
 						        series: [{
 						        	name: "Gross",
 						            data: dataForChartY,
@@ -898,7 +849,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 						        }],
 
 						        title: {
-						            text: 'US Gross'
+						            text: 'US Box Office Gross'
 						        }
 
 
@@ -908,20 +859,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 						}
 					}
 
-					//SET RT LINK VIA SERIES TITLE
-					if(MainFactory.getType() == "series") {					
-						$scope.movieRTlink_compare = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
-					}
-
-					ngProgress.complete();
-					document.getElementById("result_container").style.opacity = '1';
-					document.getElementById("result_container").style.display = 'block';
-					ngProgress.reset();
-
-
-
-
-			});
 		}
 
 
@@ -949,12 +886,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 	};
 
-	$scope.logout = function () {
-    	$scope.welcome = '';
-    	$scope.message = '';
-    	delete $window.sessionStorage.token; 
-    	$scope.movieOnWatchlist();
-  	};
+
 
   	 $scope.callRestricted = function () {
     	$http({url: '/api/restricted', method: 'GET'})
@@ -1158,24 +1090,31 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
   	}
 
   	$scope.login = function(username,password){
-  		var user = {username : username, password : password };
-		var message = '';
-		user.password = window.btoa(user.password);
-		
-		    $http.post('/authenticate', user)
-      		.success(function (data, status, headers, config) {
-        		
-        		$window.sessionStorage.token = data.token;
-        		$modalInstance.dismiss('cancel');
-        		$scope.movieOnWatchlist();
-      		})
-      		.error(function (data, status, headers, config) {
-        	// Erase the token if the user fails to log in
-        		delete $window.sessionStorage.token;
+  		console.log(username);
 
-        		// Handle login errors here
-        		$scope.message = 'Error: Invalid user or password';
-      		});
+  		if(typeof username !== 'undefined' && typeof password !== 'undefined') {
+	  		var user = {username : username, password : password };
+			var message = '';
+			user.password = window.btoa(user.password);
+			
+			    $http.post('/authenticate', user)
+	      		.success(function (data, status, headers, config) {
+	        		
+	        		$window.sessionStorage.token = data.token;
+	        		$modalInstance.dismiss('cancel');
+	        		$scope.movieOnWatchlist();
+	      		})
+	      		.error(function (data, status, headers, config) {
+	        	// Erase the token if the user fails to log in
+	        		delete $window.sessionStorage.token;
+
+	        		// Handle login errors here
+	        		$scope.message = 'Error: Invalid Username/E-Mail or password';
+	      		});
+      	} else {
+      		$scope.message = 'Error: Invalid Username/E-Mail or password';
+      		console.log("lolol");
+      	}
 	}
 
 	$scope.movieOnWatchlist = function(){
@@ -1207,4 +1146,12 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
   			MainFactory.setMovieOnWatchlist(false);
   		}
   	}
+
+ 	$scope.logout = function () {
+    	$scope.welcome = '';
+    	$scope.message = '';
+    	delete $window.sessionStorage.token; 
+    	$scope.movieOnWatchlist();
+    	$modalInstance.dismiss('cancel');
+  	};
 };
