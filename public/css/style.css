@@ -458,7 +458,6 @@ span {
 	border: 1px solid #ccc;
 	border-radius: 6px;
 	padding: 15px 0;
-
 }
 
 .similar_movie {
@@ -586,12 +585,35 @@ span {
 }
 
 #compare_results .movie_title {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+#compare_results .movie_poster {
+	max-height: 445px;
+	overflow: hidden;
+	text-align: center;
+}
+
+#compare_results #moviedata-container .carousel {
+	border: 0px solid #ccc;
+	float: left;
 	width: 100%;
+}
+
+#compare_results #moviedata-container .carousel-inner {
+	float: left;
+	width: 100%;
+	margin-bottom: 25px;
 }
 
 
 
 /* CRITICS STUFF */
+
+#similar_and_critics {
+	float: left;
+}
 
 .critic_freshness {
 	position: absolute;

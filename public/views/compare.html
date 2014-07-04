@@ -46,7 +46,7 @@
 		<div class="row" id="movie_info">
 			<div class="movie_info_wrapper">
 				<div class="movieinfo-left col-xs-12">
-					<p style="text-align: center;"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
+					<p class="movie_poster"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
 					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()" ng-show="!checkbutton()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
 					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid)" ng-show="checkbutton()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>
 
@@ -90,7 +90,7 @@
 		<div class="row" id="movie_info">
 			<div class="movie_info_wrapper">
 				<div class="movieinfo-left col-xs-12">
-					<p style="text-align: center;"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster_compare }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
+					<p class="movie_poster"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster_compare }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
 					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()" ng-show="!checkbutton()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
 					<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid)" ng-show="checkbutton()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>
 
@@ -127,6 +127,109 @@
 			</div>
 		</div>
 	</div>
+
+	<div id="moviedata-container">
+		<div class="movieratings_wrapper col-md-12">
+
+				<!-- FILL KNOBS WITH RATINGS -->
+			<div style="display: none">
+				<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
+				<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
+				<input type="text" value="N/A" class="knob" ng-model="movieUsersRating"/>
+				<input type="text" value="N/A" class="knob" ng-model="IMDBRating_compare"/>
+				<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating_compare"/>
+				<input type="text" value="N/A" class="knob" ng-model="movieUsersRating_compare"/>
+			</div>	
+
+			<carousel>
+				<slide class="ratings_slide"active="slide.active">
+					<h2 style="margin-top: 0; margin-bottom: 30px;">{{movieTitle}} Ratings</h2>
+					<div class="col-md-4" ng-class="hasRTrating ? '' : 'series_knob'">
+							<div class="knob_container">
+									<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
+								<p>IMDB</p>
+							</div>
+					</div>
+					<div class="col-md-4" ng-show="hasRTrating">
+						<div class="knob_container">
+							<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating"/>
+							<p>Rotten Tomatoes Critics</p>
+						</div>
+					</div>
+					<div class="col-md-4" ng-show="hasRTrating">
+						<div class="knob_container">
+							<input type="text" value="N/A" class="knob" ng-model="movieUsersRating"/>
+							<p>Rotten Tomatoes Audience</p>
+						</div>
+					</div>					
+			    </slide>
+
+				<slide class="ratings_slide">
+					<h2 style="margin-top: 0; margin-bottom: 30px;">{{movieTitle_compare}} Ratings</h2>
+					<div class="col-md-4" ng-class="hasRTrating_compare ? '' : 'series_knob'">
+							<div class="knob_container">
+									<input type="text" value="N/A" class="knob" ng-model="IMDBRating_compare"/>
+								<p>IMDB</p>
+							</div>
+					</div>
+					<div class="col-md-4" ng-show="hasRTrating_compare">
+						<div class="knob_container">
+							<input type="text" value="N/A" class="knob" ng-model="movieCriticsRating_compare"/>
+							<p>Rotten Tomatoes Critics</p>
+						</div>
+					</div>
+					<div class="col-md-4" ng-show="hasRTrating_compare">
+						<div class="knob_container">
+							<input type="text" value="N/A" class="knob" ng-model="movieUsersRating_compare"/>
+							<p>Rotten Tomatoes Audience</p>
+						</div>
+					</div>					
+			    </slide>
+			</carousel>
+		</div>					
+	</div>
+
+	<div id="similar_and_critics" class="col-md-12" ng-show="isMovie">
+		<h2>What The Critics Say About</h2>
+		<div class="col-md-6 critics_container" ng-show="hasReviews">
+
+			<h3 style=" margin-bottom: 15px;">{{movieTitle}}</h3>
+
+			<carousel>
+				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active" ng-if="review.quote !== ''">
+					<div class="col-sm-12 review_content">
+						<h3 class="highlight similar_movie_title">{{review.critic}}</h3>
+						<h4>{{review.publication}}</h4>
+						<span ng-show="review.freshness == 'fresh'" class="glyphicon glyphicon-thumbs-up critic_freshness"></span>
+						<span ng-show="review.freshness == 'rotten'" class="glyphicon glyphicon-thumbs-down critic_freshness"></span>
+						<p>{{"„" + review.quote + "“"}}</p>
+						<p><a href="{{review.links.review}}" target="_blank">Read Full Review</a></p>
+					</div>
+
+
+			    </slide>
+			</carousel>
+		</div>
+		<div class="col-md-6 critics_container" ng-show="hasReviews">
+			<h3 style=" margin-bottom: 15px;">{{movieTitle_compare}}</h3>
+
+			<carousel>
+				<slide class="similar_movie" ng-repeat="review in criticReviews_compare" active="slide.active" ng-if="review.quote !== ''">
+					<div class="col-sm-12 review_content">
+						<h3 class="highlight similar_movie_title">{{review.critic}}</h3>
+						<h4>{{review.publication}}</h4>
+						<span ng-show="review.freshness == 'fresh'" class="glyphicon glyphicon-thumbs-up critic_freshness"></span>
+						<span ng-show="review.freshness == 'rotten'" class="glyphicon glyphicon-thumbs-down critic_freshness"></span>
+						<p>{{"„" + review.quote + "“"}}</p>
+						<p><a href="{{review.links.review}}" target="_blank">Read Full Review</a></p>
+					</div>
+
+
+			    </slide>
+			</carousel>
+		</div>
+	</div>	
+
 
 	<div class="col-md-12">
 			<h2>Business & Money</h2>

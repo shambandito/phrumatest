@@ -8,6 +8,7 @@ angular.module('factory', [])
     var IMDBid = "";
     var IMDBid_2 = "";
     var type = "";
+    var type_movie2 = "";
     var message = "";
     var MovieOnWatchlist = false;
 
@@ -42,6 +43,14 @@ angular.module('factory', [])
 
     movie.getType = function() {
         return type;
+    }
+
+    movie.setType_movie2 = function(value) {
+        type_movie2=value;
+    } 
+
+    movie.getType_movie2 = function() {
+        return type_movie2;
     }
 
     movie.getRTmovies_list = function(query) {
@@ -150,6 +159,7 @@ angular.module('factory', [])
     return movie;           
 })
 .factory('authInterceptor', function ($rootScope, $q, $window) {
+
 return {
     request: function (config) {
       config.headers = config.headers || {};
@@ -158,6 +168,7 @@ return {
       }
       return config;
     },
+    
     responseError: function (rejection) {
       if (rejection.status === 401) {
         // handle the case where the user is not authenticated

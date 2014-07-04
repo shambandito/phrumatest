@@ -274,15 +274,15 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				});;
 			}
 
-	    //GET CLASS FUNCTION
-	    $scope.getClass = function() {
-	    		
-				if($scope.hasRTrating == false) {
-					return "series_knob"
-				} else {
-					return "";
-				}
-		}
+		    //GET CLASS FUNCTION
+		    $scope.getClass = function() {
+		    		
+					if($scope.hasRTrating == false) {
+						return "series_knob"
+					} else {
+						return "";
+					}
+			}
 
 			//GET IMDB MOVIE JSON
 			MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
@@ -444,9 +444,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 
 			});
-
-
-
 		}
 
 	}
@@ -521,10 +518,8 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	$scope.doCompare = function(id, type) {
 
 		//MainFactory.setRTurl(url);
-		//MainFactory.setType(type);
+		MainFactory.setType_movie2(type);
 		MainFactory.setIMDBid_movie2(id);
-		console.log(type);
-		console.log(MainFactory.getIMDBid());
 
 		if($location.path() == "/compare") {
 			$scope.compareInit();
@@ -537,14 +532,22 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 	//COMPARE PAGE IS GENERATED HERE
 	$scope.compareInit = function() {
 
-		var movieGross;
+		var movieGross_movie1;
+		var array_movie1;
+		var array_movie2;
+		var dataForChartY_movie1 = [];
+		var dataForChartX_movie1 = [];
+		var movie1_title;
+		var movie2_title;
 
 		document.getElementById("ngProgress-container").style.top = '60px';
 		ngProgress.reset();
 
 		$scope.movieQuery = MainFactory.getQuery();
-		console.log(MainFactory.getIMDBid());
-		console.log(MainFactory.getIMDBid_movie2());
+		console.log("Movie 1: " + MainFactory.getIMDBid());
+		console.log("Movie 2: " + MainFactory.getIMDBid_movie2());
+		console.log("Type 1: " + MainFactory.getType());
+		console.log("Type 2: " + MainFactory.getType_movie2());
 
 		$scope.errorMessage = "Search for a movie or TV show to get results";
 
@@ -558,11 +561,11 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			window.scrollTo(0, 0);
 			ngProgress.start();
 
-			//if(MainFactory.getType == "movie") {	
+			if(MainFactory.getType() == "movie") {	
 
 				$scope.isMovie = true;
 
-				//GET ROTTEN TOMATOES MOVIE JSON FOR MOVIE 1
+				//GET ROTTEN TOMATOES JSON DATA FOR MOVIE 1
 				MainFactory.getRTmovie(MainFactory.getIMDBid()).success(function (res) {
 					$scope.rtMovieID = res.id;
 
@@ -573,7 +576,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			   			$scope.movieCriticsRating = res.ratings.critics_score;
 			   			$scope.movieUsersRating = res.ratings.audience_score;
 			   			$scope.hasRTrating = true;
-			   			console.log("RT1");
 			   		}
 			   		
 			   		$scope.movieSite = res.Website;
@@ -583,19 +585,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			   		$scope.movieConsensus = res.critics_consensus;
 			   		$scope.movieRTlink = res.links.alternate;
 
-
-			   		//GET SIMILAR MOVIES
-					MainFactory.getRTsimilar($scope.rtMovieID).success(function (res) {
-						$scope.similarMovies = res.movies;
-						$scope.hasSimilar = true;
-						if($scope.similarMovies == "") {
-							$scope.hasSimilar = false;
-						}
-					}).error(function(data, status, ers, config) {
-									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
-									ngProgress.reset();
-					});;
-
 			   		//GET TOP CRITICS REVIEWS
 					MainFactory.getRTreviews_top($scope.rtMovieID).success(function (res) {
 						$scope.criticReviews = res.reviews;
@@ -604,7 +593,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 							$scope.hasReviews = false;
 						}
 
-						document.getElementById("result_container").style.display = 'block';
 					}).error(function(data, status, headers, config) {
 									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
@@ -613,10 +601,9 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				}).error(function(data, status, headers, config) {
 									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
-				});
-			//}
+				});;
 
-				//GET ROTTEN TOMATOES MOVIE JSON FOR MOVIE 2
+				//GET ROTTEN TOMATOES JSON DATA FOR MOVIE 2 (COMPARE MOVIE)
 				MainFactory.getRTmovie(MainFactory.getIMDBid_movie2()).success(function (res) {
 					$scope.rtMovieID_compare = res.id;
 
@@ -627,28 +614,14 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			   			$scope.movieCriticsRating_compare = res.ratings.critics_score;
 			   			$scope.movieUsersRating_compare = res.ratings.audience_score;
 			   			$scope.hasRTrating_compare = true;
-			   			console.log("ASDASDGZASHDGASD");
 			   		}
 			   		
 			   		$scope.movieSite_compare = res.Website;
-			   		var poster_compare = res.posters.detailed.replace('tmb','det');
-			   		$scope.moviePoster_compare = poster_compare;
-			   		$scope.movieStudio_compare = res.studio;
+			   		var poster = res.posters.detailed.replace('tmb','det');
+			   		$scope.moviePoster_compare = poster;
+			   		$scope.movieStudio_compare = res.studio_compare;
 			   		$scope.movieConsensus_compare = res.critics_consensus;
 			   		$scope.movieRTlink_compare = res.links.alternate;
-
-
-			   		//GET SIMILAR MOVIES
-					MainFactory.getRTsimilar($scope.rtMovieID_compare).success(function (res) {
-						$scope.similarMovies_compare = res.movies;
-						$scope.hasSimilar_compare = true;
-						if($scope.similarMovies_compare == "") {
-							$scope.hasSimilar_compare = false;
-						}
-					}).error(function(data, status, ers, config) {
-									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
-									ngProgress.reset();
-					});;
 
 			   		//GET TOP CRITICS REVIEWS
 					MainFactory.getRTreviews_top($scope.rtMovieID_compare).success(function (res) {
@@ -658,7 +631,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 							$scope.hasReviews_compare = false;
 						}
 
-						document.getElementById("result_container").style.display = 'block';
 					}).error(function(data, status, headers, config) {
 									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
@@ -667,10 +639,15 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				}).error(function(data, status, headers, config) {
 									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
-				});
+				});;
 
-			//GET IMDB MOVIE JSON FOR MOVIE 1
+
+			}	//END RT HTTP BLOCK		
+
+
+			//GET IMDB JSON FOR MOVIE 1
 			MainFactory.getIMDBmovie(MainFactory.getIMDBid()).success(function (res) {
+
 					$scope.countries = res.countries;
 					$scope.movieIMDBid = MainFactory.getIMDBid();
 					$scope.movieActors = res.actors;
@@ -681,38 +658,84 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					$scope.IMDBRating = res.rating * 10;
 					$scope.poster = res.urlPoster;
 					$scope.movieTitle = res.title;
+					movie1_title = res.title;
 					$scope.genres = res.genres;
 					$scope.movieDirectors = res.directors;
+
+					$scope.hasDirectors = true;
+					if($scope.movieDirectors == "") {
+						$scope.hasDirectors = false;
+					}				
+
 					$scope.movieWriters = res.writers;
+
+					$scope.hasWriters = true;
+					if($scope.movieWriters == "") {
+						$scope.hasWriters = false;
+					}
+
 					$scope.movieIMDBurl = res.urlIMDB;
 					$scope.movieLocations = res.filmingLocations;
 					$scope.movieTrivia = res.movieTrivia;
 					$scope.movieAgeRating = res.rated;
 
 					//TRIVIA STUFF
-					console.log($scope.movieTrivia.length)
 					$scope.maxSize = 5;
 					$scope.currentPage = 1;
 					$scope.totalItems = 0;
+
 
 				if(typeof res.trailer !== 'undefined' ) {
 					$scope.trailerURL = res.trailer.videoURL;
 				}
 
-					//GET SEASONS & EPISODES IF QUERY IS A SERIES
-					if(MainFactory.getType() == "series") {
-						$scope.seriesSeasons = res.seasons;
-						console.log(res.seasons);
+				//GET SEASONS & EPISODES IF QUERY IS A SERIES
+				if(MainFactory.getType() == "series") {
+					$scope.seriesSeasons = res.seasons;
+				}
+
+
+				//SET RT LINK VIA SERIES TITLE
+				if(MainFactory.getType() == "series") {					
+					$scope.movieRTlink = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
+				}
+
+				// MOVIE GROSS CHART STUFF
+				if(MainFactory.getType() == "movie") {
+					if(typeof res.business.budget !== 'undefined' ) {
+						$scope.movieBudget = res.business.budget.money;
+					}
+					$scope.hasGross = false;
+
+					movieGross_movie1 = res.business.gross;
+					console.log(movieGross_movie1);
+					array_movie1 = [];
+
+			    	if(typeof movieGross_movie1 !== 'undefined') {
+			    		$scope.hasGross = true;
+				    	for (var i = 0; i < movieGross_movie1.length; i++) {
+				    		if(movieGross_movie1[i].country == "USA"){
+				    			array_movie1[array_movie1.length] = movieGross_movie1[i];
+				    		}
+				    	};
 					}
 
-					//SET RT LINK VIA SERIES TITLE
-					if(MainFactory.getType() == "series") {					
-						$scope.movieRTlink = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
+					for (var i = 0; i < array_movie1.length; i++) {
+						dataForChartY_movie1[dataForChartY_movie1.length] = [array_movie1[i].day + "." + array_movie1[i].month + "." + array_movie1[i].year, parseFloat(array_movie1[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
+						dataForChartX_movie1[dataForChartX_movie1.length] = [array_movie1[i].day + "." + array_movie1[i].month + "." + array_movie1[i].year]			
 					}
+
+					dataForChartY_movie1.reverse();
+					dataForChartX_movie1.reverse();	
+
+				}
+
+
+				$scope.movieOnWatchlist();
+
 			});
 
-			//GET IMDB MOVIE JSON FOR MOVIE 2
-
+			//GET IMDB JSON FOR MOVIE 2 (COMPARE)
 			MainFactory.getIMDBmovie(MainFactory.getIMDBid_movie2()).success(function (res) {
 
 					$scope.countries_compare = res.countries;
@@ -725,16 +748,28 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					$scope.IMDBRating_compare = res.rating * 10;
 					$scope.poster_compare = res.urlPoster;
 					$scope.movieTitle_compare = res.title;
+					movie2_title = res.title;
 					$scope.genres_compare = res.genres;
 					$scope.movieDirectors_compare = res.directors;
+
+					$scope.hasDirectors_compare = true;
+					if($scope.movieDirectors_compare == "") {
+						$scope.hasDirectors_compare = false;
+					}				
+
 					$scope.movieWriters_compare = res.writers;
+
+					$scope.hasWriters_compare = true;
+					if($scope.movieWriters_compare == "") {
+						$scope.hasWriters_compare = false;
+					}
+
 					$scope.movieIMDBurl_compare = res.urlIMDB;
 					$scope.movieLocations_compare = res.filmingLocations;
 					$scope.movieTrivia_compare = res.movieTrivia;
 					$scope.movieAgeRating_compare = res.rated;
 
 					//TRIVIA STUFF
-					console.log($scope.movieTrivia_compare.length)
 					$scope.maxSize = 5;
 					$scope.currentPage = 1;
 					$scope.totalItems = 0;
@@ -744,65 +779,60 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					$scope.trailerURL_compare = res.trailer.videoURL;
 				}
 
-				movieGross = res.business.gross;
-
-				if(typeof res.business.budget !== 'undefined' ) {
-					$scope.movieBudget_compare = res.business.budget.money;
-				}				
-
-					//GET SEASONS & EPISODES IF QUERY IS A SERIES
-					if(MainFactory.getType() == "series") {
-						$scope.seriesSeasons_compare = res.seasons;
-						console.log(res.seasons);
-					}
+				//GET SEASONS & EPISODES IF QUERY IS A SERIES
+				if(MainFactory.getType_movie2() == "series") {
+					$scope.seriesSeasons_compare = res.seasons;
+				}
 
 
-					//SET RT LINK VIA SERIES TITLE
-					if(MainFactory.getType() == "series") {					
-						$scope.movieRTlink_compare = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
-					}
+				//SET RT LINK VIA SERIES TITLE
+				if(MainFactory.getType_movie2() == "series") {					
+					$scope.movieRTlink_compare = "http://www.rottentomatoes.com/tv/" + res.title.replace(/\s+/g, '-').toLowerCase();
+				}
 
-					ngProgress.complete();
-					document.getElementById("result_container").style.opacity = '1';
-					document.getElementById("result_container").style.display = 'block';
-					ngProgress.reset();
+					// MOVIE GROSS CHART STUFF
+					if(MainFactory.getType_movie2() == "movie") {
+						if(typeof res.business.budget !== 'undefined' ) {
+							$scope.movieBudget_compare = res.business.budget.money;
+						}
+						$scope.hasGross_compare = false;
 
-			});
-		
-					if($scope.movieType == "movie") {
+						var movieGross_movie2 = res.business.gross;
+						//console.log(movieGross_movie2);
+						array_movie2 = [];
 
-						$scope.hasGross = false;
-
-						console.log(movieGross);
-						var array = [];
-
-			    		if(typeof movieGross !== 'undefined') {
-			    			$scope.hasGross = true;
-				    		for (var i = 0; i < movieGross.length; i++) {
-				    			if(movieGross[i].country == "USA"){
-				    				array[array.length] = movieGross[i];
+			    		if(typeof movieGross_movie2 !== 'undefined') {
+			    			$scope.hasGross_compare = true;
+				    		for (var i = 0; i < movieGross_movie2.length; i++) {
+				    			if(movieGross_movie2[i].country == "USA"){
+				    				array_movie2[array_movie2.length] = movieGross_movie2[i];
 				    			}
 				    		};
 
-				    		$scope.movieUSGross = array;
-				    		console.log("ARRAY: " + array);
+				    		$scope.movieUSGross_compare = array_movie2;
+				    		$scope.movieUSGross = array_movie1;
 
-				    		if($scope.movieUSGross.length < 1) {
-				    			$scope.hasGross = false;
-				    		}
-
-				    		var dataForChartY = [];
-				    		var dataForChartX = [];
+				    		if($scope.movieUSGross_compare.length < 1) {
+				    			$scope.hasGross_compare = false;
+				    		}			    	
 
 
-							
-							for (var i = 0; i < array.length; i++) {
-								dataForChartY[dataForChartY.length] = [array[i].day + "." + array[i].month + "." + array[i].year, parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
-								dataForChartX[dataForChartX.length] = [array[i].day + "." + array[i].month + "." + array[i].year]			
+				    		var dataForChartY_movie2 = [];
+				    		var dataForChartX_movie2 = [];			
+
+							for (var i = 0; i < array_movie2.length; i++) {
+								for (var j = 0; j < array_movie2.length - 1; j++) {
+									if(parseFloat(array_movie2[j].money.substr(1).replace(/[^\d\.\-\ ]/g, '')) > parseFloat(array_movie2[j+1].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))) { 
+										//nothing	
+									} else {
+									dataForChartY_movie2[dataForChartY_movie2.length] = [array_movie2[i].day + "." + array_movie2[i].month + "." + array_movie2[i].year, parseFloat(array_movie2[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
+									dataForChartX_movie2[dataForChartX_movie2.length] = [array_movie2[i].day + "." + array_movie2[i].month + "." + array_movie2[i].year]
+									}
+								}			
 							}
 
-							dataForChartY.reverse();
-							dataForChartX.reverse();	
+							dataForChartY_movie2.reverse();
+							dataForChartX_movie2.reverse();	
 
 						    $scope.chartConfig = {
 						        options: {
@@ -829,12 +859,12 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 									    }
 									},
 									legend: {
-	            						enabled: false
+	            						enabled: true
 	        						}
 						        },
 						        
 						        xAxis: {
-						        	categories: dataForChartX
+						        	categories: dataForChartX_movie1
 								},        
 								yAxis: {           
 						            title: {
@@ -842,9 +872,14 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 						            }
 						        },
 						        series: [{
-						        	name: "Gross",
-						            data: dataForChartY,
+						        	name: movie1_title,
+						            data: dataForChartY_movie1,
 						            color: '#0096C4',
+						            lineWidth: 3
+						        },{
+						        	name: movie2_title,
+						            data: dataForChartY_movie2,
+						            color: '#444',
 						            lineWidth: 3
 						        }],
 
@@ -859,8 +894,19 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 						}
 					}
 
-		}
 
+
+
+
+
+				ngProgress.complete();
+				$scope.movieOnWatchlist();
+				document.getElementById("result_container").style.opacity = '1';
+				document.getElementById("result_container").style.display = 'block';
+				ngProgress.reset();
+			});
+			
+		}
 
 
 	}
