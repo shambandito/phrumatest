@@ -35,7 +35,7 @@
 </nav>
 
 <div class="watchlist_container container" ng-init="watchlistInit()">
-	<h2>My Watchlist</h2>
+	<h2 class="area_title">My Watchlist</h2>
     <div ng-repeat="movie in watchlist" class="row watchlist_search_result">
         <div class="col-sm-2 col-xs-3">
             <img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="singleMovieSearchWatchlist(movie.imdbID, movie.Type,movie.Title)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
