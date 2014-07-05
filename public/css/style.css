@@ -256,9 +256,10 @@ span {
 
 }
 
-/*	.movie_search_result h2 {
-		margin-top: 0;
-	}*/
+	.movie_search_result img {
+		cursor: pointer;
+	}
+
 
 .search_movie_title {
 	font-size: 24px;
@@ -300,11 +301,11 @@ span {
 	display: none;
 	margin-top: 50px;
 
-	-webkit-transition: opacity 1s ease-in;
-	-moz-transition: opacity 1s ease-in;
-	-o-transition: opacity 1s ease-in;
-	-ms-transition: opacity 1s ease-in;
-	transition: opacity 1s ease-in;
+	-webkit-transition: opacity 1.5s ease-in;
+	-moz-transition: opacity 1.5s ease-in;
+	-o-transition: opacity 1.5s ease-in;
+	-ms-transition: opacity 1.5s ease-in;
+	transition: opacity 1.5s ease-in;
 }
 
 .links_container {
@@ -364,37 +365,12 @@ span {
 	margin-bottom: 0;
 }
 
-.scrollmore {
-
-	display: none;
-
-
-	position: absolute;
-	bottom: 0px;
-	left: 50%;
-	margin-left: -20px;
-	color: #0096C4;
-	text-transform: uppercase;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
-	-ms-transition: all 0.3s;
-	border-top-right-radius: 6px;
-	border-top-left-radius: 6px;
-	font-size: 40px;
-}
-
-	.scrollmore span:hover {
-		cursor: pointer;
-	}
-
-.rt_consensus {
-	font-size: 24px;
-	font-style: italic;
-	text-align: center;
+.area_title {
 	margin-bottom: 30px;
-	margin-top: 30px;
+	font-size: 35px;
+	font-weight: 300;
 }
+
 
 .movieratings_wrapper {
 	position: relative;
@@ -522,10 +498,8 @@ span {
 }
 
 #moviedata-container {
-	margin-bottom: 2%;
+	margin-bottom: 30px;
 	position: relative;
-	float: left;
-	width: 100%;
 }
 
 #compare_search_overlay {
@@ -590,10 +564,17 @@ span {
 }
 
 #compare_results .movie_poster {
-	max-height: 445px;
-	overflow: hidden;
 	text-align: center;
+	max-width: 300px;
+	margin: 0 auto;
+	margin-bottom: 15px;
 }
+
+	#compare_results .movie_poster img {
+		max-height: 445px;
+		overflow: hidden;
+		margin-bottom: 15px;
+	}
 
 #compare_results #moviedata-container .carousel {
 	border: 0px solid #ccc;
@@ -607,12 +588,42 @@ span {
 	margin-bottom: 25px;
 }
 
+#compare_results .episode_number {
+		position: relative;
+		top: 0;
+		left: 0;
+		float: left;
+		clear: both;
+		width: 100%;
+		margin-bottom: 10px;
+	}
 
+#compare_results .nav-pills {
+		width: 100%;
+		margin-right: 0%;
+		margin-bottom: 10px;
+	}
+
+#compare_results .tab-content {
+		width: 100%;
+
+	}
+@media screen and (max-width: 991px) {
+	#compare_results #meta_container {
+		margin-bottom: 15px;
+		padding-bottom: 25px;
+		border-bottom: 3px dashed #eee;
+	}
+
+	#compare_results #series_container .col-sm-6 {
+		float: left;
+	}
+}
 
 /* CRITICS STUFF */
 
 #similar_and_critics {
-	float: left;
+	margin-bottom: 30px;
 }
 
 .critic_freshness {
@@ -631,6 +642,10 @@ span {
 }
 
 /* BUSINESS STUFF */ 
+
+#business_container {
+	margin-bottom: 30px;
+}
 
 .budget_p {
 	font-size: 24px;
@@ -720,7 +735,7 @@ span {
 .watchlist_movie_title {
 	font-size: 24px;
 	line-height: 30px;
-	width: 100%;
+	width: 75;
 	text-overflow: ellipsis;
 	float: left;
 	overflow: hidden;

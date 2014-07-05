@@ -235,8 +235,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			   		}
 			   		
 			   		$scope.movieSite = res.Website;
-			   		var poster = res.posters.detailed.replace('tmb','det');
-			   		$scope.moviePoster = poster;
 			   		$scope.movieStudio = res.studio;
 			   		$scope.movieConsensus = res.critics_consensus;
 			   		$scope.movieRTlink = res.links.alternate;
@@ -314,11 +312,14 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 					$scope.movieIMDBurl = res.urlIMDB;
 					$scope.movieLocations = res.filmingLocations;
-					$scope.movieTrivia = res.movieTrivia;
 					$scope.movieAgeRating = res.rated;
 
 					//TRIVIA STUFF
-					console.log($scope.movieTrivia.length)
+					$scope.hasTrivia = false;
+					$scope.movieTrivia = res.movieTrivia;
+					if($scope.movieTrivia.length > 0) {
+						$scope.hasTrivia = true;
+					}
 					$scope.maxSize = 5;
 					$scope.currentPage = 1;
 					$scope.totalItems = 0;
@@ -331,19 +332,20 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					//GET SEASONS & EPISODES IF QUERY IS A SERIES
 					if(MainFactory.getType() == "series") {
 						$scope.seriesSeasons = res.seasons;
-						console.log(res.seasons);
 					}
 
 
 					// MOVIE GROSS CHART STUFF
 					if($scope.movieType == "movie") {
-						if(typeof res.business.budget !== 'undefined' ) {
+						if(typeof res.business.budget !== 'undefined' && res.business.budget.money.charAt(0) == '$') {
 							$scope.movieBudget = res.business.budget.money;
+						} else if (typeof res.business.budget !== 'undefined' && res.business.budget.money.charAt(0) !== '$') {
+							$scope.movieBudget = res.business.budget.remarks + res.business.budget.money;
 						}
+
 						$scope.hasGross = false;
 
 						var movieGross = res.business.gross;
-						console.log(movieGross);
 						var array = [];
 
 			    		if(typeof movieGross !== 'undefined') {
@@ -360,18 +362,22 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				    			$scope.hasGross = false;
 				    		}
 
+				    		array.reverse();
 				    		var dataForChartY = [];
 				    		var dataForChartX = [];
+				    		var largest = 0;
 
 
 							
 							for (var i = 0; i < array.length; i++) {
-								dataForChartY[dataForChartY.length] = [array[i].day + "." + array[i].month + "." + array[i].year, parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
-								dataForChartX[dataForChartX.length] = [array[i].day + "." + array[i].month + "." + array[i].year]			
-							}
+								if(parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, '')) < largest) {
 
-							dataForChartY.reverse();
-							dataForChartX.reverse();	
+								} else {
+									largest = parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''));
+									dataForChartY[dataForChartY.length] = [array[i].day + "." + array[i].month + "." + array[i].year, parseFloat(array[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
+									dataForChartX[dataForChartX.length] = [array[i].day + "." + array[i].month + "." + array[i].year]	
+								}		
+							}
 
 						    $scope.chartConfig = {
 						        options: {
@@ -408,7 +414,8 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 								yAxis: {           
 						            title: {
 						                text: null
-						            }
+						            },
+						            min: 0
 						        },
 						        series: [{
 						        	name: "Gross",
@@ -435,8 +442,8 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 					ngProgress.complete();
 					$scope.movieOnWatchlist();
-					document.getElementById("result_container").style.opacity = '1';
 					document.getElementById("result_container").style.display = 'block';
+					document.getElementById("result_container").style.opacity = '1';					
 					ngProgress.reset();
 
 
@@ -539,15 +546,15 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		var dataForChartX_movie1 = [];
 		var movie1_title;
 		var movie2_title;
+		var hasRTrating = false;
+		var hasRTrating_compare = false;
+
+		$scope.loadStatus = 0;
 
 		document.getElementById("ngProgress-container").style.top = '60px';
 		ngProgress.reset();
 
 		$scope.movieQuery = MainFactory.getQuery();
-		console.log("Movie 1: " + MainFactory.getIMDBid());
-		console.log("Movie 2: " + MainFactory.getIMDBid_movie2());
-		console.log("Type 1: " + MainFactory.getType());
-		console.log("Type 2: " + MainFactory.getType_movie2());
 
 		$scope.errorMessage = "Search for a movie or TV show to get results";
 
@@ -570,17 +577,14 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					$scope.rtMovieID = res.id;
 
 			   		//CHECK IF THERE IS ACTUALLY A CRITICS RATING
-			   		$scope.hasRTrating = false;
 
 					if(typeof res.ratings !== 'undefined') {
 			   			$scope.movieCriticsRating = res.ratings.critics_score;
 			   			$scope.movieUsersRating = res.ratings.audience_score;
-			   			$scope.hasRTrating = true;
+			   			hasRTrating = true;
 			   		}
 			   		
 			   		$scope.movieSite = res.Website;
-			   		var poster = res.posters.detailed.replace('tmb','det');
-			   		$scope.moviePoster = poster;
 			   		$scope.movieStudio = res.studio;
 			   		$scope.movieConsensus = res.critics_consensus;
 			   		$scope.movieRTlink = res.links.alternate;
@@ -608,17 +612,14 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					$scope.rtMovieID_compare = res.id;
 
 			   		//CHECK IF THERE IS ACTUALLY A CRITICS RATING
-			   		$scope.hasRTrating_compare = false;
 
 					if(typeof res.ratings !== 'undefined') {
 			   			$scope.movieCriticsRating_compare = res.ratings.critics_score;
 			   			$scope.movieUsersRating_compare = res.ratings.audience_score;
-			   			$scope.hasRTrating_compare = true;
+			   			hasRTrating_compare = true;
 			   		}
 			   		
 			   		$scope.movieSite_compare = res.Website;
-			   		var poster = res.posters.detailed.replace('tmb','det');
-			   		$scope.moviePoster_compare = poster;
 			   		$scope.movieStudio_compare = res.studio_compare;
 			   		$scope.movieConsensus_compare = res.critics_consensus;
 			   		$scope.movieRTlink_compare = res.links.alternate;
@@ -640,9 +641,10 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
 				});;
+			
+			}		//END RT HTTP BLOCK	
 
 
-			}	//END RT HTTP BLOCK		
 
 
 			//GET IMDB JSON FOR MOVIE 1
@@ -702,13 +704,14 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 				// MOVIE GROSS CHART STUFF
 				if(MainFactory.getType() == "movie") {
-					if(typeof res.business.budget !== 'undefined' ) {
+					if(typeof res.business.budget !== 'undefined' && res.business.budget.money.charAt(0) == '$') {
 						$scope.movieBudget = res.business.budget.money;
+					} else if (typeof res.business.budget !== 'undefined' && res.business.budget.money.charAt(0) !== '$') {
+						$scope.movieBudget = res.business.budget.remarks + res.business.budget.money;
 					}
 					$scope.hasGross = false;
 
 					movieGross_movie1 = res.business.gross;
-					console.log(movieGross_movie1);
 					array_movie1 = [];
 
 			    	if(typeof movieGross_movie1 !== 'undefined') {
@@ -720,17 +723,23 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				    	};
 					}
 
+					array_movie1.reverse();
+					var largest = 0;
+
 					for (var i = 0; i < array_movie1.length; i++) {
-						dataForChartY_movie1[dataForChartY_movie1.length] = [array_movie1[i].day + "." + array_movie1[i].month + "." + array_movie1[i].year, parseFloat(array_movie1[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
-						dataForChartX_movie1[dataForChartX_movie1.length] = [array_movie1[i].day + "." + array_movie1[i].month + "." + array_movie1[i].year]			
+						if(parseFloat(array_movie1[i].money.substr(1).replace(/[^\d\.\-\ ]/g, '')) < largest) { 
+										//nothing	
+						} else {
+							largest = parseFloat(array_movie1[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''));						
+							dataForChartY_movie1[dataForChartY_movie1.length] = [array_movie1[i].day + "." + array_movie1[i].month + "." + array_movie1[i].year, parseFloat(array_movie1[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
+							dataForChartX_movie1[dataForChartX_movie1.length] = [array_movie1[i].day + "." + array_movie1[i].month + "." + array_movie1[i].year];
+						}			
 					}
 
-					dataForChartY_movie1.reverse();
-					dataForChartX_movie1.reverse();	
 
 				}
 
-
+				$scope.loadStatus = $scope.loadStatus + 1;
 				$scope.movieOnWatchlist();
 
 			});
@@ -792,8 +801,10 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 					// MOVIE GROSS CHART STUFF
 					if(MainFactory.getType_movie2() == "movie") {
-						if(typeof res.business.budget !== 'undefined' ) {
+						if(typeof res.business.budget !== 'undefined' && res.business.budget.money.charAt(0) == '$') {
 							$scope.movieBudget_compare = res.business.budget.money;
+						} else if (typeof res.business.budget !== 'undefined' && res.business.budget.money.charAt(0) !== '$') {
+							$scope.movieBudget_compare = res.business.budget.remarks + res.business.budget.money;
 						}
 						$scope.hasGross_compare = false;
 
@@ -814,25 +825,24 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 				    		if($scope.movieUSGross_compare.length < 1) {
 				    			$scope.hasGross_compare = false;
-				    		}			    	
+				    		}	
+
+				    		array_movie2.reverse();		    	
 
 
 				    		var dataForChartY_movie2 = [];
-				    		var dataForChartX_movie2 = [];			
+				    		var dataForChartX_movie2 = [];	
+				    		var largest = 0;		
 
 							for (var i = 0; i < array_movie2.length; i++) {
-								for (var j = 0; j < array_movie2.length - 1; j++) {
-									if(parseFloat(array_movie2[j].money.substr(1).replace(/[^\d\.\-\ ]/g, '')) > parseFloat(array_movie2[j+1].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))) { 
+								if(parseFloat(array_movie2[i].money.substr(1).replace(/[^\d\.\-\ ]/g, '')) < largest) { 
 										//nothing	
-									} else {
+								} else {
+									largest = parseFloat(array_movie2[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''));
 									dataForChartY_movie2[dataForChartY_movie2.length] = [array_movie2[i].day + "." + array_movie2[i].month + "." + array_movie2[i].year, parseFloat(array_movie2[i].money.substr(1).replace(/[^\d\.\-\ ]/g, ''))];
 									dataForChartX_movie2[dataForChartX_movie2.length] = [array_movie2[i].day + "." + array_movie2[i].month + "." + array_movie2[i].year]
-									}
-								}			
+								}		
 							}
-
-							dataForChartY_movie2.reverse();
-							dataForChartX_movie2.reverse();	
 
 						    $scope.chartConfig = {
 						        options: {
@@ -855,7 +865,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 											color: '#000'
 										},
 										formatter: function() {
-									        return this.x + '<br>' + '<strong>$' + Highcharts.numberFormat(this.y, 0) + '</strong>'
+									        return '<strong>$' + Highcharts.numberFormat(this.y, 0) + '</strong>'
 									    }
 									},
 									legend: {
@@ -864,12 +874,15 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 						        },
 						        
 						        xAxis: {
-						        	categories: dataForChartX_movie1
+						            labels: {
+						                enabled: false
+						            }						        	
 								},        
 								yAxis: {           
 						            title: {
 						                text: null
-						            }
+						            },
+						            min: 0
 						        },
 						        series: [{
 						        	name: movie1_title,
@@ -895,17 +908,34 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					}
 
 
+				$scope.oneHasGross = false;
+				if($scope.hasGross || $scope.hasGross_compare) {
+					$scope.oneHasGross = true;
+				}			
 
-
-
-
-				ngProgress.complete();
-				$scope.movieOnWatchlist();
-				document.getElementById("result_container").style.opacity = '1';
-				document.getElementById("result_container").style.display = 'block';
-				ngProgress.reset();
+				$scope.loadStatus = $scope.loadStatus + 1;
 			});
-			
+		
+		 	$scope.$watch('loadStatus', function() {
+
+		 		$scope.bothHaveRTrating = false;
+/*				console.log("1 " + hasRTrating);
+				console.log("2 " + hasRTrating_compare);*/
+				if(hasRTrating && hasRTrating_compare) {
+					$scope.bothHaveRTrating = true;
+				}	
+
+
+				if($scope.loadStatus == 2) {
+					ngProgress.complete();
+					$scope.movieOnWatchlist();
+					document.getElementById("result_container").style.display = 'block';
+					document.getElementById("result_container").style.opacity = '1';
+					ngProgress.reset();
+				}
+			});
+
+
 		}
 
 
@@ -1155,11 +1185,10 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
 	        		delete $window.sessionStorage.token;
 
 	        		// Handle login errors here
-	        		$scope.message = 'Error: Invalid Username/E-Mail or password';
+	        		$scope.message = 'Error: Invalid Username/E-Mail or Password';
 	      		});
       	} else {
-      		$scope.message = 'Error: Invalid Username/E-Mail or password';
-      		console.log("lolol");
+      		$scope.message = 'Error: Invalid Username/E-Mail or Password';
       	}
 	}
 

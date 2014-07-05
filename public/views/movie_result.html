@@ -59,10 +59,14 @@
 
 				<p><b>Plot</b></p>
 
-				<div id="plot_container">
-					<p ng-hide="showPlot">{{ moviePlot }} <a ng-click="showFullPlot()">full plot</a></p>
-					<p ng-show="showPlot">{{ moviePlotFull }} <a ng-click="showFullPlot()">short plot</a></p>
+				<div id="plot_container" ng-if="moviePlot !== 'Add a Plot'">
+					<p ng-hide="showPlot">{{ moviePlot }} <a ng-click="showFullPlot()">Full Plot</a></p>
+					<p ng-show="showPlot">{{ moviePlotFull }} <a ng-click="showFullPlot()">Short Plot</a></p>
 				</div>
+				<div ng-if="moviePlot == 'Add a Plot'">
+					<p>Unfortunately no Plot has been added yet.</p>
+				</div>
+
 
 				<hr>
 				<div id="meta_container">
@@ -80,9 +84,9 @@
 		</div>
 	</div>
 
-	<div id="moviedata-container">
-		<div class="movieratings_wrapper col-md-12">
-			<h2 style="margin-top: 0; margin-bottom: 30px;">Ratings</h2>
+	<div id="moviedata-container" class="row">
+		<div class="movieratings_wrapper">
+			<h2 class="area_title" style="margin-top: 0; margin-left: 15px;">Ratings</h2>
 			<div class="col-md-4" ng-class="hasRTrating ? '' : 'series_knob'">
 					<div class="knob_container">
 						<input type="text" value="N/A" class="knob" ng-model="IMDBRating"/>
@@ -108,7 +112,7 @@
 
 	<div id="similar_and_critics" class="row" ng-show="isMovie">
 		<div class="col-md-6 critics_container" ng-show="hasReviews">
-			<h2 style=" margin-bottom: 30px;">What The Critics Say</h2>
+			<h2 class="area_title">What The Critics Say</h2>
 
 			<carousel>
 				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active" ng-if="review.quote !== ''">
@@ -126,7 +130,7 @@
 			</carousel>
 		</div>
 		<div class="col-md-6 similar_container" ng-show="hasSimilar">
-			<h2 style="margin-bottom: 30px;">Similar Movies</h2>
+			<h2 class="area_title">Similar Movies</h2>
 			<carousel>
 				<slide class="similar_movie" ng-repeat="similarMovie in similarMovies" active="slide.active">
 					<div class="col-xs-3 col-sm-2">
@@ -146,9 +150,9 @@
 		</div>
 	</div>
 
-	<div id="movietrivia_container" class="row">
+	<div id="movietrivia_container" class="row" ng-hide="!hasTrivia">
 		<div class="col-md-12">
-			<h2 style=" margin-bottom: 30px;">Did you know?</h2>
+			<h2 class="area_title">Did you know?</h2>
 			<p class="trivia" ng-repeat="trivia in movieTrivia.slice(((currentPage-1)*maxSize), ((currentPage)*maxSize)) track by $index">{{trivia}}</p>
 			<div class="col-md-12 pagination_container" ng-hide="numPages == '1'">
 				<pagination total-items="movieTrivia.length" ng-model="currentPage" max-size="5" class="pagination-sm" boundary-links="false" rotate="false" num-pages="numPages"></pagination>
@@ -159,7 +163,7 @@
 
 	<div id="series_container" class="row" ng-hide="isMovie">
 		<div class="col-sm-12" >
-			<h2 style="margin-bottom: 30px">Seasons & Episodes</h2>
+			<h2 class="area_title">Seasons & Episodes</h2>
 			<tabset vertical="true" type="pills">
 			    <tab heading="Season {{season.numSeason}}" ng-repeat="season in seriesSeasons">
 					<carousel>
@@ -179,9 +183,9 @@
 
 
 
-	<div class="row" ng-show="hasGross">
+	<div id="business_container" class="row" ng-show="hasGross">
 		<div class="col-md-12">
-			<h2>Business & Money</h2>
+			<h2 class="area_title">Business & Money</h2>
 			<p class="budget_p" ng-hide="!movieBudget">{{movieTitle}} had a Budget of <span class="budget">{{movieBudget}}</span></p>
 	        <highchart id="chart1" config="chartConfig" class="span10"></highchart>
    		</div>
