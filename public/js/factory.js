@@ -11,6 +11,7 @@ angular.module('factory', [])
     var type_movie2 = "";
     var message = "";
     var MovieOnWatchlist = false;
+    var MovieOnWatchlist_compare = false;
 
 
     movie.setQuery = function(value) {
@@ -148,12 +149,21 @@ angular.module('factory', [])
     movie.getMessage = function(){
         return message;
     }
+
     movie.setMovieOnWatchlist = function(booleanvalue){
         MovieOnWatchlist = booleanvalue;
     }
 
     movie.getMovieOnWatchlist = function(){
         return MovieOnWatchlist;
+    }
+
+    movie.setMovieOnWatchlist_compare = function(booleanvalue){
+        MovieOnWatchlist_compare = booleanvalue;
+    }
+
+    movie.getMovieOnWatchlist_compare = function(){
+        return MovieOnWatchlist_compare;
     }
 
     return movie;           

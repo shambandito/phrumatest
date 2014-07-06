@@ -489,11 +489,12 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		    		for (var i = 0; i < movies.length; i++) {
 		    			if(movies[i].Type !== "episode"){
 		    				if(movies[i].Type !== "game") {
+		    					$scope.errorMessage = "";
 				    			MainFactory.getIMDBmovie_omdb(movies[i].imdbID).success(function (res) {
 				    				array[array.length] = res;
 				    				ngProgress.complete();
 				    			}).error(function(data, status, headers, config) {
-									alert("error!");
+									alert("There has been an error in the API response. Please try again.");
 									ngProgress.reset();
 						    	});
 			    			}
@@ -505,19 +506,29 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
     		}
 
 		}).error(function(data, status, headers, config) {
-			alert("error!");
+			alert("There has been an error in the API response. Please try again.");
     	});	
 	}
 
 
-	$scope.showFullPlot = function() {
+	$scope.showFullPlot = function(type) {
 
-		if($scope.showPlot == false) {
-			$scope.showPlot = true;	
-		}
-		else {
-			$scope.showPlot = false;
-		}
+		if(type == 'compare') {
+			if($scope.showPlot_compare == false) {
+				$scope.showPlot_compare = true;	
+			}
+			else {
+				$scope.showPlot_compare = false;
+			}
+		} else {
+			if($scope.showPlot == false) {
+				$scope.showPlot = true;	
+			}
+			else {
+				$scope.showPlot = false;
+			}			
+		}	
+
 	}
 
 
@@ -548,6 +559,8 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		var movie2_title;
 		var hasRTrating = false;
 		var hasRTrating_compare = false;
+		var hasBudget_movie1 = false;
+		var hasBudget_movie2 = false;
 
 		$scope.loadStatus = 0;
 
@@ -559,6 +572,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 		$scope.errorMessage = "Search for a movie or TV show to get results";
 
 		$scope.isMovie = false;
+		$scope.isMovie_compare = false;
 
 		if($scope.movieQuery != "") {
 
@@ -605,7 +619,13 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 				}).error(function(data, status, headers, config) {
 									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
-				});;
+				});;							
+			}		//END RT HTTP BLOCK	 1
+
+
+			if(MainFactory.getType_movie2() == 'movie') {
+
+				$scope.isMovie_compare = true;
 
 				//GET ROTTEN TOMATOES JSON DATA FOR MOVIE 2 (COMPARE MOVIE)
 				MainFactory.getRTmovie(MainFactory.getIMDBid_movie2()).success(function (res) {
@@ -641,9 +661,17 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 									alert("Unfortunately the Rotten Tomatoes API hasn't responded. Please try again later.");
 									ngProgress.reset();
 				});;
-			
-			}		//END RT HTTP BLOCK	
 
+			} // END RT BLOCK 2
+
+
+			//CHECK IF MOVIES OR TV SERIES
+			$scope.bothMovie = false;
+
+
+			if($scope.isMovie && $scope.isMovie_compare) {
+				$scope.bothMovie = true;
+			}		
 
 
 
@@ -704,11 +732,16 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 				// MOVIE GROSS CHART STUFF
 				if(MainFactory.getType() == "movie") {
+
+					//CHECK IF BUDGET IS IN US DOLLARS OR DIFFERENT CURRENCY
 					if(typeof res.business.budget !== 'undefined' && res.business.budget.money.charAt(0) == '$') {
 						$scope.movieBudget = res.business.budget.money;
+						hasBudget_movie1 = true;
 					} else if (typeof res.business.budget !== 'undefined' && res.business.budget.money.charAt(0) !== '$') {
 						$scope.movieBudget = res.business.budget.remarks + res.business.budget.money;
+						hasBudget_movie1 = true;
 					}
+
 					$scope.hasGross = false;
 
 					movieGross_movie1 = res.business.gross;
@@ -748,7 +781,7 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 			MainFactory.getIMDBmovie(MainFactory.getIMDBid_movie2()).success(function (res) {
 
 					$scope.countries_compare = res.countries;
-					$scope.movieIMDBid_compare = MainFactory.getIMDBid();
+					$scope.movieIMDBid_compare = MainFactory.getIMDBid_movie2();
 					$scope.movieActors_compare = res.actors;
 					$scope.moviePlot_compare = res.simplePlot;
 					$scope.moviePlotFull_compare = res.plot;
@@ -801,15 +834,19 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 					// MOVIE GROSS CHART STUFF
 					if(MainFactory.getType_movie2() == "movie") {
+
+						//CHECK IF BUDGET IS IN US DOLLARS OR DIFFERENT CURRENCY
 						if(typeof res.business.budget !== 'undefined' && res.business.budget.money.charAt(0) == '$') {
 							$scope.movieBudget_compare = res.business.budget.money;
+							hasBudget_movie2 = true;
 						} else if (typeof res.business.budget !== 'undefined' && res.business.budget.money.charAt(0) !== '$') {
 							$scope.movieBudget_compare = res.business.budget.remarks + res.business.budget.money;
+							hasBudget_movie2 = true;
 						}
+
 						$scope.hasGross_compare = false;
 
 						var movieGross_movie2 = res.business.gross;
-						//console.log(movieGross_movie2);
 						array_movie2 = [];
 
 			    		if(typeof movieGross_movie2 !== 'undefined') {
@@ -908,12 +945,18 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 					}
 
 
-				$scope.oneHasGross = false;
-				if($scope.hasGross || $scope.hasGross_compare) {
-					$scope.oneHasGross = true;
-				}			
+				$scope.bothHaveGross = false;
+				if($scope.hasGross && $scope.hasGross_compare) {
+					$scope.bothHaveGross = true;
+				}	
+
+				$scope.bothHaveBudget = false;
+				if(hasBudget_movie1 && hasBudget_movie2) {
+					$scope.bothHaveBudget = true;
+				}
 
 				$scope.loadStatus = $scope.loadStatus + 1;
+				$scope.movieOnWatchlist('compare');
 			});
 		
 		 	$scope.$watch('loadStatus', function() {
@@ -928,7 +971,6 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
 				if($scope.loadStatus == 2) {
 					ngProgress.complete();
-					$scope.movieOnWatchlist();
 					document.getElementById("result_container").style.display = 'block';
 					document.getElementById("result_container").style.opacity = '1';
 					ngProgress.reset();
@@ -976,23 +1018,44 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
 
   	//WATCHLIST
 
-  	$scope.addToWatchList = function(){
+  	$scope.addToWatchList = function(type){
   		if($window.sessionStorage.token != null){
 	  		var encodedProfile = $window.sessionStorage.token.split('.')[1];
 	    	var profile = JSON.parse(url_base64_decode(encodedProfile));
 			var imdbid = MainFactory.getIMDBid();
-			if(MainFactory.getMovieOnWatchlist() == false){
-				MainFactory.setMovieOnWatchlist(true);
+			var imdbid_compare = MainFactory.getIMDBid_movie2();
+			if(type == 'compare') {	
+				if(MainFactory.getMovieOnWatchlist_compare() == false){
+					MainFactory.setMovieOnWatchlist_compare(true);
 
-		  		$http({url: '/api/userwatchlist',
-		  			   method : 'POST',
-		  				data: {userid : profile.id,
-		  					   imdbid : imdbid,
-		  					   movieltitle : $scope.movieTitle}
-		  				}).success(function(){
-		  					$scope.successmessage = "movie was added to the watchlist";
+
+				  	$http({url: '/api/userwatchlist',
+				  		method : 'POST',
+				  		data: {userid : profile.id,
+				  		   imdbid : imdbid_compare,
+				  		   movieltitle : $scope.movieTitle_compare}
+				  		}).success(function(){
+				  			$scope.successmessage = "Successfully Added To Your Watchlist";
 						});
+
+				}
+			} else {
+				if(MainFactory.getMovieOnWatchlist() == false){
+					MainFactory.setMovieOnWatchlist(true);
+
+
+				  	$http({url: '/api/userwatchlist',
+				  		method : 'POST',
+				  		data: {userid : profile.id,
+				  		   imdbid : imdbid,
+				  		   movieltitle : $scope.movieTitle}
+				  		}).success(function(){
+				  			$scope.successmessage = "Successfully Added To Your Watchlist";
+						});
+
+				}				
 			}
+
 		}
 		else{
 			$scope.openModal('lg','notloggedin');
@@ -1003,52 +1066,92 @@ function MainController($scope, $location, $rootScope, MainFactory, ngProgress, 
   		return MainFactory.getMovieOnWatchlist();
   	}
 
+  	$scope.checkbutton_compare =  function(){
+  		return MainFactory.getMovieOnWatchlist_compare();
+  	}
+
   	$scope.goToWatchList = function(){
   		$location.path("/watchlist");
   	};
 
-  	$scope.movieOnWatchlist = function(){
+  	$scope.movieOnWatchlist = function(type){
   		
   		if($window.sessionStorage.token != null){
-  		var encodedProfile = $window.sessionStorage.token.split('.')[1];
-    	var profile = JSON.parse(url_base64_decode(encodedProfile));
+	  		var encodedProfile = $window.sessionStorage.token.split('.')[1];
+	    	var profile = JSON.parse(url_base64_decode(encodedProfile));
 
-  		$http({url: '/api/userwatchlist/'+profile.id,
-  			   method:'Get'
-  			})
-  		.success(function(data, status, headers, config){
-  			
-  				if(data.length == 0){
-  					MainFactory.setMovieOnWatchlist(false);
-  				}else{
-  					for(var i = 0 ; i < data.length ; i++){
-  						if(data[i].imdbid == MainFactory.getIMDBid()){
-  							MainFactory.setMovieOnWatchlist(true);
-  							break;
-  						}else{
-  							MainFactory.setMovieOnWatchlist(false);
-  						}
-  					}
-  					
-  				}
-  			});
-  		}else{
+
+	    	if(type == 'compare') {
+		  		$http({url: '/api/userwatchlist/'+profile.id,
+		  			   method:'Get'
+		  			})
+		  		.success(function(data, status, headers, config){
+		  			
+		  				if(data.length == 0){
+		  					MainFactory.setMovieOnWatchlist_compare(false);
+		  				}else{
+		  					for(var i = 0 ; i < data.length ; i++){
+		  						if(data[i].imdbid == MainFactory.getIMDBid_movie2()){
+		  							MainFactory.setMovieOnWatchlist_compare(true);
+		  							break;
+		  						}else{
+		  							MainFactory.setMovieOnWatchlist_compare(false);
+		  						}
+		  					}
+		  					
+		  				}
+		  			});
+	  		} else {
+		  		$http({url: '/api/userwatchlist/'+profile.id,
+		  			   method:'Get'
+		  			})
+		  		.success(function(data, status, headers, config){
+		  			
+		  				if(data.length == 0){
+		  					MainFactory.setMovieOnWatchlist(false);
+		  				}else{
+		  					for(var i = 0 ; i < data.length ; i++){
+		  						if(data[i].imdbid == MainFactory.getIMDBid()){
+		  							MainFactory.setMovieOnWatchlist(true);
+		  							break;
+		  						}else{
+		  							MainFactory.setMovieOnWatchlist(false);
+		  						}
+		  					}
+		  					
+		  				}
+		  			});	  			
+	  		}
+
+  		} else {
   			MainFactory.setMovieOnWatchlist(false);
+  			MainFactory.setMovieOnWatchlist_compare(false);
   		}
   	}
 
-  	$scope.removeFromWatchList = function(imdbID){
+
+
+  	$scope.removeFromWatchList = function(imdbID, type){
   		var encodedProfile = $window.sessionStorage.token.split('.')[1];
     	var profile = JSON.parse(url_base64_decode(encodedProfile));
 
+    	if(type == 'compare') {
+			$http({
+				url: '/api/removeuserwatchlist/'+profile.id +'/'+imdbID,
+				method: "delete"
+			}).success(function(data){
+				MainFactory.setMovieOnWatchlist_compare(false);
+				$scope.watchlistInit();
+			});
+		} else {
 			$http({
 				url: '/api/removeuserwatchlist/'+profile.id +'/'+imdbID,
 				method: "delete"
 			}).success(function(data){
 				MainFactory.setMovieOnWatchlist(false);
 				$scope.watchlistInit();
-			});
-		
+			});			
+		}	
   	}
 
   	$scope.watchlistInit =  function(){

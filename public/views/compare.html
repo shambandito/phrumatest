@@ -49,13 +49,13 @@
 							<p class="movie_poster">
 								<img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'">
 								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()" ng-show="!checkbutton()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
-								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid)" ng-show="checkbutton()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>							
+								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid, 'normal')" ng-show="checkbutton()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>							
 							</p>
 
 
 						</div>
 						<div class="movieinfo-right col-xs-12 ">
-							<h2 class="highlight movie_title">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>				
+							<h2 class="highlight movie_title">{{ movieTitle }} <small class="movie_year">(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>				
 
 							<div class="links_container">
 								<a ng-hide="!trailerURL" class="movie_link" href="{{ trailerURL }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
@@ -95,14 +95,14 @@
 						<div class="movieinfo-left col-xs-12">
 							<p class="movie_poster">
 								<img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster_compare }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'">
-								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()" ng-show="!checkbutton()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
-								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid)" ng-show="checkbutton()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>
+								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList('compare')" ng-show="!checkbutton_compare()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
+								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid_compare, 'compare')" ng-show="checkbutton_compare()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>
 							</p>
 
 
 						</div>
 						<div class="movieinfo-right col-xs-12 ">
-							<h2 class="highlight movie_title">{{ movieTitle_compare }} <small>(<span ng-repeat="country in countries">{{country_compare}}{{$last ? '' : ', '}}</span> {{ movieYear_compare }})</small></h2>				
+							<h2 class="highlight movie_title">{{ movieTitle_compare }} <small class="movie_year">(<span ng-repeat="country in countries_compare">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear_compare }})</small></h2>				
 
 							<div class="links_container">
 								<a ng-hide="!trailerURL_compare" class="movie_link" href="{{ trailerURL_compare }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
@@ -113,14 +113,14 @@
 							<p><b>Plot</b></p>
 
 							<div id="plot_container">
-								<p ng-hide="showPlot">{{ moviePlot_compare }} <a ng-click="showFullPlot()">Full Plot</a></p>
-								<p ng-show="showPlot">{{ moviePlotFull_compare }} <a ng-click="showFullPlot()">Short Plot</a></p>
+								<p ng-hide="showPlot_compare">{{ moviePlot_compare }} <a ng-click="showFullPlot('compare')">Full Plot</a></p>
+								<p ng-show="showPlot_compare">{{ moviePlotFull_compare }} <a ng-click="showFullPlot('compare')">Short Plot</a></p>
 							</div>
 
 							<hr>
 							<div id="meta_container">
 								<p ng-hide="!genres_compare"><b>Genre: </b><span ng-repeat="genre in genres_compare">{{genre}}{{$last ? '' : ', '}}</span></p>
-								<p ng-hide="!movieStudio"><b>Studio: </b>{{movieStudio_compare}}</p>
+								<p ng-hide="!movieStudio_compare"><b>Studio: </b>{{movieStudio_compare}}</p>
 								<p ng-hide="!movieRuntime_compare"><b>Runtime: </b>{{movieRuntime}}</p>
 								<p ng-hide="!movieAgeRating_compare"><b>Age Rating: </b>{{movieAgeRating}}</p>
 								<p><b>Starring: </b><span style="cursor:pointer" popover="{{'As ' + actor.character}}" popover-trigger="mouseenter" ng-repeat="actor in movieActors_compare|limitTo:10">{{actor.actorName}}{{$last ? '' : ', '}}</span></p>
@@ -195,7 +195,7 @@
 			</div>					
 		</div>
 
-		<div id="similar_and_critics" class="row" ng-show="isMovie">
+		<div id="similar_and_critics" class="row" ng-show="bothMovie">
 			<h2 class="area_title" style="margin-left: 15px; margin-bottom: 0">What The Critics Say About</h2>
 			<div class="col-md-6 critics_container" ng-show="hasReviews">
 
@@ -236,9 +236,9 @@
 			</div>
 		</div>	
 
-		<div id="series_container" class="row" ng-hide="isMovie">
+		<div id="series_container" class="row" ng-hide="bothMovie">
 			<h2 class="area_title" style="margin-left: 15px; margin-bottom: 0;">Seasons & Episodes</h2>
-			<div class="col-sm-6" >		
+			<div class="col-sm-6" ng-hide="isMovie">		
 				<h3 class="area_title" style=" margin-bottom: 15px; font-size: 30px;">{{movieTitle}}</h3>	
 				<tabset vertical="true" type="pills">
 				    <tab heading="Season {{season.numSeason}}" ng-repeat="season in seriesSeasons">
@@ -255,7 +255,7 @@
 				    </tab>
 				</tabset>
 			</div>
-			<div class="col-sm-6" >
+			<div class="col-sm-6" ng-hide="isMovie_compare">
 				<h3 class="area_title" style=" margin-bottom: 15px; font-size: 30px;">{{movieTitle_compare}}</h3>				
 				<tabset vertical="true" type="pills">
 				    <tab heading="Season {{season.numSeason}}" ng-repeat="season in seriesSeasons_compare">
@@ -274,13 +274,13 @@
 			</div>			
 		</div>
 
-		<div id="business_container" class="row" ng-show="oneHasGross">
+		<div id="business_container" class="row" ng-show="bothHaveBudget">
 			<div class="col-md-12">
 				<h2 class="area_title">Business & Money</h2>
 				<p class="budget_p" ng-hide="!movieBudget">{{movieTitle}} had a Budget of <span class="budget">{{movieBudget}}</span></p>
 				<p class="budget_p" ng-hide="!movieBudget_compare">{{movieTitle_compare}} had a Budget of <span class="budget">{{movieBudget_compare}}</span></p>
 
-		        <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+		        <highchart ng-show="bothHaveGross" id="chart1" config="chartConfig"></highchart>
 		    </div>
 		</div>
 	</div>

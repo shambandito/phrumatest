@@ -97,6 +97,15 @@ span {
 		background: transparent;
 	}
 
+.btn-block {
+	margin-bottom: 5px;
+}
+
+.btn-block+.btn-block {
+	margin-top: 0px;
+}
+
+
 .navbar-btn {
 	border: 1px solid #f0f0f0;
 	color: #f0f0f0;
@@ -258,6 +267,7 @@ span {
 
 	.movie_search_result img {
 		cursor: pointer;
+		border-radius: 6px;
 	}
 
 
@@ -280,6 +290,8 @@ span {
 .search_movie_year {
 	float: left;
 	clear: both;
+	font-weight: 300;
+	font-size: 16px;
 }
 
 .search_movie_actors {
@@ -338,6 +350,10 @@ span {
 		padding-right: 5px;
 	}
 
+.movie_year {
+	font-weight: 300;
+}
+
 .knob_container {
 	border-radius: 6px;
 	border: 1px solid #ccc;
@@ -361,7 +377,8 @@ span {
 
 .knob_container > p {
 	text-align: center;
-	font-weight: bold;
+	font-weight: 300;
+	font-size: 18px;
 	margin-bottom: 0;
 }
 
@@ -428,6 +445,12 @@ span {
 
 }
 
+.movie_poster {
+	border-radius: 6px;
+	width: 100%; 
+	max-width: 300px;
+}
+
 /* SIMILAR MOVIE STUFF */
 
 .carousel {
@@ -483,6 +506,7 @@ span {
 
 .movieposter {
 	width: 100%;
+	border-radius: 6px;
 }
 
 .ratings-container {
@@ -574,6 +598,7 @@ span {
 		max-height: 445px;
 		overflow: hidden;
 		margin-bottom: 15px;
+		border-radius: 6px;
 	}
 
 #compare_results #moviedata-container .carousel {
@@ -732,6 +757,10 @@ span {
 
 }
 
+.watchlist_search_result img {
+	border-radius: 6px;
+}
+
 .watchlist_movie_title {
 	font-size: 24px;
 	line-height: 30px;
@@ -751,6 +780,8 @@ span {
 .watchlist_movie_year {
 	float: left;
 	clear: both;
+	font-weight: 300;
+	font-size: 16px;
 }
 
 .watchlist_movie_actors {

@@ -42,14 +42,14 @@
 	<div class="row" id="movie_info">
 		<div class="movie_info_wrapper">
 			<div class="movieinfo-left col-md-3">
-				<p style="text-align: center;"><img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
+				<p style="text-align: center;"><img class="movie_poster" src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" onerror="this.src = 'http://placehold.it/233x344.jpg'"></p>
 				<button class="btn btn-default btn-block btn-lg" type="button" ng-click="openCompareSearch('lg')"><span class="glyphicon glyphicon-stats" style="margin-right: 5px; top: 2px;"></span> Compare</button>
 				<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()" ng-show="!checkbutton()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
 				<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid)" ng-show="checkbutton()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>
 
 			</div>
 			<div class="movieinfo-right col-md-9 ">
-				<h2 class="highlight movie_title">{{ movieTitle }} <small>(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>				
+				<h2 class="highlight movie_title">{{ movieTitle }} <small class="movie_year">(<span ng-repeat="country in countries">{{country}}{{$last ? '' : ', '}}</span> {{ movieYear }})</small></h2>				
 
 				<div class="links_container">
 					<a ng-hide="!trailerURL" class="movie_link" href="{{ trailerURL }}" target="_blank"><span class="glyphicon glyphicon-film"></span>Trailer</a>
@@ -118,7 +118,7 @@
 				<slide class="similar_movie" ng-repeat="review in criticReviews" active="slide.active" ng-if="review.quote !== ''">
 					<div class="col-sm-12 review_content">
 						<h3 class="highlight similar_movie_title">{{review.critic}}</h3>
-						<h4>{{review.publication}}</h4>
+						<h4 class="movie_year">{{review.publication}}</h4>
 						<span ng-show="review.freshness == 'fresh'" class="glyphicon glyphicon-thumbs-up critic_freshness"></span>
 						<span ng-show="review.freshness == 'rotten'" class="glyphicon glyphicon-thumbs-down critic_freshness"></span>
 						<p>{{"„" + review.quote + "“"}}</p>
@@ -134,11 +134,11 @@
 			<carousel>
 				<slide class="similar_movie" ng-repeat="similarMovie in similarMovies" active="slide.active">
 					<div class="col-xs-3 col-sm-2">
-						<img style="width: 100%;" src="{{similarMovie.posters.detailed}}" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')"/>
+						<img style="width: 100%; border-radius: 6px; margin-bottom: 10px;" src="{{similarMovie.posters.detailed}}" ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')"/>
 					</div>
 					<div class="col-xs-9 col-sm-10">
 						<h3 class="highlight similar_movie_title"><span ng-click="singleMovieSearch('tt' + similarMovie.alternate_ids.imdb, 'movie')">{{similarMovie.title}}</span></h3>
-						<h4>({{similarMovie.year}})</h4>
+						<h4 class="movie_year">({{similarMovie.year}})</h4>
 						<p><span ng-repeat="actor in similarMovie.abridged_cast">{{actor.name}}{{$last ? '' : ', '}}</span></p>
 						
 					</div>
@@ -183,11 +183,11 @@
 
 
 
-	<div id="business_container" class="row" ng-show="hasGross">
+	<div id="business_container" class="row" ng-hide="!movieBudget">
 		<div class="col-md-12">
 			<h2 class="area_title">Business & Money</h2>
 			<p class="budget_p" ng-hide="!movieBudget">{{movieTitle}} had a Budget of <span class="budget">{{movieBudget}}</span></p>
-	        <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+	        <highchart ng-show="hasGross" id="chart1" config="chartConfig"></highchart>
    		</div>
     </div>
 
@@ -213,7 +213,7 @@
 				<h3>{{ errorMessage }}</h3>
 			</div>
 
-			<div class="row movie_search_result" ng-repeat="movie in compareSearchMovies" >
+			<div class="row movie_search_result" ng-repeat="movie in compareSearchMovies" ng-hide="errorMessage !== ''">
 				<div class="movieinfo-left col-md-2 col-sm-2 col-xs-3">
 					<img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="doCompare(movie.imdbID, movie.Type)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
 				</div>
