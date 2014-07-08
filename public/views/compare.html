@@ -47,7 +47,7 @@
 					<div class="movie_info_wrapper">
 						<div class="movieinfo-left col-xs-12">
 							<p class="movie_poster">
-								<img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'">
+								<img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster }}" style="width: 100%; max-width: 300px;" onerror="this.src = '/css/movie-placeholder.jpg'">
 								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList()" ng-show="!checkbutton()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
 								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid, 'normal')" ng-show="checkbutton()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>							
 							</p>
@@ -94,7 +94,7 @@
 					<div class="movie_info_wrapper">
 						<div class="movieinfo-left col-xs-12">
 							<p class="movie_poster">
-								<img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster_compare }}" style="width: 100%; max-width: 300px;" onerror="this.src = 'http://placehold.it/233x344.jpg'">
+								<img src="http://imdb.wemakesites.net/api/1.0/img/?url={{ poster_compare }}" style="width: 100%; max-width: 300px;" onerror="this.src = '/css/movie-placeholder.jpg'">
 								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="addToWatchList('compare')" ng-show="!checkbutton_compare()"><span class="glyphicon glyphicon-eye-open" style="margin-right: 5px; top: 2px;"></span> Add to Watchlist</button>
 								<button class="btn btn_red btn-block btn-lg" type="button" ng-click="removeFromWatchList(movieIMDBid_compare, 'compare')" ng-show="checkbutton_compare()"><span class="glyphicon glyphicon-eye-close" style="margin-right: 5px; top: 2px;"></span> Remove from Watchlist</button>
 							</p>
@@ -306,10 +306,8 @@
         		<div class="col-md-3">Password:</div>
         		<div class="col-md-9"><input class="form-control" type="password" ng-model="password" placeholder="Password"></div>
         	</div>        	
-        	<div class="row">
-        		<div class="col-md-12 text-center">{{message}}</div>        			
-        	</div>
         <div class="modal-footer">
+                <div class="pull-left errorMessage">{{message}}</div>                   
                 <button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">Login</button>
                 <button class="btn btn-default modal-btn-close" type ="button"ng-click="cancel()">Close</button>
             </div>
@@ -318,6 +316,7 @@
     </script>
 </div>
 
+
 <div id="signup_modal">
     <script type="text/ng-template" id="mySignUpModal.html">
         <div class="modal-header">
@@ -325,31 +324,27 @@
         </div>
         <div class="modal-body">
         <form  ng-submit="signup(newuser)">
-        	<div class="row">
-        		<div class="col-md-5">Username:</div>
-        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.username" placeholder="Username"></div>
-                <div>{{message}}</div>
-        	</div>
-        	<div class="row">
-        		<div class="col-md-5">E-Mail:</div>
-        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.email" placeholder="email"></div>
-                <div>{{messageemail}}</div>
-        	</div>
-        	<div class="row">
-        		<div class="col-md-5">Password:</div>
-        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.password" placeholder="Password"></div>
-        	</div>
-        	<div class="row">
-        		<div class="col-md-5">Confirm password:</div>
-        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.passwordconfirm" placeholder="Password"></div>
-        	</div>            	
-        	<div class="row">
-        		<div class="col-md-10">{{message}}</div>        			
-        	</div>
+            <div class="row">
+                <div class="col-md-5">Username:</div>
+                <div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.username" placeholder="Username"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">E-Mail:</div>
+                <div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.email" placeholder="E-Mail"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">Password:</div>
+                <div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.password" placeholder="Password"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">Confirm password:</div>
+                <div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.passwordconfirm" placeholder="Confirm Password"></div>
+            </div> 
         <div class="modal-footer">
-        	<button class="btn btn-default modal-btn-login"  type="submit" >Register</button>
-        	<button class="btn btn-default modal-btn-close" type="button" ng-click="cancel()">Close</button>  
-        	</form>
+            <div class="pull-left errorMessage">{{message}}</div>  
+            <button class="btn btn-default modal-btn-login"  type="submit" >Register</button>
+            <button class="btn btn-default modal-btn-close" type="button" ng-click="cancel()">Close</button>  
+            </form>
         </div>
     </script>
 </div>

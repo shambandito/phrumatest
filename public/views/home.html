@@ -41,22 +41,20 @@
         </div>
         <div class="modal-body">
         <form ng-show="!isAuthenticated" ng-submit="login(username,password)">
-        	<div class="row">
-        		<div class="col-md-3">Username/E-Mail:</div>
-        		<div class="col-md-9"><input class="form-control" type="text" ng-model="username" placeholder="Username"></div>
-        	</div>
-        	<div class="row">
-        		<div class="col-md-3">Password:</div>
-        		<div class="col-md-9"><input class="form-control" type="password" ng-model="password" placeholder="Password"></div>
-        	</div>        	
-        	<div class="row">
-        		<div class="col-md-12 text-center">{{message}}</div>        			
-        	</div>
+            <div class="row">
+                <div class="col-md-3">Username/E-Mail:</div>
+                <div class="col-md-9"><input class="form-control" type="text" ng-model="username" placeholder="Username"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">Password:</div>
+                <div class="col-md-9"><input class="form-control" type="password" ng-model="password" placeholder="Password"></div>
+            </div>          
         <div class="modal-footer">
+                <div class="pull-left errorMessage">{{message}}</div>                   
                 <button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">Login</button>
                 <button class="btn btn-default modal-btn-close" type ="button"ng-click="cancel()">Close</button>
             </div>
-        	</form>
+            </form>
         </div>
     </script>
 </div>
@@ -68,31 +66,27 @@
         </div>
         <div class="modal-body">
         <form  ng-submit="signup(newuser)">
-        	<div class="row">
-        		<div class="col-md-5">Username:</div>
-        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.username" placeholder="Username"></div>
-                <div>{{message}}</div>
-        	</div>
-        	<div class="row">
-        		<div class="col-md-5">E-Mail:</div>
-        		<div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.email" placeholder="email"></div>
-                <div>{{messageemail}}</div>
-        	</div>
-        	<div class="row">
-        		<div class="col-md-5">Password:</div>
-        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.password" placeholder="Password"></div>
-        	</div>
-        	<div class="row">
-        		<div class="col-md-5">Confirm password:</div>
-        		<div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.passwordconfirm" placeholder="Password"></div>
-        	</div>            	
-        	<div class="row">
-        		<div class="col-md-10">{{message}}</div>        			
-        	</div>
+            <div class="row">
+                <div class="col-md-5">Username:</div>
+                <div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.username" placeholder="Username"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">E-Mail:</div>
+                <div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.email" placeholder="E-Mail"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">Password:</div>
+                <div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.password" placeholder="Password"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">Confirm password:</div>
+                <div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.passwordconfirm" placeholder="Confirm Password"></div>
+            </div> 
         <div class="modal-footer">
-        	<button class="btn btn-default modal-btn-login"  type="submit" >Register</button>
-        	<button class="btn btn-default modal-btn-close" type="button" ng-click="cancel()">Close</button>  
-        	</form>
+            <div class="pull-left errorMessage">{{message}}</div>  
+            <button class="btn btn-default modal-btn-login"  type="submit" >Register</button>
+            <button class="btn btn-default modal-btn-close" type="button" ng-click="cancel()">Close</button>  
+            </form>
         </div>
     </script>
 </div>

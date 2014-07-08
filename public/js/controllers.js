@@ -1244,9 +1244,19 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
   	};
 
   	$scope.signup = function(user){
+  		if(user != null){
   		var newuser =  {username : user.username , email: user.email , password : user.password};
   		$scope.message ='';
-
+  		if(newuser.username == '' || newuser.username == null){
+  			if(newuser.email == '' || newuser.email == null){
+  			$scope.message = 'Enter Username and E-Mail';
+  			}else{
+  			$scope.message = 'Enter Username';
+  			}
+  		}
+  		else if(newuser.email == '' || newuser.email == null){
+  			$scope.message = 'Enter E-Mail';
+  		}else{
   		if(newuser.password  == user.passwordconfirm){
   			newuser.password = window.btoa(user.password);
   		$http.post('/newuser',newuser)
@@ -1256,13 +1266,18 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
   			.error(function(data, status, headers, config){
   				if(data == 'User already exists'){
   					$scope.message = data;
-  				}else{
-  					$scope.messageemail = data;
+  				}
+  				else{
+  					$scope.message = data;
   				}
   			});
   		}
   		else{
-  			$scope.message = 'Error : Passwort stimmt nicht überein';
+  			$scope.message = 'Password doesn\'t match';
+  		}
+  		}
+  		}else{
+  			$scope.message = 'Please fill out the form';
   		}
 
   		
@@ -1288,10 +1303,10 @@ function ModalInstanceController($scope, $modalInstance,$http,$window,MainFactor
 	        		delete $window.sessionStorage.token;
 
 	        		// Handle login errors here
-	        		$scope.message = 'Error: Invalid Username/E-Mail or Password';
+	        		$scope.message = 'Invalid Username/E-Mail or Password';
 	      		});
       	} else {
-      		$scope.message = 'Error: Invalid Username/E-Mail or Password';
+      		$scope.message = 'Invalid Username/E-Mail or Password';
       	}
 	}
 

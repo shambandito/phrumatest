@@ -42,7 +42,7 @@
 	<div class="row movie_search_result" ng-repeat="movie in movies" >
 
 		<div class="movieinfo-left col-sm-2 col-xs-3">
-			<img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="singleMovieSearch(movie.imdbID, movie.Type)" onerror="this.src = 'http://placehold.it/65x97.jpg'">
+			<img class="movieposter" src="http://imdb.wemakesites.net/api/1.0/img/?url={{movie.Poster}}" ng-click="singleMovieSearch(movie.imdbID, movie.Type)" onerror="this.src = '/css/movie-placeholder.jpg'">
 		</div>
 		<div class="movieinfo-right col-sm-10 col-xs-9">
 
@@ -71,10 +71,8 @@
                 <div class="col-md-3">Password:</div>
                 <div class="col-md-9"><input class="form-control" type="password" ng-model="password" placeholder="Password"></div>
             </div>          
-            <div class="row">
-                <div class="col-md-12 text-center">{{message}}</div>                    
-            </div>
         <div class="modal-footer">
+                <div class="pull-left errorMessage">{{message}}</div>                   
                 <button type="submit" class="btn btn-default modal-btn-login" ng-click="doLogin()">Login</button>
                 <button class="btn btn-default modal-btn-close" type ="button"ng-click="cancel()">Close</button>
             </div>
@@ -82,6 +80,7 @@
         </div>
     </script>
 </div>
+
 
 <div id="signup_modal">
     <script type="text/ng-template" id="mySignUpModal.html">
@@ -93,12 +92,10 @@
             <div class="row">
                 <div class="col-md-5">Username:</div>
                 <div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.username" placeholder="Username"></div>
-                <div>{{message}}</div>
             </div>
             <div class="row">
                 <div class="col-md-5">E-Mail:</div>
-                <div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.email" placeholder="email"></div>
-                <div>{{messageemail}}</div>
+                <div class="col-md-5"><input class="form-control" type="text" ng-model="newuser.email" placeholder="E-Mail"></div>
             </div>
             <div class="row">
                 <div class="col-md-5">Password:</div>
@@ -106,12 +103,10 @@
             </div>
             <div class="row">
                 <div class="col-md-5">Confirm password:</div>
-                <div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.passwordconfirm" placeholder="Password"></div>
-            </div>              
-            <div class="row">
-                <div class="col-md-10">{{message}}</div>                    
-            </div>
+                <div class="col-md-5"><input class="form-control" type="password" ng-model="newuser.passwordconfirm" placeholder="Confirm Password"></div>
+            </div> 
         <div class="modal-footer">
+            <div class="pull-left errorMessage">{{message}}</div>  
             <button class="btn btn-default modal-btn-login"  type="submit" >Register</button>
             <button class="btn btn-default modal-btn-close" type="button" ng-click="cancel()">Close</button>  
             </form>

@@ -63,14 +63,14 @@ app.delete('/api/removeuserwatchlist/:userid/:imdbid', function(req,res){
 app.post('/newuser',function(req,res){
 
   user.find({username : req.body.username},function(err,data){
-    console.log(data[0]);
     if(data[0] != null){
-      console.log("ich geh hier rein");
       res.send(401,'User already exists');
     return;
     }
     else{
+      console.log(req.body.email);
       user.find({email : req.body.email},function(err,data){
+        console.log("servus");
         if(data[0] != null){
           res.send(401,'email already exists');
         return;
