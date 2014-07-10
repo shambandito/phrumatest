@@ -13,7 +13,7 @@ body, html {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	color: #8A8984;
+	color: #999;
 	font-family: 'Roboto', sans-serif;
 	font-weight: 400;
 }
@@ -621,6 +621,7 @@ span {
 		clear: both;
 		width: 100%;
 		margin-bottom: 10px;
+		font-weight: 300;
 	}
 
 #compare_results .nav-pills {
@@ -717,6 +718,7 @@ span {
 	position: absolute;
 	right: 15px;
 	margin: 0;
+	font-weight: 300;
 }
 
 .episode_plot {
